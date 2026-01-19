@@ -1,0 +1,59 @@
+{
+  "name": "Sarah Chen",
+  "age": 34,
+  "gender": "female",
+  "cultural_background": "Asian-American",
+  "occupation": "Software Engineer",
+  "job_title": "Senior Developer",
+  "department": "Engineering",
+  "tenure": "3 years",
+
+  "scenario_type": "Sexual Harassment",
+  "situation": "Reporting inappropriate comments and unwanted advances from a senior colleague during team meetings and after-hours communications. The behavior has escalated over the past two months.",
+  "role": "Complainant",
+  "concerns": [
+    "Retaliation from the accused",
+    "Not being believed",
+    "Impact on career advancement",
+    "Workplace relationships changing",
+    "Being labeled as 'difficult'"
+  ],
+  "desired_outcome": "The behavior stops, appropriate action is taken, and I can continue working without fear of retaliation.",
+  "company_policies": [
+    "Anti-harassment policy",
+    "Code of conduct",
+    "Retaliation prevention policy",
+    "Confidentiality guidelines"
+  ],
+  "previous_incidents": "Two previous informal complaints to direct supervisor that were not documented or addressed.",
+
+  "personality": "Introverted, detail-oriented, conflict-averse but principled. Values fairness and proper process.",
+  "emotional_state": "Anxious but determined to report. Frustrated that previous informal attempts were ignored. Worried about career implications.",
+  "coping_mechanisms": "Documenting everything, seeking support from trusted friends outside work, maintaining professional composure",
+  "stress_level": "High - affecting sleep and work performance",
+  "communication_style": "Precise and factual, may downplay emotions, prefers written communication",
+
+  "vocabulary_level": "Professional - uses technical terms from their field",
+  "communication_challenges": "May struggle to assert boundaries, tends to over-explain or justify feelings",
+  "non_verbal_cues": "Maintains professional posture, limited eye contact when discussing difficult topics, fidgets when anxious",
+  "professional_rapport": "Good relationships with team members, professional but distant with the accused, respects HR but unsure if they will help",
+
+  "cultural_work_values": "Values harmony and avoiding confrontation, but also believes in fairness and proper process",
+  "generational_factors": "Millennial - expects professional workplace, familiar with reporting processes, values documentation",
+  "power_dynamics": "Accused is a senior team lead with more tenure and influence in the organization",
+  "identity_factors": "One of few women in the engineering department, first-generation professional",
+
+  "current_stage": "Initial Complaint",
+  "scenario_context": "Fast-growing tech startup with developing HR processes, recent company-wide harassment training",
+  "key_conflict_points": [
+    "Whether the behavior constitutes harassment",
+    "Credibility of accounts",
+    "Appropriate response from management"
+  ],
+  "legal_implications": "Potential Title VII implications, duty to investigate, documentation requirements",
+
+  "voice_baseline": "Calm and measured, professional tone, speaks clearly",
+  "voice_emotional_patterns": "Voice tightens when recounting incidents, speaks faster when anxious, pauses before difficult admissions",
+
+  "introduction": "Thank you for meeting with me. I've been putting this off, but I need to formally report something that's been happening. I'm not sure exactly where to start."
+}
