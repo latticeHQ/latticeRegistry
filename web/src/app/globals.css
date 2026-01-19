@@ -1,0 +1,649 @@
+@import "tailwindcss";
+
+/* ============================================
+   ANTHROPIC-LEVEL DESIGN SYSTEM
+   Exact typography and spacing from claude.ai
+   ============================================ */
+
+:root {
+  /* Anthropic Color System - Light Theme */
+  --color-bg-primary: #f5f5f0;
+  --color-bg-secondary: #ebe9e1;
+  --color-bg-tertiary: #ffffff;
+  --color-bg-elevated: #ffffff;
+
+  --color-text-primary: #1a1a1a;
+  --color-text-secondary: #666666;
+  --color-text-tertiary: #999999;
+
+  --color-border-primary: #e0e0d8;
+  --color-border-secondary: #d0d0c8;
+  --color-border-subtle: #f0f0e8;
+
+  --color-accent: #d97706;
+  --color-accent-hover: #b45309;
+  --color-accent-subtle: rgba(217, 119, 6, 0.1);
+
+  /* Anthropic Typography Scale - EXACT */
+  --font-size-xs: 0.6875rem; /* 11px */
+  --font-size-sm: 0.8125rem; /* 13px */
+  --font-size-base: 0.9375rem; /* 15px */
+  --font-size-lg: 1.0625rem; /* 17px */
+  --font-size-xl: 1.25rem; /* 20px */
+  --font-size-2xl: 1.5rem; /* 24px */
+  --font-size-3xl: 2rem; /* 32px */
+  --font-size-4xl: 2.5rem; /* 40px */
+  --font-size-5xl: 3.5rem; /* 56px */
+  --font-size-6xl: 4.5rem; /* 72px */
+
+  /* Anthropic Line Heights */
+  --line-height-tight: 1.2;
+  --line-height-snug: 1.375;
+  --line-height-normal: 1.5;
+  --line-height-relaxed: 1.625;
+  --line-height-loose: 1.75;
+
+  /* Anthropic Letter Spacing */
+  --letter-spacing-tight: -0.02em;
+  --letter-spacing-normal: 0;
+  --letter-spacing-wide: 0.025em;
+
+  /* Anthropic Spacing Scale */
+  --space-1: 0.25rem;
+  --space-2: 0.5rem;
+  --space-3: 0.75rem;
+  --space-4: 1rem;
+  --space-5: 1.25rem;
+  --space-6: 1.5rem;
+  --space-8: 2rem;
+  --space-10: 2.5rem;
+  --space-12: 3rem;
+  --space-16: 4rem;
+  --space-20: 5rem;
+  --space-24: 6rem;
+
+  /* Anthropic Border Radius */
+  --radius-sm: 0.375rem;
+  --radius-md: 0.5rem;
+  --radius-lg: 0.75rem;
+  --radius-xl: 1rem;
+  --radius-2xl: 1.25rem;
+
+  /* Anthropic Transitions */
+  --transition-fast: 150ms cubic-bezier(0.4, 0, 0.2, 1);
+  --transition-base: 200ms cubic-bezier(0.4, 0, 0.2, 1);
+  --transition-slow: 300ms cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+@theme inline {
+  --color-background: var(--color-bg-primary);
+  --color-foreground: var(--color-text-primary);
+  --font-sans: var(--font-geist-sans);
+  --font-mono: var(--font-geist-mono);
+}
+
+/* ============================================
+   BASE STYLES - Anthropic Typography
+   ============================================ */
+
+* {
+  border-color: var(--color-border-primary);
+}
+
+html {
+  scroll-behavior: smooth;
+  color-scheme: light;
+}
+
+body {
+  background: var(--color-bg-primary);
+  color: var(--color-text-primary);
+  font-family: var(--font-sans), -apple-system, BlinkMacSystemFont, "Segoe UI", system-ui, sans-serif;
+  font-size: 15px;
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
+}
+
+/* Anthropic Typography Hierarchy */
+h1, h2, h3, h4, h5, h6 {
+  font-weight: 400;
+  letter-spacing: -0.02em;
+  color: var(--color-text-primary);
+  line-height: 1.1;
+}
+
+h1 {
+  font-size: 64px;
+  font-weight: 400;
+}
+
+h2 {
+  font-size: 40px;
+  font-weight: 400;
+}
+
+h3 {
+  font-size: 24px;
+  font-weight: 500;
+}
+
+h4 {
+  font-size: 18px;
+  font-weight: 500;
+}
+
+p {
+  line-height: var(--line-height-relaxed);
+  color: var(--color-text-secondary);
+}
+
+/* ============================================
+   ANTHROPIC COMPONENT SYSTEM
+   ============================================ */
+
+/* Cards - Anthropic Style */
+.card-base {
+  background: var(--color-bg-secondary);
+  border: 1px solid var(--color-border-primary);
+  border-radius: var(--radius-lg);
+  transition: all var(--transition-base);
+}
+
+.card-hover:hover {
+  border-color: var(--color-border-secondary);
+  transform: translateY(-2px);
+}
+
+.card-interactive {
+  background: var(--color-bg-secondary);
+  border: 1px solid var(--color-border-primary);
+  border-radius: var(--radius-lg);
+  transition: all var(--transition-base);
+  cursor: pointer;
+}
+
+.card-interactive:hover {
+  border-color: var(--color-accent);
+  background: var(--color-bg-tertiary);
+  box-shadow: 0 4px 12px rgba(217, 119, 6, 0.15);
+}
+
+/* Buttons - Anthropic Style */
+.btn-primary {
+  background: var(--color-accent);
+  color: white;
+  font-size: 13px;
+  font-weight: 500;
+  padding: 8px 16px;
+  border-radius: 6px;
+  border: none;
+  cursor: pointer;
+  transition: background 150ms;
+}
+
+.btn-primary:hover {
+  background: var(--color-accent-hover);
+}
+
+.btn-secondary {
+  background: transparent;
+  color: var(--color-text-primary);
+  font-size: 13px;
+  font-weight: 500;
+  padding: 8px 16px;
+  border-radius: 6px;
+  border: 1px solid var(--color-border-primary);
+  cursor: pointer;
+  transition: all 150ms;
+}
+
+.btn-secondary:hover {
+  background: var(--color-bg-secondary);
+}
+
+.btn-ghost {
+  background: transparent;
+  color: var(--color-text-secondary);
+  font-size: var(--font-size-sm);
+  font-weight: 500;
+  padding: var(--space-2) var(--space-4);
+  border-radius: var(--radius-md);
+  border: none;
+  cursor: pointer;
+  transition: all var(--transition-base);
+}
+
+.btn-ghost:hover {
+  background: var(--color-bg-secondary);
+  color: var(--color-text-primary);
+}
+
+/* Badges - Anthropic Style */
+.badge-base {
+  display: inline-flex;
+  align-items: center;
+  padding: var(--space-1) var(--space-3);
+  border-radius: var(--radius-sm);
+  font-size: var(--font-size-xs);
+  font-weight: 500;
+  background: var(--color-bg-secondary);
+  border: 1px solid var(--color-border-primary);
+  color: var(--color-text-secondary);
+  letter-spacing: var(--letter-spacing-wide);
+}
+
+.badge-primary {
+  background: var(--color-accent-subtle);
+  border: 1px solid rgba(217, 119, 6, 0.2);
+  color: var(--color-accent);
+}
+
+/* Code Blocks - Light Professional Style */
+.code-block {
+  background: #f8f8f6;
+  border: 1px solid #e0e0d8;
+  border-radius: var(--radius-lg);
+  padding: var(--space-4);
+  font-family: "JetBrains Mono", "Fira Code", var(--font-mono), "SF Mono", "Consolas", monospace;
+  font-size: 13px;
+  line-height: 1.6;
+  overflow-x: auto;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+}
+
+pre {
+  background: #f8f8f6 !important;
+  border: 1px solid #e0e0d8;
+  border-radius: var(--radius-lg);
+  padding: var(--space-4);
+  overflow-x: auto;
+  font-size: 13px;
+  line-height: 1.6;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+  color: #059669;
+}
+
+pre code {
+  background: transparent !important;
+  padding: 0;
+  color: #059669 !important;
+  font-family: "JetBrains Mono", "Fira Code", var(--font-mono), "Consolas", monospace;
+  font-feature-settings: "liga" 1, "calt" 1; /* Enable ligatures for Fira Code/JetBrains Mono */
+}
+
+/* Inline code styling */
+code {
+  font-family: "JetBrains Mono", "Fira Code", var(--font-mono), "Consolas", monospace;
+  background: var(--color-accent-subtle);
+  color: var(--color-accent);
+  padding: 0.125rem 0.375rem;
+  border-radius: var(--radius-sm);
+  font-size: 0.875em;
+  font-weight: 500;
+  border: 1px solid rgba(217, 119, 6, 0.2);
+}
+
+/* Reset code styling inside pre blocks */
+pre code {
+  background: transparent !important;
+  border: none !important;
+  padding: 0 !important;
+  color: inherit !important;
+}
+
+/* Professional Tables - GitHub Premium Style */
+table {
+  width: 100%;
+  border-collapse: separate;
+  border-spacing: 0;
+  margin: var(--space-8) 0;
+  font-size: var(--font-size-sm);
+  border: 1px solid var(--color-border-primary);
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+}
+
+thead {
+  background: #fafaf8;
+  border-bottom: 2px solid var(--color-border-primary);
+}
+
+th {
+  padding: 0.875rem 1rem;
+  text-align: left;
+  font-weight: 600;
+  font-size: 0.6875rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--color-text-tertiary);
+  border-bottom: 2px solid var(--color-border-primary);
+}
+
+td {
+  padding: 0.875rem 1rem;
+  color: var(--color-text-secondary);
+  border-bottom: 1px solid var(--color-border-subtle);
+  line-height: 1.5;
+}
+
+tbody tr {
+  background: #ffffff;
+  transition: background var(--transition-fast);
+}
+
+tbody tr:hover {
+  background: #fafaf8;
+}
+
+tbody tr:last-child td {
+  border-bottom: none;
+}
+
+/* Code in tables */
+td code {
+  font-size: 0.8125rem;
+  padding: 0.25rem 0.5rem;
+  background: var(--color-accent-subtle);
+  color: var(--color-accent);
+  border-radius: var(--radius-sm);
+  border: 1px solid rgba(217, 119, 6, 0.2);
+  white-space: nowrap;
+  font-weight: 500;
+}
+
+/* Icon Containers - Anthropic Style */
+.icon-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 2.5rem;
+  height: 2.5rem;
+  border-radius: var(--radius-md);
+  background: var(--color-accent-subtle);
+  border: 1px solid rgba(217, 119, 6, 0.2);
+  transition: all var(--transition-base);
+}
+
+.icon-container:hover {
+  background: rgba(217, 119, 6, 0.15);
+  border-color: var(--color-accent);
+}
+
+.icon-container-lg {
+  width: 4rem;
+  height: 4rem;
+  border-radius: var(--radius-lg);
+}
+
+/* Background Patterns - Anthropic Style */
+.bg-grid-subtle {
+  background-image:
+    linear-gradient(rgba(217, 119, 6, 0.02) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(217, 119, 6, 0.02) 1px, transparent 1px);
+  background-size: 64px 64px;
+}
+
+.bg-gradient-radial {
+  background: radial-gradient(circle at center, var(--color-accent-subtle) 0%, transparent 70%);
+}
+
+/* Animations - Anthropic Style */
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes fadeUp {
+  from {
+    opacity: 0;
+    transform: translateY(16px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes float {
+  0%, 100% { transform: translateY(0px); }
+  50% { transform: translateY(-8px); }
+}
+
+.animate-fade-in {
+  animation: fadeIn 0.4s ease-out forwards;
+}
+
+.animate-fade-up {
+  animation: fadeUp 0.5s ease-out forwards;
+}
+
+.animate-float {
+  animation: float 5s ease-in-out infinite;
+}
+
+/* Stagger Delays */
+.stagger-1 { animation-delay: 0.1s; opacity: 0; }
+.stagger-2 { animation-delay: 0.15s; opacity: 0; }
+.stagger-3 { animation-delay: 0.2s; opacity: 0; }
+.stagger-4 { animation-delay: 0.25s; opacity: 0; }
+.stagger-5 { animation-delay: 0.3s; opacity: 0; }
+
+/* Prose Styling - Anthropic Typography */
+.prose-custom {
+  max-width: none;
+  font-size: var(--font-size-base);
+  line-height: var(--line-height-relaxed);
+  color: var(--color-text-secondary);
+}
+
+.prose-custom h1,
+.prose-custom h2,
+.prose-custom h3,
+.prose-custom h4 {
+  color: var(--color-text-primary);
+  font-weight: 500;
+  letter-spacing: var(--letter-spacing-tight);
+  line-height: var(--line-height-tight);
+}
+
+.prose-custom h1 {
+  font-size: var(--font-size-3xl);
+  margin-top: var(--space-10);
+  margin-bottom: var(--space-6);
+}
+
+.prose-custom h2 {
+  font-size: var(--font-size-2xl);
+  margin-top: var(--space-8);
+  margin-bottom: var(--space-4);
+  padding-bottom: var(--space-3);
+  border-bottom: 1px solid var(--color-border-primary);
+}
+
+.prose-custom h3 {
+  font-size: var(--font-size-xl);
+  margin-top: var(--space-6);
+  margin-bottom: var(--space-3);
+}
+
+.prose-custom p {
+  margin-bottom: var(--space-4);
+  line-height: var(--line-height-loose);
+}
+
+.prose-custom a {
+  color: var(--color-accent);
+  text-decoration: none;
+  font-weight: 500;
+  transition: color var(--transition-fast);
+}
+
+.prose-custom a:hover {
+  color: var(--color-accent-hover);
+}
+
+.prose-custom ul,
+.prose-custom ol {
+  margin: var(--space-4) 0;
+  padding-left: var(--space-6);
+}
+
+.prose-custom li {
+  margin: var(--space-2) 0;
+  line-height: var(--line-height-relaxed);
+}
+
+/* Tables in prose inherit global table styling */
+.prose-custom table {
+  width: 100%;
+  border-collapse: separate;
+  border-spacing: 0;
+  margin: var(--space-8) 0;
+  font-size: var(--font-size-sm);
+  border: 1px solid var(--color-border-primary);
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+}
+
+.prose-custom thead {
+  background: #fafaf8;
+  border-bottom: 2px solid var(--color-border-primary);
+}
+
+.prose-custom th {
+  padding: 0.875rem 1rem;
+  text-align: left;
+  font-weight: 600;
+  font-size: 0.6875rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--color-text-tertiary);
+  border-bottom: 2px solid var(--color-border-primary);
+}
+
+.prose-custom td {
+  padding: 0.875rem 1rem;
+  color: var(--color-text-secondary);
+  border-bottom: 1px solid var(--color-border-subtle);
+  line-height: 1.5;
+}
+
+.prose-custom tbody tr {
+  background: #ffffff;
+  transition: background var(--transition-fast);
+}
+
+.prose-custom tbody tr:hover {
+  background: #fafaf8;
+}
+
+.prose-custom tbody tr:last-child td {
+  border-bottom: none;
+}
+
+.prose-custom td code {
+  font-size: 0.8125rem;
+  padding: 0.25rem 0.5rem;
+  background: var(--color-accent-subtle);
+  color: var(--color-accent);
+  border-radius: var(--radius-sm);
+  border: 1px solid rgba(217, 119, 6, 0.2);
+  white-space: nowrap;
+  font-weight: 500;
+}
+
+/* Code blocks in prose */
+.prose-custom pre {
+  margin: var(--space-6) 0;
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+}
+
+.prose-custom pre code {
+  display: block;
+  background: transparent !important;
+  border: none !important;
+  padding: 0 !important;
+}
+
+.prose-custom blockquote {
+  border-left: 3px solid var(--color-accent);
+  background: var(--color-accent-subtle);
+  padding: var(--space-4) var(--space-6);
+  margin: var(--space-6) 0;
+  border-radius: 0 var(--radius-md) var(--radius-md) 0;
+  font-style: normal;
+  color: var(--color-text-secondary);
+}
+
+/* Scrollbar - Anthropic Style */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--color-border-primary);
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--color-border-secondary);
+}
+
+/* Selection */
+::selection {
+  background: var(--color-accent);
+  color: white;
+}
+
+/* Transitions */
+.transition-smooth {
+  transition: all var(--transition-base);
+}
+
+/* Utilities */
+.text-balance {
+  text-wrap: balance;
+}
+
+/* Glass Card Effect */
+.card-glass {
+  background: rgba(31, 31, 31, 0.8);
+  border: 1px solid var(--color-border-primary);
+  border-radius: var(--radius-lg);
+  backdrop-filter: blur(12px);
+}
+
+/* Gradient Text */
+.text-gradient-primary {
+  background: linear-gradient(135deg, var(--color-accent) 0%, var(--color-accent-hover) 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+/* Gradient Mesh Background */
+.bg-gradient-mesh {
+  background:
+    radial-gradient(at 40% 20%, rgba(217, 119, 6, 0.15) 0px, transparent 50%),
+    radial-gradient(at 80% 0%, rgba(217, 119, 6, 0.1) 0px, transparent 50%),
+    radial-gradient(at 0% 50%, rgba(217, 119, 6, 0.08) 0px, transparent 50%);
+}
+
+/* Reduced Motion */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}

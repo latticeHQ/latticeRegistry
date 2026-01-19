@@ -1,0 +1,60 @@
+name: deploy-registry
+
+on:
+  schedule:
+    # Runs at 02:30 UTC Monday through Friday
+    - cron: "30 2 * * 1-5"
+  push:
+    tags:
+      # Matches release/<namespace>/<resource_name>/<semantic_version>
+      # (e.g., "release/lattice/agent-identity/v1.0.0")
+      - "release/*/*/v*.*.*"
+    branches: # Templates get released when merged to main
+      - main
+    paths:
+      - ".github/workflows/deploy-registry.yaml"
+      - "registry/**/templates/**"
+      - "registry/**/README.md"
+      - ".icons/**"
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    # TODO: Configure your deployment infrastructure
+    # This workflow needs to be customized for your registry hosting setup
+    # Options include:
+    # - Vercel / Netlify for static hosting
+    # - AWS S3 + CloudFront
+    # - GitHub Pages
+    # - Self-hosted infrastructure
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v6
+
+      - name: Build registry
+        run: |
+          echo "Building registry..."
+          # Add your build commands here
+
+      # Example: Deploy to GitHub Pages
+      # - name: Deploy to GitHub Pages
+      #   uses: peaceiris/actions-gh-pages@v3
+      #   with:
+      #     github_token: ${{ secrets.GITHUB_TOKEN }}
+      #     publish_dir: ./build
+
+      # Example: Deploy to Vercel
+      # - name: Deploy to Vercel
+      #   uses: amondnet/vercel-action@v25
+      #   with:
+      #     vercel-token: ${{ secrets.VERCEL_TOKEN }}
+      #     vercel-org-id: ${{ secrets.VERCEL_ORG_ID }}
+      #     vercel-project-id: ${{ secrets.VERCEL_PROJECT_ID }}
+      #     vercel-args: '--prod'
+
+      - name: Deployment placeholder
+        run: |
+          echo "Registry deployment workflow triggered"
+          echo "Configure your deployment infrastructure in this workflow"
