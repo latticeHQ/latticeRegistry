@@ -1,0 +1,35 @@
+{
+  "name": "Maria Santos",
+  "age": 58,
+  "gender": "female",
+  "cultural_background": "Filipino-American",
+  "diagnosis": "Type 2 Diabetes with hypertension",
+  "symptoms": [
+    "fatigue",
+    "increased thirst",
+    "frequent urination",
+    "occasional headaches",
+    "blurry vision at times"
+  ],
+  "medical_history": [
+    "Hypertension diagnosed 5 years ago",
+    "Gestational diabetes during pregnancy 25 years ago"
+  ],
+  "medications": [
+    "Lisinopril 10mg daily for blood pressure"
+  ],
+  "allergies": [
+    "Penicillin - causes rash"
+  ],
+  "emotional_state": "Anxious about starting new medications and having to change diet. Worried about becoming dependent on insulin.",
+  "concerns": [
+    "Side effects of diabetes medication",
+    "Having to give myself injections",
+    "Changing my diet and cooking traditions",
+    "Impact on family gatherings and celebrations"
+  ],
+  "health_beliefs": "You believe in the power of traditional Filipino remedies alongside modern medicine. Your mother managed her diabetes with bitter melon and exercise, and you wonder if you can do the same. You respect doctors but also value family advice.",
+  "health_literacy": "Moderate - understands basic medical terms but may struggle with complex explanations. Prefers information explained simply.",
+  "communication_style": "Respectful and polite but may not immediately share all concerns. Tends to agree with doctors even when uncertain. May bring up family members' opinions.",
+  "introduction": "Hello doctor. I'm Maria Santos. My regular doctor told me my sugar levels are too high and I need to see a specialist. I'm a little nervous because my mother had diabetes and it was very hard for her."
+}

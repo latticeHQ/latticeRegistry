@@ -1,0 +1,47 @@
+{
+  "stt_model": "deepgram/nova-3",
+  "stt_language": "multi",
+  "noise_cancellation": true,
+  "enable_recording": true,
+  "recording_format": "ogg",
+  "audio_only_recording": true,
+  "save_session_report": true,
+  "save_conversation_text": true,
+  "save_conversation_json": true,
+  "save_analysis_json": true,
+  "session_type": "transcriber",
+
+  "storage_structure": {
+    "base_path": "sessions/{room_name}/{timestamp}/",
+    "files": {
+      "recording": "recording.ogg",
+      "session_report": "session_report.json",
+      "conversation_text": "conversation.txt",
+      "conversation_json": "conversation.json",
+      "analysis": "analysis.json"
+    }
+  },
+
+  "session_report_schema": {
+    "participants": {
+      "description": "Per-participant chat history, transcripts, and speaking metrics",
+      "fields": ["chat_history", "message_count", "transcripts", "transcript_count", "speaking_metrics"]
+    },
+    "conversation_analysis": {
+      "description": "Comprehensive conversation analysis",
+      "fields": ["timeline", "duration_seconds", "total_turns", "turn_sequence", "speaking_balance"]
+    },
+    "summary": {
+      "description": "High-level session summary",
+      "fields": ["total_participants", "participant_identities", "total_transcripts", "total_words", "conversation_duration_seconds"]
+    }
+  },
+
+  "speaking_metrics_schema": {
+    "total_turns": "Number of times participant spoke",
+    "total_words": "Total word count for participant",
+    "avg_words_per_turn": "Average words per utterance",
+    "first_spoke_at": "Timestamp of first utterance",
+    "last_spoke_at": "Timestamp of last utterance"
+  }
+}
