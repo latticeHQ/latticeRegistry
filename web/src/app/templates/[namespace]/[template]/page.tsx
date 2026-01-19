@@ -137,7 +137,7 @@ export default async function TemplatePage({ params }: PageProps) {
               </div>
             </div>
 
-            {/* Usage */}
+            {/* Quick Start */}
             <div className="card-base mb-8">
               <div className="p-6" style={{ borderBottom: "1px solid #e0e0d8" }}>
                 <div className="flex items-center gap-2">
@@ -149,13 +149,12 @@ export default async function TemplatePage({ params }: PageProps) {
               </div>
               <div className="p-6">
                 <div className="terminal-body">
-                  <code style={{ color: "#059669" }}>
+                  <code style={{ color: "#666666" }}>
                     lattice template use {namespace}/{templateName}
                   </code>
                 </div>
                 <p className="mt-4 text-sm" style={{ color: "#666666" }}>
-                  This will create a new workspace using this template
-                  configuration.
+                  This will create a new workspace using this template configuration.
                 </p>
               </div>
             </div>
@@ -188,14 +187,20 @@ export default async function TemplatePage({ params }: PageProps) {
             {/* Documentation */}
             <div className="card-base">
               <div className="p-6" style={{ borderBottom: "1px solid #e0e0d8" }}>
-                <h2 className="text-lg font-semibold" style={{ color: "#1a1a1a" }}>Documentation</h2>
+                <div className="flex items-center gap-2">
+                  <FileCode className="h-5 w-5" style={{ color: "#d97706" }} />
+                  <h2 className="text-lg font-semibold" style={{ color: "#1a1a1a" }}>
+                    Documentation
+                  </h2>
+                </div>
               </div>
-              <div className="p-6">
-                <div
-                  className="prose prose-orange max-w-none"
-                  style={{ color: "#666666" }}
-                  dangerouslySetInnerHTML={{ __html: template.htmlContent }}
-                />
+              <div className="p-8">
+                <div className="max-w-4xl">
+                  <div
+                    className="prose-custom"
+                    dangerouslySetInnerHTML={{ __html: template.htmlContent }}
+                  />
+                </div>
               </div>
             </div>
           </div>

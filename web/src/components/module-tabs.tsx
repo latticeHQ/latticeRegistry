@@ -70,10 +70,12 @@ export function ModuleTabs({ readme, variables, scripts, sourceUrl }: ModuleTabs
       {/* Tab Content */}
       <div className="p-8">
         {activeTab === "readme" && (
-          <div
-            className="prose-custom"
-            dangerouslySetInnerHTML={{ __html: readme }}
-          />
+          <div className="max-w-4xl">
+            <div
+              className="prose-custom"
+              dangerouslySetInnerHTML={{ __html: readme }}
+            />
+          </div>
         )}
 
         {activeTab === "variables" && (
