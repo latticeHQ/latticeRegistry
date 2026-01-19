@@ -49,11 +49,10 @@ export default async function ContributorPage({ params }: PageProps) {
   const githubUsername = ns.frontmatter.github || namespace;
 
   return (
-    <div className="relative min-h-screen">
+    <div className="relative min-h-screen" style={{ backgroundColor: "#f5f5f0" }}>
       {/* Background */}
       <div className="fixed inset-0 pointer-events-none">
-        <div className="absolute inset-0 grid-pattern opacity-30" />
-        <div className="absolute top-1/4 right-1/4 w-[500px] h-[500px] bg-orange-500/5 rounded-full blur-3xl" />
+        <div className="absolute inset-0 grid-pattern opacity-20" />
       </div>
 
       <div className="relative mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-12">
@@ -61,7 +60,8 @@ export default async function ContributorPage({ params }: PageProps) {
         <div className="mb-8">
           <Link
             href="/contributors"
-            className="inline-flex items-center text-sm text-slate-400 hover:text-orange-400 transition-colors"
+            className="inline-flex items-center text-sm transition-colors"
+            style={{ color: "#666666" }}
           >
             <ArrowLeft className="h-4 w-4 mr-2" />
             Back to Contributors
@@ -79,15 +79,15 @@ export default async function ContributorPage({ params }: PageProps) {
                 size="lg"
               />
               {ns.frontmatter.status === "official" && (
-                <div className="absolute -bottom-1 -right-1 bg-slate-900 rounded-full p-1">
-                  <CheckCircle2 className="h-5 w-5 text-orange-400" />
+                <div className="absolute -bottom-1 -right-1 rounded-full p-1" style={{ backgroundColor: "#ffffff" }}>
+                  <CheckCircle2 className="h-5 w-5" style={{ color: "#d97706" }} />
                 </div>
               )}
             </div>
 
             <div className="flex-1">
               <div className="flex items-center gap-3 mb-2">
-                <h1 className="text-3xl font-bold text-slate-100">
+                <h1 className="text-3xl font-bold" style={{ color: "#1a1a1a" }}>
                   {ns.frontmatter.display_name || namespace}
                 </h1>
                 {ns.frontmatter.status === "official" && (
@@ -101,13 +101,13 @@ export default async function ContributorPage({ params }: PageProps) {
                 )}
               </div>
 
-              <div className="flex items-center gap-1.5 text-sm text-slate-500 mb-4">
+              <div className="flex items-center gap-1.5 text-sm mb-4" style={{ color: "#666666" }}>
                 <Github className="h-4 w-4" />
                 <span className="font-mono">@{githubUsername}</span>
               </div>
 
               {ns.frontmatter.bio && (
-                <p className="text-lg text-slate-400 mb-6 leading-relaxed">
+                <p className="text-lg mb-6 leading-relaxed" style={{ color: "#666666" }}>
                   {ns.frontmatter.bio}
                 </p>
               )}
@@ -170,14 +170,14 @@ export default async function ContributorPage({ params }: PageProps) {
         <div className="grid grid-cols-2 gap-4 mb-12">
           <div className="card-base p-6">
             <div className="flex items-center gap-4">
-              <div className="p-3 rounded-xl bg-orange-500/10 border border-orange-500/20">
-                <Package className="h-6 w-6 text-orange-400" />
+              <div className="p-3 rounded-xl" style={{ background: "rgba(217, 119, 6, 0.1)", border: "1px solid rgba(217, 119, 6, 0.2)" }}>
+                <Package className="h-6 w-6" style={{ color: "#d97706" }} />
               </div>
               <div>
-                <div className="text-3xl font-bold text-slate-100">
+                <div className="text-3xl font-bold" style={{ color: "#1a1a1a" }}>
                   {ns.modules.length}
                 </div>
-                <div className="text-sm text-slate-500">
+                <div className="text-sm" style={{ color: "#666666" }}>
                   Modules
                 </div>
               </div>
@@ -185,14 +185,14 @@ export default async function ContributorPage({ params }: PageProps) {
           </div>
           <div className="card-base p-6">
             <div className="flex items-center gap-4">
-              <div className="p-3 rounded-xl bg-orange-500/10 border border-orange-500/20">
-                <Box className="h-6 w-6 text-orange-400" />
+              <div className="p-3 rounded-xl" style={{ background: "rgba(217, 119, 6, 0.1)", border: "1px solid rgba(217, 119, 6, 0.2)" }}>
+                <Box className="h-6 w-6" style={{ color: "#d97706" }} />
               </div>
               <div>
-                <div className="text-3xl font-bold text-slate-100">
+                <div className="text-3xl font-bold" style={{ color: "#1a1a1a" }}>
                   {ns.templates.length}
                 </div>
-                <div className="text-sm text-slate-500">
+                <div className="text-sm" style={{ color: "#666666" }}>
                   Templates
                 </div>
               </div>
@@ -205,9 +205,9 @@ export default async function ContributorPage({ params }: PageProps) {
           <section className="mb-12">
             <div className="flex items-center gap-3 mb-6">
               <div className="icon-container">
-                <Package className="h-5 w-5 text-orange-400" />
+                <Package className="h-5 w-5" style={{ color: "#d97706" }} />
               </div>
-              <h2 className="text-2xl font-bold text-slate-100">
+              <h2 className="text-2xl font-bold" style={{ color: "#1a1a1a" }}>
                 Modules
               </h2>
             </div>
@@ -224,9 +224,9 @@ export default async function ContributorPage({ params }: PageProps) {
           <section className="mb-12">
             <div className="flex items-center gap-3 mb-6">
               <div className="icon-container">
-                <Box className="h-5 w-5 text-orange-400" />
+                <Box className="h-5 w-5" style={{ color: "#d97706" }} />
               </div>
-              <h2 className="text-2xl font-bold text-slate-100">
+              <h2 className="text-2xl font-bold" style={{ color: "#1a1a1a" }}>
                 Templates
               </h2>
             </div>
@@ -242,12 +242,12 @@ export default async function ContributorPage({ params }: PageProps) {
         {ns.modules.length === 0 && ns.templates.length === 0 && (
           <div className="text-center py-16 card-base">
             <div className="icon-container-lg mx-auto mb-6">
-              <Package className="h-8 w-8 text-orange-400" />
+              <Package className="h-8 w-8" style={{ color: "#d97706" }} />
             </div>
-            <h3 className="text-xl font-semibold text-slate-100 mb-3">
+            <h3 className="text-xl font-semibold mb-3" style={{ color: "#1a1a1a" }}>
               No modules or templates yet
             </h3>
-            <p className="text-slate-500 max-w-md mx-auto">
+            <p className="max-w-md mx-auto" style={{ color: "#666666" }}>
               This contributor hasn&apos;t published any modules or templates yet.
             </p>
           </div>

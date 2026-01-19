@@ -110,37 +110,40 @@ export default function SearchPage() {
   ];
 
   return (
-    <div className="relative min-h-screen">
+    <div className="relative min-h-screen" style={{ backgroundColor: "#f5f5f0" }}>
       {/* Background */}
       <div className="fixed inset-0 pointer-events-none">
-        <div className="absolute inset-0 grid-pattern opacity-30" />
-        <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-orange-500/5 rounded-full blur-3xl" />
-        <div className="absolute bottom-1/4 right-1/3 w-[400px] h-[400px] bg-orange-500/5 rounded-full blur-3xl" />
+        <div className="absolute inset-0 grid-pattern opacity-20" />
       </div>
 
       <div className="relative mx-auto max-w-4xl px-4 sm:px-6 lg:px-8 py-16 md:py-24">
         {/* Header */}
         <div className="text-center mb-12">
-          <div className="inline-flex p-3 rounded-2xl bg-gradient-to-br from-orange-500/20 to-orange-600/10 border border-orange-500/20 mb-6">
-            <Sparkles className="h-8 w-8 text-orange-400" />
+          <div className="inline-flex p-3 rounded-2xl mb-6" style={{ background: "rgba(217, 119, 6, 0.1)", border: "1px solid rgba(217, 119, 6, 0.2)" }}>
+            <Sparkles className="h-8 w-8" style={{ color: "#d97706" }} />
           </div>
-          <h1 className="text-3xl sm:text-4xl font-bold text-slate-100 mb-4">
+          <h1 className="text-3xl sm:text-4xl font-bold mb-4" style={{ color: "#1a1a1a" }}>
             Search the Registry
           </h1>
-          <p className="text-lg text-slate-400">
+          <p className="text-lg" style={{ color: "#666666" }}>
             Find modules, templates, and contributors
           </p>
         </div>
 
         {/* Search Input */}
         <div className="relative mb-10">
-          <SearchIcon className="absolute left-5 top-1/2 -translate-y-1/2 h-6 w-6 text-slate-500" />
+          <SearchIcon className="absolute left-5 top-1/2 -translate-y-1/2 h-6 w-6" style={{ color: "#999999" }} />
           <Input
             type="text"
             placeholder="Search for modules, templates, or contributors..."
             value={query}
             onChange={(e) => setQuery(e.target.value)}
-            className="pl-14 h-14 text-lg bg-slate-900/50 border-slate-700 focus:border-orange-500/50 rounded-2xl"
+            className="pl-14 h-14 text-lg rounded-2xl"
+            style={{
+              backgroundColor: "#ffffff",
+              borderColor: "#e0e0d8",
+              color: "#1a1a1a"
+            }}
             autoFocus
           />
         </div>
@@ -148,7 +151,7 @@ export default function SearchPage() {
         {/* Quick Links */}
         {!query && (
           <div className="mb-12">
-            <h2 className="text-xs font-semibold text-slate-500 mb-4 uppercase tracking-wider">
+            <h2 className="text-xs font-semibold mb-4 uppercase tracking-wider" style={{ color: "#999999" }}>
               Quick Links
             </h2>
             <div className="flex flex-wrap gap-3">
@@ -156,9 +159,14 @@ export default function SearchPage() {
                 <Link key={i} href={link.href}>
                   <Badge
                     variant="secondary"
-                    className="cursor-pointer px-4 py-2 text-sm hover:bg-slate-700 transition-colors"
+                    className="cursor-pointer px-4 py-2 text-sm transition-colors"
+                    style={{
+                      backgroundColor: "#ebe9e1",
+                      color: "#666666",
+                      border: "1px solid #e0e0d8"
+                    }}
                   >
-                    <link.icon className="h-3.5 w-3.5 mr-2 text-orange-400" />
+                    <link.icon className="h-3.5 w-3.5 mr-2" style={{ color: "#d97706" }} />
                     {link.label}
                   </Badge>
                 </Link>
@@ -178,8 +186,8 @@ export default function SearchPage() {
               </div>
             ) : filteredResults.length > 0 ? (
               <>
-                <p className="text-sm text-slate-500 mb-6">
-                  <span className="text-orange-400 font-semibold">{filteredResults.length}</span>{" "}
+                <p className="text-sm mb-6" style={{ color: "#999999" }}>
+                  <span className="font-semibold" style={{ color: "#d97706" }}>{filteredResults.length}</span>{" "}
                   result{filteredResults.length !== 1 ? "s" : ""} for &quot;{query}&quot;
                 </p>
                 {filteredResults.map((result, i) => (
@@ -191,14 +199,14 @@ export default function SearchPage() {
                         </div>
                         <div className="flex-1 min-w-0">
                           <div className="flex items-center gap-3 mb-2">
-                            <h3 className="font-semibold text-slate-100 group-hover:text-orange-400 transition-colors">
+                            <h3 className="font-semibold group-hover:transition-colors" style={{ color: "#1a1a1a" }}>
                               {result.displayName}
                             </h3>
                             <Badge variant="secondary" className="text-[10px]">
                               {result.type}
                             </Badge>
                           </div>
-                          <p className="text-sm text-slate-500 mb-3">
+                          <p className="text-sm mb-3" style={{ color: "#666666" }}>
                             {result.description}
                           </p>
                           {result.tags && (
@@ -211,7 +219,7 @@ export default function SearchPage() {
                             </div>
                           )}
                         </div>
-                        <ArrowUpRight className="h-5 w-5 text-slate-700 opacity-0 group-hover:opacity-100 group-hover:text-orange-400 transition-all" />
+                        <ArrowUpRight className="h-5 w-5 opacity-0 group-hover:opacity-100 transition-all" style={{ color: "#d97706" }} />
                       </div>
                     </div>
                   </Link>
@@ -220,12 +228,12 @@ export default function SearchPage() {
             ) : (
               <div className="text-center py-16 card-base">
                 <div className="icon-container-lg mx-auto mb-6">
-                  <SearchIcon className="h-8 w-8 text-orange-400" />
+                  <SearchIcon className="h-8 w-8" style={{ color: "#d97706" }} />
                 </div>
-                <h3 className="text-xl font-semibold text-slate-100 mb-3">
+                <h3 className="text-xl font-semibold mb-3" style={{ color: "#1a1a1a" }}>
                   No results found
                 </h3>
-                <p className="text-slate-500 max-w-md mx-auto mb-6">
+                <p className="max-w-md mx-auto mb-6" style={{ color: "#666666" }}>
                   Try different keywords or browse the categories above
                 </p>
                 <Link href="/modules">
@@ -241,8 +249,8 @@ export default function SearchPage() {
 
         {/* CTA */}
         {!query && (
-          <div className="text-center pt-8 border-t border-slate-800">
-            <p className="text-slate-500 mb-4">
+          <div className="text-center pt-8" style={{ borderTop: "1px solid #e0e0d8" }}>
+            <p className="mb-4" style={{ color: "#666666" }}>
               Can&apos;t find what you&apos;re looking for?
             </p>
             <a

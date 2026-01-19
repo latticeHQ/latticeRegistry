@@ -67,11 +67,10 @@ export default async function TemplatePage({ params }: PageProps) {
   const repoUrl = `https://github.com/latticeHQ/registry/tree/main/registry/${namespace}/templates/${templateName}`;
 
   return (
-    <div className="relative min-h-screen">
+    <div className="relative min-h-screen" style={{ backgroundColor: "#f5f5f0" }}>
       {/* Background */}
       <div className="fixed inset-0 pointer-events-none">
-        <div className="absolute inset-0 grid-pattern opacity-30" />
-        <div className="absolute bottom-1/4 left-0 w-96 h-96 bg-orange-500/5 rounded-full blur-3xl" />
+        <div className="absolute inset-0 grid-pattern opacity-20" />
       </div>
 
       <div className="relative mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-12">
@@ -79,7 +78,8 @@ export default async function TemplatePage({ params }: PageProps) {
         <div className="mb-8">
           <Link
             href="/templates"
-            className="inline-flex items-center text-sm text-slate-400 hover:text-orange-400 transition-colors"
+            className="inline-flex items-center text-sm transition-colors"
+            style={{ color: "#666666" }}
           >
             <ArrowLeft className="h-4 w-4 mr-2" />
             Back to Templates
@@ -93,18 +93,18 @@ export default async function TemplatePage({ params }: PageProps) {
             <div className="mb-8">
               <div className="flex items-start gap-4 mb-4">
                 <div className="icon-container-lg">
-                  <Box className="h-7 w-7 text-orange-400" />
+                  <Box className="h-7 w-7" style={{ color: "#d97706" }} />
                 </div>
                 <div className="flex-1">
                   <div className="flex items-center gap-3 flex-wrap mb-2">
-                    <h1 className="text-2xl font-bold text-slate-100">
+                    <h1 className="text-2xl font-bold" style={{ color: "#1a1a1a" }}>
                       {template.frontmatter.display_name}
                     </h1>
                     {template.frontmatter.verified && (
                       <Badge variant="success">Verified</Badge>
                     )}
                   </div>
-                  <p className="text-lg text-slate-400">
+                  <p className="text-lg" style={{ color: "#666666" }}>
                     {template.frontmatter.description}
                   </p>
                 </div>
@@ -139,21 +139,21 @@ export default async function TemplatePage({ params }: PageProps) {
 
             {/* Usage */}
             <div className="card-base mb-8">
-              <div className="p-6 border-b border-slate-800">
+              <div className="p-6" style={{ borderBottom: "1px solid #e0e0d8" }}>
                 <div className="flex items-center gap-2">
-                  <Terminal className="h-5 w-5 text-orange-400" />
-                  <h2 className="text-lg font-semibold text-slate-100">
+                  <Terminal className="h-5 w-5" style={{ color: "#d97706" }} />
+                  <h2 className="text-lg font-semibold" style={{ color: "#1a1a1a" }}>
                     Quick Start
                   </h2>
                 </div>
               </div>
               <div className="p-6">
                 <div className="terminal-body">
-                  <code className="text-emerald-400">
+                  <code style={{ color: "#059669" }}>
                     lattice template use {namespace}/{templateName}
                   </code>
                 </div>
-                <p className="mt-4 text-sm text-slate-500">
+                <p className="mt-4 text-sm" style={{ color: "#666666" }}>
                   This will create a new workspace using this template
                   configuration.
                 </p>
@@ -163,11 +163,11 @@ export default async function TemplatePage({ params }: PageProps) {
             {/* Terraform Code */}
             {template.terraformCode && (
               <div className="card-base mb-8">
-                <div className="p-6 border-b border-slate-800">
+                <div className="p-6" style={{ borderBottom: "1px solid #e0e0d8" }}>
                   <div className="flex items-center justify-between">
                     <div className="flex items-center gap-2">
-                      <FileCode className="h-5 w-5 text-orange-400" />
-                      <h2 className="text-lg font-semibold text-slate-100">
+                      <FileCode className="h-5 w-5" style={{ color: "#d97706" }} />
+                      <h2 className="text-lg font-semibold" style={{ color: "#1a1a1a" }}>
                         Template Configuration
                       </h2>
                     </div>
@@ -179,7 +179,7 @@ export default async function TemplatePage({ params }: PageProps) {
                 </div>
                 <div className="p-6">
                   <div className="terminal-body max-h-96 overflow-auto">
-                    <pre className="text-slate-300">{template.terraformCode}</pre>
+                    <pre style={{ color: "#666666" }}>{template.terraformCode}</pre>
                   </div>
                 </div>
               </div>
@@ -187,12 +187,13 @@ export default async function TemplatePage({ params }: PageProps) {
 
             {/* Documentation */}
             <div className="card-base">
-              <div className="p-6 border-b border-slate-800">
-                <h2 className="text-lg font-semibold text-slate-100">Documentation</h2>
+              <div className="p-6" style={{ borderBottom: "1px solid #e0e0d8" }}>
+                <h2 className="text-lg font-semibold" style={{ color: "#1a1a1a" }}>Documentation</h2>
               </div>
               <div className="p-6">
                 <div
-                  className="prose prose-invert prose-orange max-w-none"
+                  className="prose prose-orange max-w-none"
+                  style={{ color: "#666666" }}
                   dangerouslySetInnerHTML={{ __html: template.htmlContent }}
                 />
               </div>
@@ -204,15 +205,15 @@ export default async function TemplatePage({ params }: PageProps) {
             {/* Publisher Info */}
             {namespaceData && (
               <div className="card-base">
-                <div className="p-4 border-b border-slate-800">
-                  <h4 className="text-xs text-slate-500 uppercase tracking-wide font-medium">
+                <div className="p-4" style={{ borderBottom: "1px solid #e0e0d8" }}>
+                  <h4 className="text-xs uppercase tracking-wide font-medium" style={{ color: "#999999" }}>
                     Published by
                   </h4>
                 </div>
                 <div className="p-4">
                   <Link
                     href={`/contributors/${namespace}`}
-                    className="flex items-center gap-3 hover:bg-slate-800/50 -m-2 p-2 rounded-lg transition-colors group"
+                    className="flex items-center gap-3 -m-2 p-2 rounded-lg transition-colors group hover:bg-[rgba(217,119,6,0.05)]"
                   >
                     <ContributorAvatar
                       githubUsername={githubUsername}
@@ -220,10 +221,10 @@ export default async function TemplatePage({ params }: PageProps) {
                       size="sm"
                     />
                     <div>
-                      <div className="font-medium text-slate-100 group-hover:text-orange-400 transition-colors">
+                      <div className="font-medium group-hover:text-[#d97706] transition-colors" style={{ color: "#1a1a1a" }}>
                         {namespaceData.frontmatter.display_name || namespace}
                       </div>
-                      <div className="text-sm text-slate-500 flex items-center gap-1">
+                      <div className="text-sm flex items-center gap-1" style={{ color: "#666666" }}>
                         <Github className="h-3 w-3" />
                         @{githubUsername}
                       </div>
@@ -235,26 +236,26 @@ export default async function TemplatePage({ params }: PageProps) {
 
             {/* Template Info Card */}
             <div className="card-base">
-              <div className="p-4 border-b border-slate-800">
-                <h4 className="text-xs text-slate-500 uppercase tracking-wide font-medium">
+              <div className="p-4" style={{ borderBottom: "1px solid #e0e0d8" }}>
+                <h4 className="text-xs uppercase tracking-wide font-medium" style={{ color: "#999999" }}>
                   Template Info
                 </h4>
               </div>
               <div className="p-4">
                 <dl className="space-y-4">
                   <div>
-                    <dt className="text-sm text-slate-500">
+                    <dt className="text-sm" style={{ color: "#666666" }}>
                       Template Name
                     </dt>
-                    <dd className="mt-1 font-mono text-sm text-slate-100">
+                    <dd className="mt-1 font-mono text-sm" style={{ color: "#1a1a1a" }}>
                       {templateName}
                     </dd>
                   </div>
                   <div>
-                    <dt className="text-sm text-slate-500">
+                    <dt className="text-sm" style={{ color: "#666666" }}>
                       Full Reference
                     </dt>
-                    <dd className="mt-1 font-mono text-sm bg-slate-800 px-2 py-1 rounded text-slate-300">
+                    <dd className="mt-1 font-mono text-sm px-2 py-1 rounded" style={{ backgroundColor: "#ebe9e1", color: "#666666" }}>
                       {namespace}/{templateName}
                     </dd>
                   </div>
@@ -265,8 +266,8 @@ export default async function TemplatePage({ params }: PageProps) {
             {/* Inputs Summary */}
             {template.inputs && template.inputs.length > 0 && (
               <div className="card-base">
-                <div className="p-4 border-b border-slate-800">
-                  <h4 className="text-xs text-slate-500 uppercase tracking-wide font-medium">
+                <div className="p-4" style={{ borderBottom: "1px solid #e0e0d8" }}>
+                  <h4 className="text-xs uppercase tracking-wide font-medium" style={{ color: "#999999" }}>
                     Required Inputs
                   </h4>
                 </div>
@@ -280,10 +281,10 @@ export default async function TemplatePage({ params }: PageProps) {
                           key={input.name}
                           className="flex items-start gap-2 text-sm"
                         >
-                          <code className="px-1.5 py-0.5 bg-slate-800 rounded text-orange-400 font-mono">
+                          <code className="px-1.5 py-0.5 rounded font-mono" style={{ backgroundColor: "#ebe9e1", color: "#d97706" }}>
                             {input.name}
                           </code>
-                          <span className="text-slate-500">
+                          <span style={{ color: "#666666" }}>
                             ({input.type})
                           </span>
                         </li>
@@ -291,7 +292,7 @@ export default async function TemplatePage({ params }: PageProps) {
                   </ul>
                   {template.inputs.filter((input) => input.required).length >
                     5 && (
-                    <p className="text-sm text-slate-500 mt-2">
+                    <p className="text-sm mt-2" style={{ color: "#666666" }}>
                       +
                       {template.inputs.filter((input) => input.required)
                         .length - 5}{" "}
@@ -304,8 +305,8 @@ export default async function TemplatePage({ params }: PageProps) {
 
             {/* Related Links */}
             <div className="card-base">
-              <div className="p-4 border-b border-slate-800">
-                <h4 className="text-xs text-slate-500 uppercase tracking-wide font-medium">
+              <div className="p-4" style={{ borderBottom: "1px solid #e0e0d8" }}>
+                <h4 className="text-xs uppercase tracking-wide font-medium" style={{ color: "#999999" }}>
                   Resources
                 </h4>
               </div>
@@ -314,7 +315,8 @@ export default async function TemplatePage({ params }: PageProps) {
                   href={repoUrl}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="flex items-center gap-2 text-sm text-slate-400 hover:text-orange-400 transition-colors"
+                  className="flex items-center gap-2 text-sm transition-colors"
+                  style={{ color: "#666666" }}
                 >
                   <Github className="h-4 w-4" />
                   View Source
@@ -324,7 +326,8 @@ export default async function TemplatePage({ params }: PageProps) {
                   href="https://docs.latticeruntime.com/templates"
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="flex items-center gap-2 text-sm text-slate-400 hover:text-orange-400 transition-colors"
+                  className="flex items-center gap-2 text-sm transition-colors"
+                  style={{ color: "#666666" }}
                 >
                   <Package className="h-4 w-4" />
                   Template Documentation
@@ -334,7 +337,8 @@ export default async function TemplatePage({ params }: PageProps) {
                   href={`https://github.com/latticeHQ/registry/issues/new?title=Issue%20with%20${namespace}/${templateName}`}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="flex items-center gap-2 text-sm text-slate-400 hover:text-orange-400 transition-colors"
+                  className="flex items-center gap-2 text-sm transition-colors"
+                  style={{ color: "#666666" }}
                 >
                   Report an Issue
                   <ArrowUpRight className="h-3 w-3 ml-auto" />
