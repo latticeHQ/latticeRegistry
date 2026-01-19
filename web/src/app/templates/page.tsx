@@ -30,14 +30,15 @@ async function TemplatesList({ searchParams }: { searchParams: Promise<{ q?: str
   return (
     <div>
       {/* Search */}
-      <div className="mb-10">
+      <div className="mb-8">
         <form className="relative">
-          <Search className="absolute left-4 top-1/2 -translate-y-1/2 h-5 w-5 text-slate-500" />
+          <Search className="absolute left-4 top-1/2 -translate-y-1/2 h-4 w-4" style={{ color: "#999999" }} />
           <Input
             name="q"
             placeholder="Search templates..."
             defaultValue={params.q}
-            className="pl-12 h-12 text-base bg-slate-900/50 border-slate-700 focus:border-orange-500/50"
+            className="pl-11 h-11 text-sm"
+            style={{ background: "#ffffff", border: "1px solid #e0e0d8", color: "#1a1a1a" }}
           />
         </form>
       </div>
@@ -45,23 +46,13 @@ async function TemplatesList({ searchParams }: { searchParams: Promise<{ q?: str
       {/* Results */}
       {filteredTemplates.length > 0 ? (
         <>
-          <div className="flex items-center justify-between mb-6">
-            <p className="text-sm text-slate-500">
-              <span className="text-orange-400 font-semibold">{filteredTemplates.length}</span>{" "}
+          <div className="flex items-center justify-between mb-5">
+            <p className="text-xs" style={{ color: "#666666" }}>
+              Displaying <span style={{ color: "#1a1a1a", fontWeight: "500" }}>{filteredTemplates.length}</span>{" "}
               template{filteredTemplates.length !== 1 && "s"}
-              {params.q && <span className="text-slate-400"> matching &quot;{params.q}&quot;</span>}
             </p>
-            <a
-              href="https://github.com/latticeHQ/registry"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="text-sm text-slate-500 hover:text-orange-400 transition-colors flex items-center gap-1.5"
-            >
-              <GitBranch className="h-3.5 w-3.5" />
-              Contribute
-            </a>
           </div>
-          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-5">
             {filteredTemplates.map((template) => (
               <ModuleCard key={template.slug} module={template} type="template" />
             ))}
@@ -70,12 +61,12 @@ async function TemplatesList({ searchParams }: { searchParams: Promise<{ q?: str
       ) : (
         <div className="text-center py-20 card-base">
           <div className="icon-container-lg mx-auto mb-6">
-            <Box className="h-8 w-8 text-orange-400" />
+            <Box className="h-8 w-8" style={{ color: "#d97706" }} />
           </div>
-          <h3 className="text-xl font-semibold text-slate-100 mb-3">
+          <h3 className="text-xl font-semibold mb-3" style={{ color: "#1a1a1a" }}>
             No templates found
           </h3>
-          <p className="text-slate-500 max-w-md mx-auto mb-6">
+          <p className="max-w-md mx-auto mb-6" style={{ color: "#666666" }}>
             {params.q
               ? `No templates match "${params.q}". Try a different search term.`
               : "No templates available yet. Be the first to contribute!"}
@@ -84,11 +75,10 @@ async function TemplatesList({ searchParams }: { searchParams: Promise<{ q?: str
             href="https://github.com/latticeHQ/registry/blob/main/CONTRIBUTING.md"
             target="_blank"
             rel="noopener noreferrer"
+            className="btn-primary inline-flex items-center gap-2"
           >
-            <Button>
-              Contribute a Template
-              <ArrowUpRight className="ml-2 h-4 w-4" />
-            </Button>
+            Contribute a Template
+            <ArrowUpRight className="h-4 w-4" />
           </a>
         </div>
       )}
@@ -105,23 +95,22 @@ export default async function TemplatesPage({
     <div className="relative min-h-screen">
       {/* Background */}
       <div className="fixed inset-0 pointer-events-none">
-        <div className="absolute inset-0 grid-pattern opacity-30" />
-        <div className="absolute bottom-1/4 left-0 w-96 h-96 bg-orange-500/5 rounded-full blur-3xl" />
+        <div className="absolute inset-0 bg-grid-subtle" />
+        <div className="absolute top-1/4 right-0 w-96 h-96 bg-gradient-radial blur-3xl" />
       </div>
 
-      <div className="relative mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-12 md:py-16">
+      <div className="relative mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-16 md:py-20">
         {/* Header */}
         <div className="mb-12">
-          <div className="flex items-center gap-3 mb-4">
-            <div className="icon-container">
-              <Boxes className="h-5 w-5 text-orange-400" />
-            </div>
-            <Badge variant="secondary">Registry</Badge>
+          <div className="flex items-center gap-3 mb-6">
+            <div className="badge-base">Registry</div>
+            <span style={{ color: "#e0e0d8" }}>→</span>
+            <span className="text-sm" style={{ color: "#666666" }}>Templates</span>
           </div>
-          <h1 className="text-3xl sm:text-4xl font-bold text-slate-100 mb-4">
+          <h1 className="text-5xl sm:text-6xl font-bold mb-5 tracking-tight" style={{ color: "#1a1a1a" }}>
             Templates
           </h1>
-          <p className="text-lg text-slate-400 max-w-2xl">
+          <p className="text-lg max-w-3xl leading-relaxed" style={{ color: "#666666" }}>
             Pre-configured agent workspace definitions for Lattice Runtime.
             Complete configurations to accelerate your AI agent deployments.
           </p>
@@ -129,11 +118,11 @@ export default async function TemplatesPage({
 
         <Suspense
           fallback={
-            <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+            <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-5">
               {[...Array(6)].map((_, i) => (
                 <div
                   key={i}
-                  className="h-48 rounded-2xl shimmer"
+                  className="h-48 rounded-xl card-base animate-pulse"
                 />
               ))}
             </div>
