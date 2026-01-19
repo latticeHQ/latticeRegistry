@@ -1,6 +1,6 @@
 # Lattice Registry
 
-[Registry Site](https://registry.latticeruntime.com) • [Lattice Runtime](https://github.com/latticeHQ/latticeRuntime) • [Docs](https://docs.latticeruntime.com)
+[Registry Site](https://registry.latticeruntime.com) • [Lattice Runtime](https://github.com/latticeHQ/lattice) • [Docs](https://docs.latticeruntime.com)
 
 Lattice Registry is a community-driven platform for extending your Lattice Runtime deployments. Publish reusable Terraform modules for AI agent infrastructure, identity management, and runtime enforcement.
 
