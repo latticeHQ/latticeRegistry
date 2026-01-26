@@ -8,7 +8,7 @@ import { Button } from "@/components/ui/button";
 import { Search as SearchIcon, Package, Box, Users, ArrowUpRight, Sparkles, GitBranch } from "lucide-react";
 
 interface SearchResult {
-  type: "module" | "template" | "contributor";
+  type: "module" | "template" | "preset" | "contributor";
   namespace: string;
   name: string;
   displayName: string;
@@ -80,6 +80,8 @@ export default function SearchPage() {
         return <Package className="h-5 w-5 text-orange-400" />;
       case "template":
         return <Box className="h-5 w-5 text-orange-400" />;
+      case "preset":
+        return <Sparkles className="h-5 w-5 text-orange-400" />;
       case "contributor":
         return <Users className="h-5 w-5 text-orange-400" />;
       default:
@@ -93,6 +95,8 @@ export default function SearchPage() {
         return `/modules/${result.namespace}/${result.name}`;
       case "template":
         return `/templates/${result.namespace}/${result.name}`;
+      case "preset":
+        return `/presets/${result.namespace}/${result.name}`;
       case "contributor":
         return `/contributors/${result.namespace}`;
       default:
@@ -106,6 +110,7 @@ export default function SearchPage() {
     { label: "Integrations", href: "/modules?category=integration", icon: Package },
     { label: "All Modules", href: "/modules", icon: Package },
     { label: "Templates", href: "/templates", icon: Box },
+    { label: "Presets", href: "/presets", icon: Sparkles },
     { label: "Contributors", href: "/contributors", icon: Users },
   ];
 
@@ -126,7 +131,7 @@ export default function SearchPage() {
             Search the Registry
           </h1>
           <p className="text-lg" style={{ color: "#666666" }}>
-            Find modules, templates, and contributors
+            Find modules, templates, presets, and contributors
           </p>
         </div>
 
@@ -135,7 +140,7 @@ export default function SearchPage() {
           <SearchIcon className="absolute left-5 top-1/2 -translate-y-1/2 h-6 w-6" style={{ color: "#999999" }} />
           <Input
             type="text"
-            placeholder="Search for modules, templates, or contributors..."
+            placeholder="Search for modules, templates, presets, or contributors..."
             value={query}
             onChange={(e) => setQuery(e.target.value)}
             className="pl-14 h-14 text-lg rounded-2xl"

@@ -14,7 +14,9 @@ import {
   Box,
   CheckCircle2,
   ArrowUpRight,
+  Sparkles,
 } from "lucide-react";
+import { PresetCard } from "@/components/preset-card";
 import { ContributorAvatar } from "@/components/contributor-avatar";
 
 interface PageProps {
@@ -167,7 +169,7 @@ export default async function ContributorPage({ params }: PageProps) {
         </div>
 
         {/* Stats */}
-        <div className="grid grid-cols-2 gap-4 mb-12">
+        <div className="grid grid-cols-3 gap-4 mb-12">
           <div className="card-base p-6">
             <div className="flex items-center gap-4">
               <div className="p-3 rounded-xl" style={{ background: "rgba(217, 119, 6, 0.1)", border: "1px solid rgba(217, 119, 6, 0.2)" }}>
@@ -194,6 +196,21 @@ export default async function ContributorPage({ params }: PageProps) {
                 </div>
                 <div className="text-sm" style={{ color: "#666666" }}>
                   Templates
+                </div>
+              </div>
+            </div>
+          </div>
+          <div className="card-base p-6">
+            <div className="flex items-center gap-4">
+              <div className="p-3 rounded-xl" style={{ background: "rgba(217, 119, 6, 0.1)", border: "1px solid rgba(217, 119, 6, 0.2)" }}>
+                <Sparkles className="h-6 w-6" style={{ color: "#d97706" }} />
+              </div>
+              <div>
+                <div className="text-3xl font-bold" style={{ color: "#1a1a1a" }}>
+                  {ns.presets.length}
+                </div>
+                <div className="text-sm" style={{ color: "#666666" }}>
+                  Presets
                 </div>
               </div>
             </div>
@@ -238,17 +255,36 @@ export default async function ContributorPage({ params }: PageProps) {
           </section>
         )}
 
+        {/* Presets */}
+        {ns.presets.length > 0 && (
+          <section className="mb-12">
+            <div className="flex items-center gap-3 mb-6">
+              <div className="icon-container">
+                <Sparkles className="h-5 w-5" style={{ color: "#d97706" }} />
+              </div>
+              <h2 className="text-2xl font-bold" style={{ color: "#1a1a1a" }}>
+                Presets
+              </h2>
+            </div>
+            <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+              {ns.presets.map((preset) => (
+                <PresetCard key={preset.slug} preset={preset} />
+              ))}
+            </div>
+          </section>
+        )}
+
         {/* Empty state */}
-        {ns.modules.length === 0 && ns.templates.length === 0 && (
+        {ns.modules.length === 0 && ns.templates.length === 0 && ns.presets.length === 0 && (
           <div className="text-center py-16 card-base">
             <div className="icon-container-lg mx-auto mb-6">
               <Package className="h-8 w-8" style={{ color: "#d97706" }} />
             </div>
             <h3 className="text-xl font-semibold mb-3" style={{ color: "#1a1a1a" }}>
-              No modules or templates yet
+              No modules, templates, or presets yet
             </h3>
             <p className="max-w-md mx-auto" style={{ color: "#666666" }}>
-              This contributor hasn&apos;t published any modules or templates yet.
+              This contributor hasn&apos;t published any modules, templates, or presets yet.
             </p>
           </div>
         )}

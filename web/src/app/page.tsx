@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { getAllModules, getAllTemplates, getNamespaces } from "@/lib/registry";
+import { getAllModules, getAllTemplates, getAllPresets, getNamespaces } from "@/lib/registry";
 import { ModuleCard } from "@/components/module-card";
 import { Button } from "@/components/ui/button";
 import { AnimatedTerminal } from "@/components/animated-terminal";
@@ -21,11 +21,13 @@ import {
   Layers,
   Activity,
   Server,
+  Sparkles,
 } from "lucide-react";
 
 export default async function HomePage() {
   const modules = await getAllModules();
   const templates = await getAllTemplates();
+  const presets = await getAllPresets();
   const namespaces = await getNamespaces();
 
   const capabilities = [
@@ -63,6 +65,7 @@ export default async function HomePage() {
   const stats = [
     { value: modules.length.toString(), label: "Modules", icon: Package },
     { value: templates.length.toString(), label: "Templates", icon: Box },
+    { value: presets.length.toString(), label: "Presets", icon: Sparkles },
     { value: namespaces.length.toString(), label: "Contributors", icon: GitBranch },
   ];
 
@@ -81,11 +84,11 @@ export default async function HomePage() {
             <div className="space-y-6">
               {/* Heading - Large Anthropic style */}
               <h1 style={{ fontSize: "56px", lineHeight: "1.1", letterSpacing: "-0.02em", fontWeight: "400", color: "#1a1a1a" }}>
-                Modules and templates that extend Lattice Runtime
+                Modules, templates, and presets that extend Lattice Runtime
               </h1>
 
               <p style={{ fontSize: "18px", lineHeight: "1.6", color: "#666666" }}>
-                Lattice Registry is a community-driven repository for modules and templates. Identity management, policy templates, AI framework integrations, and monitoring.
+                Lattice Registry is a community-driven repository for modules, templates, and presets. Identity management, policy templates, AI framework integrations, training presets, and monitoring.
               </p>
 
               {/* CTA Buttons */}
@@ -132,6 +135,16 @@ export default async function HomePage() {
                     </div>
                   </a>
                   <a
+                    href="/presets"
+                    className="block p-4 rounded-lg transition-colors"
+                    style={{ background: "#ffffff", border: "1px solid #e0e0d8" }}
+                  >
+                    <div className="flex items-center justify-between">
+                      <span className="font-medium" style={{ color: "#1a1a1a" }}>Browse presets</span>
+                      <ArrowUpRight className="h-4 w-4" style={{ color: "#666666" }} />
+                    </div>
+                  </a>
+                  <a
                     href="https://docs.latticeruntime.com"
                     target="_blank"
                     rel="noopener noreferrer"
@@ -153,7 +166,7 @@ export default async function HomePage() {
       {/* Stats Section - Anthropic style */}
       <section className="relative py-20" style={{ borderTop: "1px solid #e0e0d8", borderBottom: "1px solid #e0e0d8", background: "#ffffff" }}>
         <div className="mx-auto max-w-6xl px-6">
-          <div className="grid grid-cols-3 gap-16">
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-8 md:gap-16">
             {stats.map((stat, index) => (
               <div key={index}>
                 <div style={{ fontSize: "40px", fontWeight: "400", color: "#1a1a1a", letterSpacing: "-0.01em", marginBottom: "8px" }} className="tabular-nums">

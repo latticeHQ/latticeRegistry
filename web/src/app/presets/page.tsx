@@ -70,48 +70,9 @@ async function PresetsList({
           />
         </form>
 
-        {/* Category Filters */}
-        {allCategories.length > 0 && (
-          <div className="mb-4">
-            <p className="text-xs uppercase tracking-wide font-medium mb-2" style={{ color: "#999999" }}>
-              Category
-            </p>
-            <div className="flex items-center gap-2 flex-wrap">
-              <a href="/presets">
-                <Badge
-                  variant={!params.category ? "default" : "outline"}
-                  className="cursor-pointer text-xs"
-                  style={{
-                    background: !params.category ? "#d97706" : "transparent",
-                    borderColor: "#e0e0d8",
-                    color: !params.category ? "#ffffff" : "#666666"
-                  }}
-                >
-                  All
-                </Badge>
-              </a>
-              {allCategories.map((category) => (
-                <a key={category} href={`/presets?category=${category}`}>
-                  <Badge
-                    variant={params.category === category ? "default" : "outline"}
-                    className="cursor-pointer text-xs"
-                    style={{
-                      background: params.category === category ? "#d97706" : "transparent",
-                      borderColor: "#e0e0d8",
-                      color: params.category === category ? "#ffffff" : "#666666"
-                    }}
-                  >
-                    {category}
-                  </Badge>
-                </a>
-              ))}
-            </div>
-          </div>
-        )}
-
         {/* Domain Filters */}
         {allDomains.length > 0 && (
-          <div>
+          <div className="mb-4">
             <p className="text-xs uppercase tracking-wide font-medium mb-2" style={{ color: "#999999" }}>
               Domain
             </p>
@@ -144,6 +105,45 @@ async function PresetsList({
                     }}
                   >
                     {domain}
+                  </Badge>
+                </a>
+              ))}
+            </div>
+          </div>
+        )}
+
+        {/* Category Filters */}
+        {allCategories.length > 0 && (
+          <div>
+            <p className="text-xs uppercase tracking-wide font-medium mb-2" style={{ color: "#999999" }}>
+              Category
+            </p>
+            <div className="flex items-center gap-2 flex-wrap">
+              <a href={params.domain ? `/presets?domain=${params.domain}` : "/presets"}>
+                <Badge
+                  variant={!params.category ? "default" : "outline"}
+                  className="cursor-pointer text-xs"
+                  style={{
+                    background: !params.category ? "#d97706" : "transparent",
+                    borderColor: "#e0e0d8",
+                    color: !params.category ? "#ffffff" : "#666666"
+                  }}
+                >
+                  All
+                </Badge>
+              </a>
+              {allCategories.map((category) => (
+                <a key={category} href={params.domain ? `/presets?domain=${params.domain}&category=${category}` : `/presets?category=${category}`}>
+                  <Badge
+                    variant={params.category === category ? "default" : "outline"}
+                    className="cursor-pointer text-xs"
+                    style={{
+                      background: params.category === category ? "#d97706" : "transparent",
+                      borderColor: "#e0e0d8",
+                      color: params.category === category ? "#ffffff" : "#666666"
+                    }}
+                  >
+                    {category}
                   </Badge>
                 </a>
               ))}
