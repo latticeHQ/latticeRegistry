@@ -56,7 +56,7 @@ data "wirtual_parameter" "memory" {
 data "wirtual_parameter" "git_repo" {
   type        = "string"
   name        = "Git repository"
-  default     = "https://github.com/wirtualdev/wirtualdev"
+  default     = "https://github.com/latticehq/latticeruntime"
   description = "Clone a git repo into [base directory]"
   mutable     = true
 }
