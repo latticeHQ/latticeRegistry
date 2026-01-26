@@ -3,6 +3,7 @@ import { getAllPresets } from "@/lib/registry";
 import { PresetCard } from "@/components/preset-card";
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
 import { Search, Sparkles, ArrowUpRight } from "lucide-react";
 
 export const metadata = {
@@ -49,11 +50,23 @@ async function PresetsList({
   // Get unique categories and domains
   const allCategories = Array.from(
     new Set(presets.map((p) => p.frontmatter.category).filter(Boolean))
-  ).sort();
+  ).sort() as string[];
 
   const allDomains = Array.from(
     new Set(presets.map((p) => p.frontmatter.domain).filter(Boolean))
-  ).sort();
+  ).sort() as string[];
+
+  // Build URL preserving other params
+  const buildUrl = (newParams: { category?: string; domain?: string }) => {
+    const urlParams = new URLSearchParams();
+    if (newParams.category) urlParams.set("category", newParams.category);
+    else if (params.category && newParams.category !== null) urlParams.set("category", params.category);
+    if (newParams.domain) urlParams.set("domain", newParams.domain);
+    else if (params.domain && newParams.domain !== null) urlParams.set("domain", params.domain);
+    if (params.q) urlParams.set("q", params.q);
+    const queryString = urlParams.toString();
+    return queryString ? `/presets?${queryString}` : "/presets";
+  };
 
   return (
     <div>
@@ -72,82 +85,71 @@ async function PresetsList({
 
         {/* Domain Filters */}
         {allDomains.length > 0 && (
-          <div className="mb-4">
-            <p className="text-xs uppercase tracking-wide font-medium mb-2" style={{ color: "#999999" }}>
-              Domain
-            </p>
-            <div className="flex items-center gap-2 flex-wrap">
-              <a href={params.category ? `/presets?category=${params.category}` : "/presets"}>
+          <div className="flex items-center gap-2 flex-wrap mb-3">
+            <span className="text-xs font-medium mr-1" style={{ color: "#999999" }}>Domain:</span>
+            <a href={buildUrl({ domain: undefined })}>
+              <Badge
+                variant={!params.domain ? "default" : "outline"}
+                className="cursor-pointer text-xs"
+                style={{
+                  background: !params.domain ? "#d97706" : "transparent",
+                  borderColor: "#e0e0d8",
+                  color: !params.domain ? "#ffffff" : "#666666"
+                }}
+              >
+                All
+              </Badge>
+            </a>
+            {allDomains.map((domain) => (
+              <a key={domain} href={buildUrl({ domain })}>
                 <Badge
-                  variant={!params.domain ? "default" : "outline"}
+                  variant={params.domain === domain ? "default" : "outline"}
                   className="cursor-pointer text-xs"
                   style={{
-                    background: !params.domain ? "#d97706" : "transparent",
+                    background: params.domain === domain ? "#d97706" : "transparent",
                     borderColor: "#e0e0d8",
-                    color: !params.domain ? "#ffffff" : "#666666"
+                    color: params.domain === domain ? "#ffffff" : "#666666"
                   }}
                 >
-                  All
+                  {domain}
                 </Badge>
               </a>
-              {allDomains.map((domain) => (
-                <a
-                  key={domain}
-                  href={params.category ? `/presets?category=${params.category}&domain=${domain}` : `/presets?domain=${domain}`}
-                >
-                  <Badge
-                    variant={params.domain === domain ? "default" : "outline"}
-                    className="cursor-pointer text-xs"
-                    style={{
-                      background: params.domain === domain ? "#d97706" : "transparent",
-                      borderColor: "#e0e0d8",
-                      color: params.domain === domain ? "#ffffff" : "#666666"
-                    }}
-                  >
-                    {domain}
-                  </Badge>
-                </a>
-              ))}
-            </div>
+            ))}
           </div>
         )}
 
         {/* Category Filters */}
         {allCategories.length > 0 && (
-          <div>
-            <p className="text-xs uppercase tracking-wide font-medium mb-2" style={{ color: "#999999" }}>
-              Category
-            </p>
-            <div className="flex items-center gap-2 flex-wrap">
-              <a href={params.domain ? `/presets?domain=${params.domain}` : "/presets"}>
+          <div className="flex items-center gap-2 flex-wrap">
+            <span className="text-xs font-medium mr-1" style={{ color: "#999999" }}>Category:</span>
+            <a href={buildUrl({ category: undefined })}>
+              <Badge
+                variant={!params.category ? "default" : "outline"}
+                className="cursor-pointer text-xs"
+                style={{
+                  background: !params.category ? "#d97706" : "transparent",
+                  borderColor: "#e0e0d8",
+                  color: !params.category ? "#ffffff" : "#666666"
+                }}
+              >
+                All
+              </Badge>
+            </a>
+            {allCategories.map((category) => (
+              <a key={category} href={buildUrl({ category })}>
                 <Badge
-                  variant={!params.category ? "default" : "outline"}
+                  variant={params.category === category ? "default" : "outline"}
                   className="cursor-pointer text-xs"
                   style={{
-                    background: !params.category ? "#d97706" : "transparent",
+                    background: params.category === category ? "#d97706" : "transparent",
                     borderColor: "#e0e0d8",
-                    color: !params.category ? "#ffffff" : "#666666"
+                    color: params.category === category ? "#ffffff" : "#666666"
                   }}
                 >
-                  All
+                  {category}
                 </Badge>
               </a>
-              {allCategories.map((category) => (
-                <a key={category} href={params.domain ? `/presets?domain=${params.domain}&category=${category}` : `/presets?category=${category}`}>
-                  <Badge
-                    variant={params.category === category ? "default" : "outline"}
-                    className="cursor-pointer text-xs"
-                    style={{
-                      background: params.category === category ? "#d97706" : "transparent",
-                      borderColor: "#e0e0d8",
-                      color: params.category === category ? "#ffffff" : "#666666"
-                    }}
-                  >
-                    {category}
-                  </Badge>
-                </a>
-              ))}
-            </div>
+            ))}
           </div>
         )}
       </div>
@@ -184,10 +186,11 @@ async function PresetsList({
             href="https://github.com/latticeHQ/registry/blob/main/CONTRIBUTING.md"
             target="_blank"
             rel="noopener noreferrer"
-            className="btn-primary inline-flex items-center gap-2"
           >
-            Contribute a Preset
-            <ArrowUpRight className="h-4 w-4" />
+            <Button>
+              Contribute a Preset
+              <ArrowUpRight className="ml-2 h-4 w-4" />
+            </Button>
           </a>
         </div>
       )}
@@ -213,7 +216,7 @@ export default async function PresetsPage({
         <div className="mb-12">
           <div className="flex items-center gap-3 mb-6">
             <div className="badge-base">Registry</div>
-            <span style={{ color: "#e0e0d8" }}>&rarr;</span>
+            <span style={{ color: "#e0e0d8" }}>→</span>
             <span className="text-sm" style={{ color: "#666666" }}>Presets</span>
           </div>
           <h1 className="text-5xl sm:text-6xl font-bold mb-5 tracking-tight" style={{ color: "#1a1a1a" }}>
