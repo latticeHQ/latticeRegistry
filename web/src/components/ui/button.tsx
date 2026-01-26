@@ -5,19 +5,19 @@ import { cva, type VariantProps } from "class-variance-authority";
 import { cn } from "@/lib/utils";
 
 const buttonVariants = cva(
-  "inline-flex items-center justify-center whitespace-nowrap rounded-lg text-sm font-medium transition-all duration-150 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-orange-500 focus-visible:ring-offset-2 focus-visible:ring-offset-slate-950 disabled:pointer-events-none disabled:opacity-50",
+  "inline-flex items-center justify-center whitespace-nowrap rounded-lg text-sm font-medium transition-all duration-150 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-orange-500 focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50",
   {
     variants: {
       variant: {
         default:
-          "bg-orange-600 text-white hover:bg-orange-500 active:bg-orange-700",
+          "bg-[#d97706] text-white hover:bg-[#b45309] active:bg-[#92400e]",
         secondary:
-          "bg-slate-800 text-slate-200 hover:bg-slate-700 active:bg-slate-600 border border-slate-700",
+          "bg-[#ebe9e1] text-[#1a1a1a] hover:bg-[#ddd9cc] active:bg-[#d0ccc0] border border-[#e0e0d8]",
         outline:
-          "border border-slate-700 bg-transparent text-slate-300 hover:bg-slate-800 hover:text-white hover:border-slate-600 active:bg-slate-700",
+          "border border-[#d0d0c8] bg-transparent text-[#1a1a1a] hover:bg-[#ebe9e1] hover:border-[#c0c0b8] active:bg-[#ddd9cc]",
         ghost:
-          "text-slate-400 hover:bg-slate-800 hover:text-slate-200 active:bg-slate-700",
-        link: "text-orange-500 underline-offset-4 hover:underline hover:text-orange-400 p-0 h-auto",
+          "text-[#666666] hover:bg-[#ebe9e1] hover:text-[#1a1a1a] active:bg-[#ddd9cc]",
+        link: "text-[#d97706] underline-offset-4 hover:underline hover:text-[#b45309] p-0 h-auto",
         destructive:
           "bg-red-600 text-white hover:bg-red-500 active:bg-red-700",
       },
