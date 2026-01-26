@@ -3,7 +3,7 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useState, useEffect } from "react";
-import { Package, Box, Users, Github, ExternalLink, Menu, X } from "lucide-react";
+import { Package, Box, Users, Github, ExternalLink, Menu, X, Sparkles } from "lucide-react";
 
 export function Header() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -21,6 +21,7 @@ export function Header() {
   const navLinks = [
     { href: "/modules", label: "Modules", icon: Package },
     { href: "/templates", label: "Templates", icon: Box },
+    { href: "/presets", label: "Presets", icon: Sparkles },
     { href: "/contributors", label: "Contributors", icon: Users },
   ];
 

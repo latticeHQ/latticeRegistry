@@ -14,6 +14,29 @@ export interface ModuleFrontmatter {
   supported_os?: string[];
 }
 
+export interface PresetFrontmatter {
+  display_name: string;
+  description: string;
+  icon: string;
+  category: string;
+  domain: string;
+  tags?: string[];
+  difficulty?: string;
+  duration?: string;
+  sidecar_id?: string;
+  voice_settings?: {
+    voice_id?: string;
+    speed?: number;
+    pitch?: number;
+    stability?: number;
+  };
+  model_settings?: {
+    model_id?: string;
+    temperature?: number;
+    max_tokens?: number;
+  };
+}
+
 export interface NamespaceFrontmatter {
   display_name: string;
   bio: string;
@@ -37,6 +60,16 @@ export interface Module {
   outputs?: TableRow[];
 }
 
+export interface Preset {
+  namespace: string;
+  name: string;
+  slug: string;
+  frontmatter: PresetFrontmatter;
+  content: string;
+  htmlContent: string;
+  instructions?: string;
+}
+
 export interface Namespace {
   name: string;
   frontmatter: NamespaceFrontmatter;
@@ -44,6 +77,7 @@ export interface Namespace {
   htmlContent: string;
   modules: Module[];
   templates: Module[];
+  presets: Preset[];
 }
 
 export interface TableRow {
@@ -117,6 +151,7 @@ export async function getNamespace(name: string): Promise<Namespace | null> {
 
   const modules = await getModulesForNamespace(name);
   const templates = await getTemplatesForNamespace(name);
+  const presets = await getPresetsForNamespace(name);
 
   return {
     name,
@@ -125,6 +160,7 @@ export async function getNamespace(name: string): Promise<Namespace | null> {
     htmlContent,
     modules,
     templates,
+    presets,
   };
 }
 
@@ -237,4 +273,60 @@ export function getIconPath(iconRelativePath: string, namespace: string): string
   // The relative path from module is like "../../../../.icons/key.svg"
   const iconName = iconRelativePath.split('/').pop() || 'default.svg';
   return `/icons/${iconName}`;
+}
+
+export async function getPresetsForNamespace(namespace: string): Promise<Preset[]> {
+  const presetsPath = path.join(REGISTRY_PATH, namespace, 'presets');
+  const presets: Preset[] = [];
+
+  if (!fs.existsSync(presetsPath)) {
+    return presets;
+  }
+
+  const dirs = fs.readdirSync(presetsPath, { withFileTypes: true })
+    .filter(dirent => dirent.isDirectory());
+
+  for (const dir of dirs) {
+    const preset = await getPreset(namespace, dir.name);
+    if (preset) {
+      presets.push(preset);
+    }
+  }
+
+  return presets;
+}
+
+export async function getPreset(namespace: string, presetName: string): Promise<Preset | null> {
+  const presetPath = path.join(REGISTRY_PATH, namespace, 'presets', presetName);
+  const readmePath = path.join(presetPath, 'README.md');
+
+  if (!fs.existsSync(readmePath)) {
+    return null;
+  }
+
+  const fileContent = fs.readFileSync(readmePath, 'utf-8');
+  const { data, content } = matter(fileContent);
+  const htmlContent = await marked(content);
+
+  // Try to read instructions from separate file
+  let instructions: string | undefined;
+  const instructionsPath = path.join(presetPath, 'instructions.md');
+  if (fs.existsSync(instructionsPath)) {
+    instructions = fs.readFileSync(instructionsPath, 'utf-8');
+  }
+
+  return {
+    namespace,
+    name: presetName,
+    slug: `${namespace}/${presetName}`,
+    frontmatter: data as PresetFrontmatter,
+    content,
+    htmlContent,
+    instructions,
+  };
+}
+
+export async function getAllPresets(): Promise<Preset[]> {
+  const namespaces = await getNamespaces();
+  return namespaces.flatMap(ns => ns.presets);
 }
