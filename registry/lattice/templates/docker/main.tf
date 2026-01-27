@@ -28,7 +28,7 @@ data "lattice_provisioner" "me" {}
 data "lattice_agent" "me" {}
 data "lattice_agent_owner" "me" {}
 
-resource "lattice_agent" "main" {
+resource "lattice_sidecar" "main" {
   arch           = data.lattice_provisioner.me.arch
   os             = "linux"
   startup_script = <<-EOT
@@ -167,7 +167,7 @@ SIDECAR_CONFIG
 }
 
 resource "lattice_app" "code-server" {
-  sidecar_id     = lattice_agent.main.id
+  sidecar_id     = lattice_sidecar.main.id
   slug         = "code-server"
   display_name = "code-server"
   url          = "http://localhost:13337/?folder=/home/${local.username}"
@@ -217,8 +217,8 @@ resource "docker_container" "workspace" {
   # Hostname makes the shell more user friendly: lattice@my-workspace:~$
   hostname = data.lattice_agent.me.name
   # Use the docker gateway if the access URL is 127.0.0.1
-  entrypoint = ["sh", "-c", replace(lattice_agent.main.init_script, "/localhost|127\\.0\\.0\\.1/", "host.docker.internal")]
-  env        = ["LATTICE_SIDECAR_TOKEN=${lattice_agent.main.token}"]
+  entrypoint = ["sh", "-c", replace(lattice_sidecar.main.init_script, "/localhost|127\\.0\\.0\\.1/", "host.docker.internal")]
+  env        = ["LATTICE_SIDECAR_TOKEN=${lattice_sidecar.main.token}"]
   host {
     host = "host.docker.internal"
     ip   = "host-gateway"
