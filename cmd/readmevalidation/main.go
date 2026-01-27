@@ -31,11 +31,11 @@ func main() {
 	if err != nil {
 		errs = append(errs, err)
 	}
-	err = validateAllCoderModules()
+	err = validateAllLatticeModules()
 	if err != nil {
 		errs = append(errs, err)
 	}
-	err = validateAllCoderTemplates()
+	err = validateAllLatticeTemplates()
 	if err != nil {
 		errs = append(errs, err)
 	}

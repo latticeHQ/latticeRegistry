@@ -50,7 +50,7 @@ func TestValidateModuleReadmes(t *testing.T) {
 				rawText:  string(content),
 			}
 
-			resource, errs := parseCoderResourceReadme("modules", rm)
+			resource, errs := parseLatticeResourceReadme("modules", rm)
 			if len(errs) != 0 {
 				if tc.shouldPass {
 					for _, e := range errs {
@@ -60,7 +60,7 @@ func TestValidateModuleReadmes(t *testing.T) {
 				return
 			}
 
-			validationErrs := validateCoderModuleReadme(resource)
+			validationErrs := validateLatticeModuleReadme(resource)
 			if tc.shouldPass && len(validationErrs) != 0 {
 				for _, e := range validationErrs {
 					t.Errorf("Unexpected validation error: %v", e)
@@ -94,7 +94,7 @@ func TestValidateTemplateReadmes(t *testing.T) {
 				rawText:  string(content),
 			}
 
-			resource, errs := parseCoderResourceReadme("templates", rm)
+			resource, errs := parseLatticeResourceReadme("templates", rm)
 			if len(errs) != 0 {
 				if tc.shouldPass {
 					for _, e := range errs {
@@ -104,7 +104,7 @@ func TestValidateTemplateReadmes(t *testing.T) {
 				return
 			}
 
-			validationErrs := validateCoderModuleReadme(resource)
+			validationErrs := validateLatticeModuleReadme(resource)
 			if tc.shouldPass && len(validationErrs) != 0 {
 				for _, e := range validationErrs {
 					t.Errorf("Unexpected validation error: %v", e)

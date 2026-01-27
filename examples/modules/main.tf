@@ -2,8 +2,8 @@ terraform {
   required_version = ">= 1.0"
 
   required_providers {
-    coder = {
-      source  = "coder/coder"
+    lattice = {
+      source  = "latticehq/lattice"
       version = ">= 2.5"
     }
   }
@@ -11,7 +11,7 @@ terraform {
 
 locals {
   # A built-in icon like "/icon/code.svg" or a full URL of icon
-  icon_url = "https://raw.githubusercontent.com/coder/coder/main/site/static/icon/code.svg"
+  icon_url = "https://raw.githubusercontent.com/latticehq/latticeruntime/main/site/static/icon/code.svg"
   # a map of all possible values
   options = {
     "Option 1" = {
@@ -30,7 +30,7 @@ locals {
 # Add required variables for your modules and remove any unneeded variables
 variable "sidecar_id" {
   type        = string
-  description = "The ID of a Coder agent."
+  description = "The ID of a Lattice agent."
 }
 
 variable "log_path" {
@@ -59,7 +59,7 @@ variable "order" {
 # Add other variables here
 
 
-resource "coder_script" "module_name" {
+resource "lattice_script" "module_name" {
   sidecar_id     = var.sidecar_id
   display_name = "Module Name"
   icon         = local.icon_url
@@ -70,7 +70,7 @@ resource "coder_script" "module_name" {
   run_on_stop  = false
 }
 
-resource "coder_app" "module_name" {
+resource "lattice_app" "module_name" {
   sidecar_id     = var.sidecar_id
   slug         = "module-name"
   display_name = "Module Name"
@@ -88,7 +88,7 @@ resource "coder_app" "module_name" {
   }
 }
 
-data "coder_parameter" "module_name" {
+data "lattice_parameter" "module_name" {
   type         = "string"
   name         = "module_name"
   display_name = "Module Name"

@@ -29,7 +29,7 @@ var (
 	gfmAlertRegex = regexp.MustCompile(`^>(\s*)\[!(\w+)\](\s*)(.*)`)
 )
 
-type coderResourceFrontmatter struct {
+type latticeResourceFrontmatter struct {
 	Description      string   `yaml:"description"`
 	IconURL          string   `yaml:"icon"`
 	DisplayName      *string  `yaml:"display_name"`
@@ -38,23 +38,23 @@ type coderResourceFrontmatter struct {
 	OperatingSystems []string `yaml:"supported_os"`
 }
 
-// A slice version of the struct tags from coderResourceFrontmatter. Might be worth using reflection to generate this
+// A slice version of the struct tags from latticeResourceFrontmatter. Might be worth using reflection to generate this
 // list at runtime in the future, but this should be okay for now
-var supportedCoderResourceStructKeys = []string{
+var supportedLatticeResourceStructKeys = []string{
 	"description", "icon", "display_name", "verified", "tags", "supported_os",
 	// TODO: This is an old, officially deprecated key. We can remove this once we
 	// make sure that the Lattice Registry Server is no longer checking this field.
 	"maintainer_github",
 }
 
-// coderResourceReadme represents a README describing a Terraform resource used
+// latticeResourceReadme represents a README describing a Terraform resource used
 // to help create Lattice Runtime deployments. As of 2025-01-19, this encapsulates both
 // Lattice Modules and Lattice Templates.
-type coderResourceReadme struct {
+type latticeResourceReadme struct {
 	resourceType string
 	filePath     string
 	body         string
-	frontmatter  coderResourceFrontmatter
+	frontmatter  latticeResourceFrontmatter
 }
 
 func validateSupportedOperatingSystems(systems []string) []error {
@@ -68,14 +68,14 @@ func validateSupportedOperatingSystems(systems []string) []error {
 	return errs
 }
 
-func validateCoderResourceDisplayName(displayName *string) error {
+func validateLatticeResourceDisplayName(displayName *string) error {
 	if displayName != nil && *displayName == "" {
 		return xerrors.New("if defined, display_name must not be empty string")
 	}
 	return nil
 }
 
-func validateCoderResourceDescription(description string) error {
+func validateLatticeResourceDescription(description string) error {
 	if description == "" {
 		return xerrors.New("frontmatter description cannot be empty")
 	}
@@ -103,7 +103,7 @@ func isPermittedRelativeURL(checkURL string, readmeFilePath string) error {
 	return nil
 }
 
-func validateCoderResourceIconURL(iconURL string, filePath string) []error {
+func validateLatticeResourceIconURL(iconURL string, filePath string) []error {
 	if iconURL == "" {
 		return []error{xerrors.New("icon URL cannot be empty")}
 	}
@@ -124,7 +124,7 @@ func validateCoderResourceIconURL(iconURL string, filePath string) []error {
 	return errs
 }
 
-func validateCoderResourceTags(tags []string) error {
+func validateLatticeResourceTags(tags []string) error {
 	if tags == nil {
 		return xerrors.New("provided tags array is nil")
 	}
@@ -147,23 +147,23 @@ func validateCoderResourceTags(tags []string) error {
 	return nil
 }
 
-func validateCoderResourceFrontmatter(resourceType string, filePath string, fm coderResourceFrontmatter) []error {
+func validateLatticeResourceFrontmatter(resourceType string, filePath string, fm latticeResourceFrontmatter) []error {
 	if !slices.Contains(supportedResourceTypes, resourceType) {
 		return []error{xerrors.Errorf("cannot process unknown resource type %q", resourceType)}
 	}
 
 	var errs []error
-	if err := validateCoderResourceDisplayName(fm.DisplayName); err != nil {
+	if err := validateLatticeResourceDisplayName(fm.DisplayName); err != nil {
 		errs = append(errs, addFilePathToError(filePath, err))
 	}
-	if err := validateCoderResourceDescription(fm.Description); err != nil {
+	if err := validateLatticeResourceDescription(fm.Description); err != nil {
 		errs = append(errs, addFilePathToError(filePath, err))
 	}
-	if err := validateCoderResourceTags(fm.Tags); err != nil {
+	if err := validateLatticeResourceTags(fm.Tags); err != nil {
 		errs = append(errs, addFilePathToError(filePath, err))
 	}
 
-	for _, err := range validateCoderResourceIconURL(fm.IconURL, filePath) {
+	for _, err := range validateLatticeResourceIconURL(fm.IconURL, filePath) {
 		errs = append(errs, addFilePathToError(filePath, err))
 	}
 	for _, err := range validateSupportedOperatingSystems(fm.OperatingSystems) {
@@ -173,27 +173,27 @@ func validateCoderResourceFrontmatter(resourceType string, filePath string, fm c
 	return errs
 }
 
-func parseCoderResourceReadme(resourceType string, rm readme) (coderResourceReadme, []error) {
+func parseLatticeResourceReadme(resourceType string, rm readme) (latticeResourceReadme, []error) {
 	fm, body, err := separateFrontmatter(rm.rawText)
 	if err != nil {
-		return coderResourceReadme{}, []error{xerrors.Errorf("%q: failed to parse frontmatter: %v", rm.filePath, err)}
+		return latticeResourceReadme{}, []error{xerrors.Errorf("%q: failed to parse frontmatter: %v", rm.filePath, err)}
 	}
 
-	keyErrs := validateFrontmatterYamlKeys(fm, supportedCoderResourceStructKeys)
+	keyErrs := validateFrontmatterYamlKeys(fm, supportedLatticeResourceStructKeys)
 	if len(keyErrs) != 0 {
 		var remapped []error
 		for _, e := range keyErrs {
 			remapped = append(remapped, addFilePathToError(rm.filePath, e))
 		}
-		return coderResourceReadme{}, remapped
+		return latticeResourceReadme{}, remapped
 	}
 
-	yml := coderResourceFrontmatter{}
+	yml := latticeResourceFrontmatter{}
 	if err := yaml.Unmarshal([]byte(fm), &yml); err != nil {
-		return coderResourceReadme{}, []error{xerrors.Errorf("%q: failed to parse: %v", rm.filePath, err)}
+		return latticeResourceReadme{}, []error{xerrors.Errorf("%q: failed to parse: %v", rm.filePath, err)}
 	}
 
-	return coderResourceReadme{
+	return latticeResourceReadme{
 		resourceType: resourceType,
 		filePath:     rm.filePath,
 		body:         body,
@@ -201,15 +201,15 @@ func parseCoderResourceReadme(resourceType string, rm readme) (coderResourceRead
 	}, nil
 }
 
-func parseCoderResourceReadmeFiles(resourceType string, rms []readme) ([]coderResourceReadme, error) {
+func parseLatticeResourceReadmeFiles(resourceType string, rms []readme) ([]latticeResourceReadme, error) {
 	if !slices.Contains(supportedResourceTypes, resourceType) {
 		return nil, xerrors.Errorf("cannot process unknown resource type %q", resourceType)
 	}
 
-	resources := map[string]coderResourceReadme{}
+	resources := map[string]latticeResourceReadme{}
 	var yamlParsingErrs []error
 	for _, rm := range rms {
-		p, errs := parseCoderResourceReadme(resourceType, rm)
+		p, errs := parseLatticeResourceReadme(resourceType, rm)
 		if len(errs) != 0 {
 			yamlParsingErrs = append(yamlParsingErrs, errs...)
 			continue
@@ -224,11 +224,11 @@ func parseCoderResourceReadmeFiles(resourceType string, rms []readme) ([]coderRe
 		}
 	}
 
-	var serialized []coderResourceReadme
+	var serialized []latticeResourceReadme
 	for _, r := range resources {
 		serialized = append(serialized, r)
 	}
-	slices.SortFunc(serialized, func(r1 coderResourceReadme, r2 coderResourceReadme) int {
+	slices.SortFunc(serialized, func(r1 latticeResourceReadme, r2 latticeResourceReadme) int {
 		return strings.Compare(r1.filePath, r2.filePath)
 	})
 	return serialized, nil
@@ -236,11 +236,11 @@ func parseCoderResourceReadmeFiles(resourceType string, rms []readme) ([]coderRe
 
 // Todo: Need to beef up this function by grabbing each image/video URL from
 // the body's AST.
-func validateCoderResourceRelativeURLs(_ []coderResourceReadme) error {
+func validateLatticeResourceRelativeURLs(_ []latticeResourceReadme) error {
 	return nil
 }
 
-func aggregateCoderResourceReadmeFiles(resourceType string) ([]readme, error) {
+func aggregateLatticeResourceReadmeFiles(resourceType string) ([]readme, error) {
 	if !slices.Contains(supportedResourceTypes, resourceType) {
 		return nil, xerrors.Errorf("cannot process unknown resource type %q", resourceType)
 	}
@@ -267,7 +267,7 @@ func aggregateCoderResourceReadmeFiles(resourceType string) ([]readme, error) {
 		}
 
 		for _, rd := range resourceDirs {
-			if !rd.IsDir() || rd.Name() == ".coder" {
+			if !rd.IsDir() || rd.Name() == ".lattice" {
 				continue
 			}
 

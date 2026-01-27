@@ -49,7 +49,7 @@ EXAMPLES:
   $0 -y -q -f json        # CI/CD automation
   $0 -d -v                # Test with verbose output
   $0 -m code-server -d    # Target specific module
-  $0 -n coder -m code-server -d  # Target module in namespace
+  $0 -n lattice -m code-server -d  # Target module in namespace
 
 Exit codes: 0=success, 1=error, 2=no action needed
 EOF
@@ -248,7 +248,7 @@ extract_version_from_module_block() {
   local module_name="$3"
 
   local version
-  version=$(grep -A 10 "source[[:space:]]*=[[:space:]]*\"registry\.coder\.com/${namespace}/${module_name}/coder" "$readme_path" \
+  version=$(grep -A 10 "source[[:space:]]*=[[:space:]]*\"registry\.latticeruntime\.com/${namespace}/${module_name}/lattice" "$readme_path" \
     | sed '/^[[:space:]]*}/q' \
     | grep -E "version[[:space:]]*=[[:space:]]*\"[^\"]+\"" \
     | head -1 \
@@ -598,7 +598,7 @@ main() {
   fi
 
   if [[ "$OUTPUT_FORMAT" != "json" ]]; then
-    log "INFO" "🚀 Coder Registry Tag Release Script"
+    log "INFO" "🚀 Lattice Registry Tag Release Script"
     log "INFO" "Operating on commit: $(git rev-parse HEAD 2> /dev/null || echo 'unknown')"
     echo ""
   fi

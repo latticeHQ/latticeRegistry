@@ -137,14 +137,14 @@ export interface TerraformState {
 
 type TerraformVariables = Record<string, JsonValue>;
 
-export interface CoderScriptAttributes {
+export interface LatticeScriptAttributes {
   script: string;
   sidecar_id: string;
   url: string;
 }
 
 export type ResourceInstance<T extends string = string> =
-  T extends "coder_script" ? CoderScriptAttributes : Record<string, string>;
+  T extends "lattice_script" ? LatticeScriptAttributes : Record<string, string>;
 
 /**
  * finds the first instance of the given resource type in the given state. If
@@ -229,7 +229,7 @@ export const runTerraformApply = async <TVars extends TerraformVariables>(
     ...(customEnv ?? {}),
   };
 
-  // This is a fix for when you try to run the tests from a Coder workspace.
+  // This is a fix for when you try to run the tests from a Lattice workspace.
   // When process.env is destructured into the object, it can sometimes have
   // workspace-specific values, which causes the resulting URL to be different
   // from what the tests have classically expected.
@@ -295,13 +295,13 @@ export const createJSONResponse = (obj: object, statusCode = 200): Response => {
   });
 };
 
-export const writeCoder = async (id: string, script: string) => {
-  await writeFileContainer(id, "/usr/bin/coder", script, {
+export const writeLattice = async (id: string, script: string) => {
+  await writeFileContainer(id, "/usr/bin/lattice", script, {
     user: "root",
   });
   const execResult = await execContainer(
     id,
-    ["chmod", "755", "/usr/bin/coder"],
+    ["chmod", "755", "/usr/bin/lattice"],
     ["--user", "root"],
   );
   expect(execResult.exitCode).toBe(0);

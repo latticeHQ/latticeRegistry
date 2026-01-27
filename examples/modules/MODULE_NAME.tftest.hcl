@@ -15,7 +15,7 @@ run "app_url_uses_port" {
   }
 
   assert {
-    condition     = resource.coder_app.module_name.url == "http://localhost:19999"
+    condition     = resource.lattice_app.module_name.url == "http://localhost:19999"
     error_message = "Expected module-name app URL to include configured port"
   }
 }

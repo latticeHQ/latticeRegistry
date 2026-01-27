@@ -75,5 +75,5 @@ echo "Template scaffolded successfully at registry/${NAMESPACE}/templates/${TEMP
 echo "Next steps:"
 echo "1. Edit main.tf to add your infrastructure resources"
 echo "2. Update README.md with template-specific information"
-echo "3. Test your template with 'coder templates push'"
+echo "3. Test your template with 'lattice templates push'"
 echo "4. Consider adding an icon at .icons/${TEMPLATE_NAME}.svg"

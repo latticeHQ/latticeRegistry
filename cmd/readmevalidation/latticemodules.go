@@ -8,7 +8,7 @@ import (
 	"golang.org/x/xerrors"
 )
 
-func validateCoderTemplateReadmeBody(body string) []error {
+func validateLatticeModuleReadmeBody(body string) []error {
 	var errs []error
 
 	trimmed := strings.TrimSpace(body)
@@ -16,15 +16,18 @@ func validateCoderTemplateReadmeBody(body string) []error {
 		errs = append(errs, baseErrs...)
 	}
 
-	var nextLine string
 	foundParagraph := false
-	isInsideCodeBlock := false
+	terraformCodeBlockCount := 0
+	foundTerraformVersionRef := false
+
 	lineNum := 0
+	isInsideCodeBlock := false
+	isInsideTerraform := false
 
 	lineScanner := bufio.NewScanner(strings.NewReader(trimmed))
 	for lineScanner.Scan() {
 		lineNum++
-		nextLine = lineScanner.Text()
+		nextLine := lineScanner.Text()
 
 		// Code assumes that invalid headers would've already been handled by the base validation function, so we don't
 		// need to check deeper if the first line isn't an h1.
@@ -37,8 +40,19 @@ func validateCoderTemplateReadmeBody(body string) []error {
 
 		if strings.HasPrefix(nextLine, "```") {
 			isInsideCodeBlock = !isInsideCodeBlock
+			isInsideTerraform = isInsideCodeBlock && strings.HasPrefix(nextLine, "```tf")
+			if isInsideTerraform {
+				terraformCodeBlockCount++
+			}
 			if strings.HasPrefix(nextLine, "```hcl") {
-				errs = append(errs, xerrors.New("all .hcl language references must be converted to .tf"))
+				errs = append(errs, xerrors.New("all hcl code blocks must be converted to tf"))
+			}
+			continue
+		}
+
+		if isInsideCodeBlock {
+			if isInsideTerraform {
+				foundTerraformVersionRef = foundTerraformVersionRef || terraformVersionRe.MatchString(nextLine)
 			}
 			continue
 		}
@@ -55,6 +69,16 @@ func validateCoderTemplateReadmeBody(body string) []error {
 		foundParagraph = foundParagraph || isParagraph
 	}
 
+	if terraformCodeBlockCount == 0 {
+		errs = append(errs, xerrors.New("did not find Terraform code block within h1 section"))
+	} else {
+		if terraformCodeBlockCount > 1 {
+			errs = append(errs, xerrors.New("cannot have more than one Terraform code block in h1 section"))
+		}
+		if !foundTerraformVersionRef {
+			errs = append(errs, xerrors.New("did not find Terraform code block that specifies 'version' field"))
+		}
+	}
 	if !foundParagraph {
 		errs = append(errs, xerrors.New("did not find paragraph within h1 section"))
 	}
@@ -65,24 +89,24 @@ func validateCoderTemplateReadmeBody(body string) []error {
 	return errs
 }
 
-func validateCoderTemplateReadme(rm coderResourceReadme) []error {
+func validateLatticeModuleReadme(rm latticeResourceReadme) []error {
 	var errs []error
-	for _, err := range validateCoderTemplateReadmeBody(rm.body) {
+	for _, err := range validateLatticeModuleReadmeBody(rm.body) {
 		errs = append(errs, addFilePathToError(rm.filePath, err))
 	}
 	for _, err := range validateResourceGfmAlerts(rm.body) {
 		errs = append(errs, addFilePathToError(rm.filePath, err))
 	}
-	if fmErrs := validateCoderResourceFrontmatter("templates", rm.filePath, rm.frontmatter); len(fmErrs) != 0 {
+	if fmErrs := validateLatticeResourceFrontmatter("modules", rm.filePath, rm.frontmatter); len(fmErrs) != 0 {
 		errs = append(errs, fmErrs...)
 	}
 	return errs
 }
 
-func validateAllCoderTemplateReadmes(resources []coderResourceReadme) error {
+func validateAllLatticeModuleReadmes(resources []latticeResourceReadme) error {
 	var yamlValidationErrors []error
 	for _, readme := range resources {
-		errs := validateCoderTemplateReadme(readme)
+		errs := validateLatticeModuleReadme(readme)
 		if len(errs) > 0 {
 			yamlValidationErrors = append(yamlValidationErrors, errs...)
 		}
@@ -96,25 +120,25 @@ func validateAllCoderTemplateReadmes(resources []coderResourceReadme) error {
 	return nil
 }
 
-func validateAllCoderTemplates() error {
-	const resourceType = "templates"
-	allReadmeFiles, err := aggregateCoderResourceReadmeFiles(resourceType)
+func validateAllLatticeModules() error {
+	const resourceType = "modules"
+	allReadmeFiles, err := aggregateLatticeResourceReadmeFiles(resourceType)
 	if err != nil {
 		return err
 	}
 
 	logger.Info(context.Background(), "processing template README files", "resource_type", resourceType, "num_files", len(allReadmeFiles))
-	resources, err := parseCoderResourceReadmeFiles(resourceType, allReadmeFiles)
+	resources, err := parseLatticeResourceReadmeFiles(resourceType, allReadmeFiles)
 	if err != nil {
 		return err
 	}
-	err = validateAllCoderTemplateReadmes(resources)
+	err = validateAllLatticeModuleReadmes(resources)
 	if err != nil {
 		return err
 	}
 	logger.Info(context.Background(), "processed README files as valid Lattice resources", "resource_type", resourceType, "num_files", len(resources))
 
-	if err := validateCoderResourceRelativeURLs(resources); err != nil {
+	if err := validateLatticeResourceRelativeURLs(resources); err != nil {
 		return err
 	}
 	logger.Info(context.Background(), "all relative URLs for READMEs are valid", "resource_type", resourceType)

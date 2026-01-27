@@ -16,10 +16,9 @@ var supportedUserNameSpaceDirectories = append(supportedResourceTypes, ".images"
 // validNameRe validates that names contain only alphanumeric characters and hyphens
 var validNameRe = regexp.MustCompile(`^[a-zA-Z0-9](?:[a-zA-Z0-9-]*[a-zA-Z0-9])?$`)
 
-
-// validateCoderResourceSubdirectory validates that the structure of a module or template within a namespace follows all
+// validateLatticeResourceSubdirectory validates that the structure of a module or template within a namespace follows all
 // expected file conventions for Lattice Registry
-func validateCoderResourceSubdirectory(dirPath string) []error {
+func validateLatticeResourceSubdirectory(dirPath string) []error {
 	resourceDir, err := os.Stat(dirPath)
 	if err != nil {
 		// It's valid for a specific resource directory not to exist. It's just that if it does exist, it must follow
@@ -40,10 +39,10 @@ func validateCoderResourceSubdirectory(dirPath string) []error {
 
 	var errs []error
 	for _, f := range files {
-		// The .coder subdirectories are sometimes generated as part of our Bun tests. These subdirectories will never
+		// The .lattice subdirectories are sometimes generated as part of our Bun tests. These subdirectories will never
 		// be committed to the repo, but in the off chance that they don't get cleaned up properly, we want to skip over
 		// them.
-		if !f.IsDir() || f.Name() == ".coder" {
+		if !f.IsDir() || f.Name() == ".lattice" {
 			continue
 		}
 
@@ -125,7 +124,7 @@ func validateRegistryDirectory() []error {
 				continue
 			}
 
-			if errs := validateCoderResourceSubdirectory(filePath); len(errs) != 0 {
+			if errs := validateLatticeResourceSubdirectory(filePath); len(errs) != 0 {
 				allErrs = append(allErrs, errs...)
 			}
 		}

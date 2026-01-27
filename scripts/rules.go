@@ -41,14 +41,14 @@ func xerrors(m dsl.Matcher) {
 		Report("Use xerrors to provide additional stacktrace information!")
 }
 
-// databaseImport enforces not importing any database types into /codersdk.
+// databaseImport enforces not importing any database types into /wirtualsdk.
 //
 //nolint:unused,deadcode,varnamelen
 func databaseImport(m dsl.Matcher) {
-	m.Import("github.com/coder/coderv0coderd/database")
+	m.Import("github.com/latticehq/latticev0wirtuald/database")
 	m.Match("database.$_").
-		Report("Do not import any database types into codersdk").
-		Where(m.File().PkgPath.Matches("github.com/coder/coderv0codersdk"))
+		Report("Do not import any database types into wirtualsdk").
+		Where(m.File().PkgPath.Matches("github.com/latticehq/latticev0wirtualsdk"))
 }
 
 // doNotCallTFailNowInsideGoroutine enforces not calling t.FailNow or
@@ -98,7 +98,7 @@ func doNotCallTFailNowInsideGoroutine(m dsl.Matcher) {
 func useStandardTimeoutsAndDelaysInTests(m dsl.Matcher) {
 	m.Import("github.com/stretchr/testify/require")
 	m.Import("github.com/stretchr/testify/assert")
-	m.Import("github.com/coder/coderv0testutil")
+	m.Import("github.com/latticehq/latticev0testutil")
 
 	m.Match(`context.WithTimeout($ctx, $duration)`).
 		Where(m.File().Imports("testing") && !m.File().PkgPath.Matches("testutil$") && !m["duration"].Text.Matches("^testutil\\.")).
