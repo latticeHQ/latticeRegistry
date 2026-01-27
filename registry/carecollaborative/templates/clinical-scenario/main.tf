@@ -279,7 +279,7 @@ resource "docker_container" "workspace" {
   entrypoint = ["sh", "-c", replace(lattice_agent.main.init_script, "/localhost|127\\.0\\.0\\.1/", "host.docker.internal")]
 
   env = [
-    "LATTICE_AGENT_TOKEN=${lattice_agent.main.token}",
+    "LATTICE_SIDECAR_TOKEN=${lattice_agent.main.token}",
     # API credentials
     "OPENAI_API_KEY=${var.openai_api_key}",
     "LIVEKIT_URL=${var.livekit_url}",
@@ -314,7 +314,7 @@ resource "docker_container" "workspace" {
 }
 
 # Outputs
-output "agent_id" {
+output "sidecar_id" {
   value       = lattice_agent.main.id
   description = "The ID of the clinical patient agent"
 }

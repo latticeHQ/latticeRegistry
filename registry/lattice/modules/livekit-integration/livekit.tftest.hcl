@@ -1,7 +1,7 @@
 mock_provider "lattice" {}
 
 variables {
-  agent_id      = "test-agent-001"
+  sidecar_id      = "test-agent-001"
   enable_voice  = true
   enable_video  = false
   room_prefix   = "lattice"

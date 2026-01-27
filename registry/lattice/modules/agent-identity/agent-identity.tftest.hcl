@@ -1,7 +1,7 @@
 mock_provider "lattice" {}
 
 variables {
-  agent_id      = "test-agent-001"
+  sidecar_id      = "test-agent-001"
   provider_type = "oidc"
   issuer_url    = "https://auth.example.com"
   client_id     = "test-client"

@@ -82,7 +82,7 @@ resource "lattice_agent" "main" {
 }
 
 resource "lattice_app" "continue" {
-  agent_id     = lattice_agent.main.id
+  sidecar_id     = lattice_agent.main.id
   slug         = "continue"
   display_name = "Continue (VSCode)"
   url          = "http://localhost:13337"

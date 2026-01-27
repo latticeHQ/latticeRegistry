@@ -198,7 +198,7 @@ module "code-server" {
   # This ensures that the latest version of the module gets downloaded, you can also pin the module version to prevent breaking changes in production.
   version = ">= 1.0.0"
 
-  agent_id = lattice_agent.dev[0].id
+  sidecar_id = lattice_agent.dev[0].id
   order    = 1
 }
 
@@ -217,7 +217,7 @@ module "jetbrains_gateway" {
   # This ensures that the latest version of the module gets downloaded, you can also pin the module version to prevent breaking changes in production.
   version = ">= 1.0.0"
 
-  agent_id   = lattice_agent.dev[0].id
+  sidecar_id   = lattice_agent.dev[0].id
   agent_name = "dev"
   order      = 2
 }

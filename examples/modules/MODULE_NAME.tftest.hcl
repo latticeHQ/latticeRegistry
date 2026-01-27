@@ -2,7 +2,7 @@ run "plan_with_required_vars" {
   command = plan
 
   variables {
-    agent_id = "example-agent-id"
+    sidecar_id = "example-agent-id"
   }
 }
 
@@ -10,7 +10,7 @@ run "app_url_uses_port" {
   command = plan
 
   variables {
-    agent_id = "example-agent-id"
+    sidecar_id = "example-agent-id"
     port     = 19999
   }
 

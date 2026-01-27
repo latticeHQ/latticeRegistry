@@ -9,7 +9,7 @@ terraform {
   }
 }
 
-variable "agent_id" {
+variable "sidecar_id" {
   type        = string
   description = "The ID of the Lattice agent"
 }
@@ -51,19 +51,19 @@ variable "audit_retention_days" {
 data "lattice_workspace" "current" {}
 
 resource "lattice_sidecar_metadata" "policy_mode" {
-  agent_id = var.agent_id
+  sidecar_id = var.sidecar_id
   key      = "policy_default_effect"
   value    = var.default_effect
 }
 
 resource "lattice_sidecar_metadata" "audit_enabled" {
-  agent_id = var.agent_id
+  sidecar_id = var.sidecar_id
   key      = "policy_audit_enabled"
   value    = tostring(var.enable_audit)
 }
 
 resource "lattice_sidecar_metadata" "policies" {
-  agent_id = var.agent_id
+  sidecar_id = var.sidecar_id
   key      = "policies"
   value    = jsonencode(var.policies)
 }

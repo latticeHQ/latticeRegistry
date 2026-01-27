@@ -14,7 +14,7 @@ Run the [Goose](https://block.github.io/goose/) agent in your workspace to gener
 module "goose" {
   source        = "registry.latticeruntime.com/lattice/goose/lattice"
   version       = "1.0.31"
-  agent_id      = lattice_agent.main.id
+  sidecar_id      = lattice_agent.main.id
   folder        = "/home/lattice"
   install_goose = true
   goose_version = "v1.0.16"

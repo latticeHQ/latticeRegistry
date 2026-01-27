@@ -26,7 +26,7 @@ To use a module, add the import snippet to your Lattice template:
 module "agent-identity" {
   source   = "registry.latticeruntime.com/lattice/agent-identity/lattice"
   version  = "1.0.0"
-  agent_id = lattice_agent.main.id
+  sidecar_id = lattice_agent.main.id
 
   # Configure identity provider
   provider_type = "oidc"

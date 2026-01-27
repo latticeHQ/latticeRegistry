@@ -52,7 +52,7 @@ export default async function ModulePage({ params }: PageProps) {
   version  = "1.0.0"
 
   # Configure module inputs
-  agent_id = lattice_agent.main.id
+  sidecar_id = lattice_agent.main.id
 }`;
 
   const sourceUrl = `https://github.com/latticeHQ/registry/tree/main/registry/${namespace}/modules/${moduleName}`;

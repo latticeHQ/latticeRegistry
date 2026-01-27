@@ -40,7 +40,7 @@ resource "docker_container" "workspace" {
   image = "lattice/enterprise-base:ubuntu"
   name  = "lattice-${data.lattice_workspace.me.owner}-${data.lattice_workspace.me.name}"
 
-  env = ["LATTICE_AGENT_TOKEN=${lattice_agent.main.token}"]
+  env = ["LATTICE_SIDECAR_TOKEN=${lattice_agent.main.token}"]
 }
 ```
 

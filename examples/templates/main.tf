@@ -30,7 +30,7 @@ data "coder_provisioner" "me" {}
 data "coder_workspace" "me" {}
 data "coder_workspace_owner" "me" {}
 
-resource "coder_agent" "main" {
+resource "lattice_sidecar" "main" {
   arch           = data.coder_provisioner.me.arch
   os             = "linux"
   startup_script = <<-EOT
@@ -106,8 +106,8 @@ resource "coder_agent" "main" {
 #   # Hostname makes the shell more user friendly: coder@my-workspace:~$
 #   hostname = data.coder_workspace.me.name
 #   # Use the docker gateway if the access URL is 127.0.0.1
-#   entrypoint = ["sh", "-c", replace(coder_agent.main.init_script, "/localhost|127\.0\.0\.1/", "host.docker.internal")]
-#   env        = ["CODER_AGENT_TOKEN=${coder_agent.main.token}"]
+#   entrypoint = ["sh", "-c", replace(lattice_sidecar.main.init_script, "/localhost|127\.0\.0\.1/", "host.docker.internal")]
+#   env        = ["LATTICE_SIDECAR_TOKEN=${lattice_sidecar.main.token}"]
 #   host {
 #     host = "host.docker.internal"
 #     ip   = "host-gateway"
@@ -163,7 +163,7 @@ resource "coder_agent" "main" {
 # }
 
 resource "coder_metadata" "workspace_info" {
-  resource_id = coder_agent.main.id
+  resource_id = lattice_sidecar.main.id
 
   item {
     key   = "TEMPLATE_NAME"

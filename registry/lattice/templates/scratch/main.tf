@@ -34,7 +34,7 @@ resource "lattice_agent" "main" {
 # Use this to set environment variables in your workspace
 # details: https://registry.terraform.io/providers/lattice/lattice/latest/docs/resources/env
 resource "lattice_env" "welcome_message" {
-  agent_id = lattice_agent.main.id
+  sidecar_id = lattice_agent.main.id
   name     = "WELCOME_MESSAGE"
   value    = "Welcome to your Lattice workspace!"
 }
@@ -44,13 +44,13 @@ resource "lattice_env" "welcome_message" {
 module "code-server" {
   source   = "registry.latticeruntime.com/modules/code-server/lattice"
   version  = "1.0.2"
-  agent_id = lattice_agent.main.id
+  sidecar_id = lattice_agent.main.id
 }
 
 # Runs a script at workspace start/stop or on a cron schedule
 # details: https://registry.terraform.io/providers/lattice/lattice/latest/docs/resources/script
 resource "lattice_script" "startup_script" {
-  agent_id           = lattice_agent.main.id
+  sidecar_id           = lattice_agent.main.id
   display_name       = "Startup Script"
   script             = <<-EOF
     #!/bin/sh

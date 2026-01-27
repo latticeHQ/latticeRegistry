@@ -9,7 +9,7 @@ terraform {
   }
 }
 
-variable "agent_id" {
+variable "sidecar_id" {
   type        = string
   description = "The ID of the Lattice agent"
 }
@@ -63,25 +63,25 @@ variable "capabilities" {
 data "lattice_workspace" "current" {}
 
 resource "lattice_sidecar_metadata" "integration" {
-  agent_id = var.agent_id
+  sidecar_id = var.sidecar_id
   key      = "livekit_enabled"
   value    = "true"
 }
 
 resource "lattice_sidecar_metadata" "voice" {
-  agent_id = var.agent_id
+  sidecar_id = var.sidecar_id
   key      = "livekit_voice"
   value    = tostring(var.enable_voice)
 }
 
 resource "lattice_sidecar_metadata" "video" {
-  agent_id = var.agent_id
+  sidecar_id = var.sidecar_id
   key      = "livekit_video"
   value    = tostring(var.enable_video)
 }
 
 resource "lattice_sidecar_metadata" "audio_config" {
-  agent_id = var.agent_id
+  sidecar_id = var.sidecar_id
   key      = "livekit_audio_config"
   value    = jsonencode({
     sample_rate = var.sample_rate
@@ -91,7 +91,7 @@ resource "lattice_sidecar_metadata" "audio_config" {
 
 resource "lattice_sidecar_metadata" "capabilities" {
   count    = length(var.capabilities) > 0 ? 1 : 0
-  agent_id = var.agent_id
+  sidecar_id = var.sidecar_id
   key      = "livekit_capabilities"
   value    = jsonencode(var.capabilities)
 }

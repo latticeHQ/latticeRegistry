@@ -24,7 +24,7 @@ This module provides seamless integration between Lattice Runtime and LiveKit fo
 module "livekit" {
   source   = "registry.latticeruntime.com/lattice/livekit-integration/lattice"
   version  = "1.0.0"
-  agent_id = lattice_agent.main.id
+  sidecar_id = lattice_agent.main.id
 
   # Configure LiveKit integration
   enable_voice     = true
@@ -48,7 +48,7 @@ module "livekit" {
 
 | Name | Description | Type | Default | Required |
 |------|-------------|------|---------|----------|
-| `agent_id` | The ID of the Lattice agent | `string` | - | yes |
+| `sidecar_id` | The ID of the Lattice agent | `string` | - | yes |
 | `enable_voice` | Enable voice communication | `bool` | `true` | no |
 | `enable_video` | Enable video communication | `bool` | `false` | no |
 | `room_prefix` | Prefix for LiveKit room names | `string` | `"lattice"` | no |

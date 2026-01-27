@@ -28,7 +28,7 @@ locals {
 }
 
 # Add required variables for your modules and remove any unneeded variables
-variable "agent_id" {
+variable "sidecar_id" {
   type        = string
   description = "The ID of a Coder agent."
 }
@@ -60,7 +60,7 @@ variable "order" {
 
 
 resource "coder_script" "module_name" {
-  agent_id     = var.agent_id
+  sidecar_id     = var.sidecar_id
   display_name = "Module Name"
   icon         = local.icon_url
   script = templatefile("${path.module}/run.sh", {
@@ -71,7 +71,7 @@ resource "coder_script" "module_name" {
 }
 
 resource "coder_app" "module_name" {
-  agent_id     = var.agent_id
+  sidecar_id     = var.sidecar_id
   slug         = "module-name"
   display_name = "Module Name"
   url          = "http://localhost:${var.port}"

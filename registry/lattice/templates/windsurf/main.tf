@@ -81,7 +81,7 @@ resource "lattice_agent" "main" {
 }
 
 resource "lattice_app" "windsurf" {
-  agent_id     = lattice_agent.main.id
+  sidecar_id     = lattice_agent.main.id
   slug         = "windsurf"
   display_name = "Windsurf IDE"
   url          = "http://localhost:13337"

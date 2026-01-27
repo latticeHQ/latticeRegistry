@@ -82,7 +82,7 @@ resource "lattice_agent" "main" {
 }
 
 resource "lattice_app" "cursor" {
-  agent_id     = lattice_agent.main.id
+  sidecar_id     = lattice_agent.main.id
   slug         = "cursor"
   display_name = "Cursor IDE"
   url          = "http://localhost:13337"

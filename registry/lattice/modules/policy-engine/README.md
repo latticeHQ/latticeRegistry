@@ -23,7 +23,7 @@ This module configures runtime policy enforcement for AI agents in Lattice Runti
 module "policy-engine" {
   source   = "registry.latticeruntime.com/lattice/policy-engine/lattice"
   version  = "1.0.0"
-  agent_id = lattice_agent.main.id
+  sidecar_id = lattice_agent.main.id
 
   # Define policies
   policies = [
@@ -48,7 +48,7 @@ module "policy-engine" {
 
 | Name | Description | Type | Default | Required |
 |------|-------------|------|---------|----------|
-| `agent_id` | The ID of the Lattice agent | `string` | - | yes |
+| `sidecar_id` | The ID of the Lattice agent | `string` | - | yes |
 | `policies` | List of policy definitions | `list(object)` | `[]` | no |
 | `default_effect` | Default policy effect (allow/deny) | `string` | `"deny"` | no |
 | `enable_audit` | Enable audit logging for policy decisions | `bool` | `true` | no |

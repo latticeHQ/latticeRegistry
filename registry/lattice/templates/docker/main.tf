@@ -130,7 +130,7 @@ resource "lattice_agent" "main" {
     display_name = "LiveKit Agent Config"
     key          = "livekit_sidecar_config"
     script       = <<EOT
-      cat <<'AGENT_CONFIG'
+      cat <<'SIDECAR_CONFIG'
 ${jsonencode({
   agents = [
     {
@@ -159,7 +159,7 @@ ${jsonencode({
     }
   ]
 })}
-AGENT_CONFIG
+SIDECAR_CONFIG
     EOT
     interval     = 0
     timeout      = 1
@@ -167,7 +167,7 @@ AGENT_CONFIG
 }
 
 resource "lattice_app" "code-server" {
-  agent_id     = lattice_agent.main.id
+  sidecar_id     = lattice_agent.main.id
   slug         = "code-server"
   display_name = "code-server"
   url          = "http://localhost:13337/?folder=/home/${local.username}"
@@ -218,7 +218,7 @@ resource "docker_container" "workspace" {
   hostname = data.lattice_workspace.me.name
   # Use the docker gateway if the access URL is 127.0.0.1
   entrypoint = ["sh", "-c", replace(lattice_agent.main.init_script, "/localhost|127\\.0\\.0\\.1/", "host.docker.internal")]
-  env        = ["LATTICE_AGENT_TOKEN=${lattice_agent.main.token}"]
+  env        = ["LATTICE_SIDECAR_TOKEN=${lattice_agent.main.token}"]
   host {
     host = "host.docker.internal"
     ip   = "host-gateway"

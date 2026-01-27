@@ -176,7 +176,7 @@ resource "lattice_agent" "main" {
 
 # code-server
 resource "lattice_app" "code-server" {
-  agent_id     = lattice_agent.main.id
+  sidecar_id     = lattice_agent.main.id
   slug         = "code-server"
   display_name = "code-server"
   icon         = "/icon/code.svg"
@@ -291,7 +291,7 @@ resource "kubernetes_deployment" "main" {
             run_as_user = "1000"
           }
           env {
-            name  = "LATTICE_AGENT_TOKEN"
+            name  = "LATTICE_SIDECAR_TOKEN"
             value = lattice_agent.main.token
           }
           resources {

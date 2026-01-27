@@ -23,7 +23,7 @@ This module configures identity and authentication for AI agents running in Latt
 module "agent-identity" {
   source   = "registry.latticeruntime.com/lattice/agent-identity/lattice"
   version  = "1.0.0"
-  agent_id = lattice_agent.main.id
+  sidecar_id = lattice_agent.main.id
 
   # Configure identity provider
   provider_type = "oidc"
@@ -39,7 +39,7 @@ module "agent-identity" {
 
 | Name | Description | Type | Default | Required |
 |------|-------------|------|---------|----------|
-| `agent_id` | The ID of the Lattice agent | `string` | - | yes |
+| `sidecar_id` | The ID of the Lattice agent | `string` | - | yes |
 | `provider_type` | Identity provider type (oidc, oauth2, apikey) | `string` | `"oidc"` | no |
 | `issuer_url` | OIDC issuer URL | `string` | `""` | no |
 | `client_id` | OAuth client ID | `string` | `""` | no |

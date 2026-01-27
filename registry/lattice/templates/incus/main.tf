@@ -106,7 +106,7 @@ resource "lattice_agent" "main" {
 module "git-clone" {
   source   = "registry.latticeruntime.com/modules/git-clone/lattice"
   version  = "1.0.2"
-  agent_id = local.agent_id
+  sidecar_id = local.sidecar_id
   url      = data.lattice_parameter.git_repo.value
   base_dir = local.repo_base_dir
 }
@@ -114,20 +114,20 @@ module "git-clone" {
 module "code-server" {
   source   = "registry.latticeruntime.com/modules/code-server/lattice"
   version  = "1.0.2"
-  agent_id = local.agent_id
+  sidecar_id = local.sidecar_id
   folder   = local.repo_base_dir
 }
 
 module "filebrowser" {
   source   = "registry.latticeruntime.com/modules/filebrowser/lattice"
   version  = "1.0.2"
-  agent_id = local.agent_id
+  sidecar_id = local.sidecar_id
 }
 
 module "lattice-login" {
   source   = "registry.latticeruntime.com/modules/lattice-login/lattice"
   version  = "1.0.2"
-  agent_id = local.agent_id
+  sidecar_id = local.sidecar_id
 }
 
 resource "incus_volume" "home" {
@@ -145,11 +145,11 @@ resource "incus_cached_image" "image" {
   source_image  = data.lattice_parameter.image.value
 }
 
-resource "incus_instance_file" "agent_token" {
+resource "incus_instance_file" "sidecar_token" {
   count              = data.lattice_workspace.me.start_count
   instance           = incus_instance.dev.name
   content            = <<EOF
-LATTICE_AGENT_TOKEN=${local.agent_token}
+LATTICE_SIDECAR_TOKEN=${local.sidecar_token}
 EOF
   create_directories = true
   target_path        = "/opt/lattice/init.env"
@@ -278,8 +278,8 @@ locals {
   pool              = "lattice"
   repo_base_dir     = data.lattice_parameter.repo_base_dir.value == "~" ? "/home/${local.workspace_user}" : replace(data.lattice_parameter.repo_base_dir.value, "/^~\\//", "/home/${local.workspace_user}/")
   repo_dir          = module.git-clone.repo_dir
-  agent_id          = data.lattice_workspace.me.start_count == 1 ? lattice_agent.main[0].id : ""
-  agent_token       = data.lattice_workspace.me.start_count == 1 ? lattice_agent.main[0].token : ""
+  sidecar_id          = data.lattice_workspace.me.start_count == 1 ? lattice_agent.main[0].id : ""
+  sidecar_token       = data.lattice_workspace.me.start_count == 1 ? lattice_agent.main[0].token : ""
   agent_init_script = data.lattice_workspace.me.start_count == 1 ? lattice_agent.main[0].init_script : ""
 }
 

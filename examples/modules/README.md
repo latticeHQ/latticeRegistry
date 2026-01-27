@@ -31,7 +31,7 @@ module "MODULE_NAME" {
   count    = data.lattice_workspace.me.start_count
   source   = "registry.latticeruntime.com/NAMESPACE/MODULE_NAME/lattice"
   version  = "1.0.0"
-  agent_id = lattice_agent.main.id
+  sidecar_id = lattice_agent.main.id
   extensions = [
     "dracula-theme.theme-dracula"
   ]
@@ -49,7 +49,7 @@ module "MODULE_NAME" {
   count      = data.lattice_workspace.me.start_count
   source     = "registry.latticeruntime.com/NAMESPACE/MODULE_NAME/lattice"
   version    = "1.0.0"
-  agent_id   = lattice_agent.main.id
+  sidecar_id   = lattice_agent.main.id
   extensions = ["dracula-theme.theme-dracula"]
   settings = {
     "workbench.colorTheme" = "Dracula"
@@ -65,7 +65,7 @@ Run code-server in the background, don't fetch it from GitHub:
 module "MODULE_NAME" {
   source   = "registry.latticeruntime.com/NAMESPACE/MODULE_NAME/lattice"
   version  = "1.0.0"
-  agent_id = lattice_agent.main.id
+  sidecar_id = lattice_agent.main.id
   offline  = true
 }
 ```

@@ -125,7 +125,7 @@ resource "lattice_agent" "main" {
 
 # code-server
 resource "lattice_app" "code-server" {
-  agent_id     = lattice_agent.main.id
+  sidecar_id     = lattice_agent.main.id
   slug         = "code-server"
   display_name = "code-server"
   icon         = "/icon/code.svg"

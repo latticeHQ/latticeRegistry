@@ -15,6 +15,6 @@ This should fail validation.
 module "test" {
   source   = "registry.latticeruntime.com/lattice/test/lattice"
   version  = "1.0.0"
-  agent_id = lattice_agent.main.id
+  sidecar_id = lattice_agent.main.id
 }
 ```

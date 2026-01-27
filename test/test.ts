@@ -139,7 +139,7 @@ type TerraformVariables = Record<string, JsonValue>;
 
 export interface CoderScriptAttributes {
   script: string;
-  agent_id: string;
+  sidecar_id: string;
   url: string;
 }
 
@@ -233,8 +233,8 @@ export const runTerraformApply = async <TVars extends TerraformVariables>(
   // When process.env is destructured into the object, it can sometimes have
   // workspace-specific values, which causes the resulting URL to be different
   // from what the tests have classically expected.
-  childEnv.CODER_AGENT_URL = undefined;
-  childEnv.CODER_WORKSPACE_NAME = undefined;
+  childEnv.LATTICE_SIDECAR_URL = undefined;
+  childEnv.LATTICE_WORKSPACE_NAME = undefined;
 
   for (const [key, value] of Object.entries(vars) as [string, JsonValue][]) {
     if (value !== null) {

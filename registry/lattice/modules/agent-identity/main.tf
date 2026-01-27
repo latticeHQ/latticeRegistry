@@ -9,7 +9,7 @@ terraform {
   }
 }
 
-variable "agent_id" {
+variable "sidecar_id" {
   type        = string
   description = "The ID of the Lattice agent"
 }
@@ -52,14 +52,14 @@ variable "token_lifetime" {
 data "lattice_workspace" "current" {}
 
 resource "lattice_sidecar_metadata" "identity" {
-  agent_id = var.agent_id
+  sidecar_id = var.sidecar_id
   key      = "identity_provider"
   value    = var.provider_type
 }
 
 resource "lattice_sidecar_metadata" "issuer" {
   count    = var.provider_type == "oidc" ? 1 : 0
-  agent_id = var.agent_id
+  sidecar_id = var.sidecar_id
   key      = "oidc_issuer"
   value    = var.issuer_url
 }

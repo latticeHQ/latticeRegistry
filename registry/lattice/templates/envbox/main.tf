@@ -106,7 +106,7 @@ resource "lattice_agent" "main" {
 
 # code-server
 resource "lattice_app" "code-server" {
-  agent_id     = lattice_agent.main.id
+  sidecar_id     = lattice_agent.main.id
   slug         = "code-server"
   display_name = "code-server"
   icon         = "/icon/code.svg"
@@ -172,12 +172,12 @@ resource "kubernetes_pod" "main" {
       }
 
       env {
-        name  = "LATTICE_AGENT_TOKEN"
+        name  = "LATTICE_SIDECAR_TOKEN"
         value = lattice_agent.main.token
       }
 
       env {
-        name  = "LATTICE_AGENT_URL"
+        name  = "LATTICE_SIDECAR_URL"
         value = data.lattice_workspace.me.access_url
       }
 

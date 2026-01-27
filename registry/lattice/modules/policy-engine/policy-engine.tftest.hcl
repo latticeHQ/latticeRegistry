@@ -1,7 +1,7 @@
 mock_provider "lattice" {}
 
 variables {
-  agent_id       = "test-agent-001"
+  sidecar_id       = "test-agent-001"
   default_effect = "deny"
   enable_audit   = true
   policies = [

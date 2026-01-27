@@ -532,7 +532,7 @@ data "lattice_workspace" "me" {}
 data "lattice_workspace_owner" "me" {}
 
 # ============================================================================
-# LATTICE AGENT WITH AI BRIDGE PRE-CONFIGURATION
+# LATTICE SIDECAR WITH AI BRIDGE PRE-CONFIGURATION
 # ============================================================================
 # This configures the workspace agent with AI Bridge environment variables
 # so that AI coding tools (like Claude Code, Cursor, Roo Code) automatically
