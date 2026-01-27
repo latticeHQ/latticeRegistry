@@ -2,7 +2,7 @@
 display_name: Agent Definition with Cartesia
 description: Deploy ultra-fast voice agents with Cartesia neural TTS
 icon: ../.icons/cartesia.svg
-maintainer_github: wirtualdev
+maintainer_github: latticeHQ
 verified: true
 tags: [voice, tts, realtime]
 ---
@@ -25,9 +25,9 @@ Deploy ultra-fast voice agents using Cartesia's neural voice synthesis with sub-
 Requires Docker-enabled environment or cloud VM.
 
 ```sh
-# Add wirtual user to Docker group
-sudo adduser wirtual docker
-sudo systemctl restart wirtual
+# Add lattice user to Docker group
+sudo adduser lattice docker
+sudo systemctl restart lattice
 ```
 
 ### API Keys

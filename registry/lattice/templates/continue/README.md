@@ -2,7 +2,7 @@
 display_name: Agent Definition with Continue
 description: Deploy AI agents with Continue open-source code assistant
 icon: ../.icons/continue.svg
-maintainer_github: wirtualdev
+maintainer_github: latticeHQ
 verified: true
 tags: [ide, vibe-coding, open-source]
 ---
@@ -22,12 +22,12 @@ Deploy AI coding agents with Continue, the open-source AI code assistant for VSC
 
 ### Infrastructure
 
-Requires a Docker-enabled environment. The VM running Wirtual must have:
+Requires a Docker-enabled environment. The VM running Lattice must have:
 
 ```sh
-# Add wirtual user to Docker group
-sudo adduser wirtual docker
-sudo systemctl restart wirtual
+# Add lattice user to Docker group
+sudo adduser lattice docker
+sudo systemctl restart lattice
 ```
 
 ### API Keys

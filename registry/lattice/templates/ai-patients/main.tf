@@ -1,7 +1,7 @@
 terraform {
   required_providers {
-    wirtual = {
-      source = "wirtualdev/wirtual"
+    lattice = {
+      source = "latticehq/lattice"
     }
   }
 }
@@ -54,7 +54,7 @@ variable "analysis_provider" {
 }
 
 # Template parameters for transcript analysis configuration
-data "wirtual_parameter" "analysis_model" {
+data "lattice_parameter" "analysis_model" {
   name         = "analysis_model"
   display_name = "AI Analysis Model"
   description  = "Model name: gpt-4.1, gpt-4o, claude-sonnet-4.5-20250110, claude-sonnet-4-20250514, claude-SONNET-4-5-20250929"
@@ -63,7 +63,7 @@ data "wirtual_parameter" "analysis_model" {
   default      = var.analysis_model
 }
 
-data "wirtual_parameter" "analysis_max_tokens" {
+data "lattice_parameter" "analysis_max_tokens" {
   name         = "analysis_max_tokens"
   display_name = "Max Analysis Tokens"
   description  = "Maximum tokens for AI response (1000-16000)"
@@ -76,7 +76,7 @@ data "wirtual_parameter" "analysis_max_tokens" {
   }
 }
 
-data "wirtual_parameter" "analysis_temperature" {
+data "lattice_parameter" "analysis_temperature" {
   name         = "analysis_temperature"
   display_name = "Analysis Temperature"
   description  = "Creativity level (0.0=focused, 1.0=creative)"
@@ -85,7 +85,7 @@ data "wirtual_parameter" "analysis_temperature" {
   default      = tostring(var.analysis_temperature)
 }
 
-data "wirtual_parameter" "analysis_provider" {
+data "lattice_parameter" "analysis_provider" {
   name         = "analysis_provider"
   display_name = "AI Provider"
   description  = "Choose AI provider: anthropic (Claude) or openai (GPT)"

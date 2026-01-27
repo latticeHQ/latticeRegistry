@@ -11,11 +11,11 @@ disk_setup:
     table_type: gpt
     layout: true
 fs_setup:
-  - label: wirtual_home
+  - label: lattice_home
     filesystem: ext4
     device: homedir.1
 mounts:
-  - ["LABEL=wirtual_home", "/home/${username}"]
+  - ["LABEL=lattice_home", "/home/${username}"]
 hostname: ${hostname}
 users:
   - name: ${username}
@@ -25,32 +25,32 @@ users:
 packages:
   - git
 write_files:
-  - path: /opt/wirtual/init
+  - path: /opt/lattice/init
     permissions: "0755"
     encoding: b64
     content: ${init_script}
-  - path: /etc/systemd/system/wirtual-agent.service
+  - path: /etc/systemd/system/lattice-agent.service
     permissions: "0644"
     content: |
       [Unit]
-      Description=Wirtual Agent
+      Description=Lattice Agent
       After=network-online.target
       Wants=network-online.target
 
       [Service]
       User=${username}
-      ExecStart=/opt/wirtual/init
+      ExecStart=/opt/lattice/init
       Restart=always
       RestartSec=10
       TimeoutStopSec=90
       KillMode=process
 
       OOMScoreAdjust=-900
-      SyslogIdentifier=wirtual-agent
+      SyslogIdentifier=lattice-agent
 
       [Install]
       WantedBy=multi-user.target
 runcmd:
   - chown ${username}:${username} /home/${username}
-  - systemctl enable wirtual-agent
-  - systemctl start wirtual-agent
+  - systemctl enable lattice-agent
+  - systemctl start lattice-agent

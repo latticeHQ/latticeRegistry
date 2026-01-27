@@ -1,7 +1,7 @@
 terraform {
   required_providers {
-    wirtual = {
-      source = "wirtualdev/wirtual"
+    lattice = {
+      source = "latticehq/lattice"
     }
     azurerm = {
       source = "hashicorp/azurerm"
@@ -13,12 +13,12 @@ provider "azurerm" {
   features {}
 }
 
-provider "wirtual" {
+provider "lattice" {
 }
 
-data "wirtual_workspace" "me" {}
+data "lattice_workspace" "me" {}
 
-data "wirtual_parameter" "location" {
+data "lattice_parameter" "location" {
   description  = "What location should your workspace live in?"
   display_name = "Location"
   name         = "location"
@@ -42,7 +42,7 @@ data "wirtual_parameter" "location" {
   }
 }
 
-data "wirtual_parameter" "data_disk_size" {
+data "lattice_parameter" "data_disk_size" {
   description  = "Size of your data (F:) drive in GB"
   display_name = "Data disk size"
   name         = "data_disk_size"
@@ -55,7 +55,7 @@ data "wirtual_parameter" "data_disk_size" {
   }
 }
 
-resource "wirtual_agent" "main" {
+resource "lattice_agent" "main" {
   arch = "amd64"
   auth = "azure-instance-identity"
   os   = "windows"
@@ -71,15 +71,15 @@ resource "random_password" "admin_password" {
 }
 
 locals {
-  prefix         = "wirtual-win"
-  admin_username = "wirtual"
+  prefix         = "lattice-win"
+  admin_username = "lattice"
 }
 
 resource "azurerm_resource_group" "main" {
-  name     = "${local.prefix}-${data.wirtual_workspace.me.id}"
-  location = data.wirtual_parameter.location.value
+  name     = "${local.prefix}-${data.lattice_workspace.me.id}"
+  location = data.lattice_parameter.location.value
   tags = {
-    Wirtual_Provisioned = "true"
+    Lattice_Provisioned = "true"
   }
 }
 
@@ -90,7 +90,7 @@ resource "azurerm_resource_group" "main" {
 #  location            = azurerm_resource_group.main.location
 #  allocation_method   = "Static"
 #  tags = {
-#    Wirtual_Provisioned = "true"
+#    Lattice_Provisioned = "true"
 #  }
 #}
 resource "azurerm_virtual_network" "main" {
@@ -99,7 +99,7 @@ resource "azurerm_virtual_network" "main" {
   location            = azurerm_resource_group.main.location
   resource_group_name = azurerm_resource_group.main.name
   tags = {
-    Wirtual_Provisioned = "true"
+    Lattice_Provisioned = "true"
   }
 }
 resource "azurerm_subnet" "internal" {
@@ -120,7 +120,7 @@ resource "azurerm_network_interface" "main" {
     #    public_ip_address_id = azurerm_public_ip.main.id
   }
   tags = {
-    Wirtual_Provisioned = "true"
+    Lattice_Provisioned = "true"
   }
 }
 # Create storage account for boot diagnostics
@@ -146,7 +146,7 @@ resource "azurerm_managed_disk" "data" {
   resource_group_name  = azurerm_resource_group.main.name
   storage_account_type = "Standard_LRS"
   create_option        = "Empty"
-  disk_size_gb         = data.wirtual_parameter.data_disk_size.value
+  disk_size_gb         = data.lattice_parameter.data_disk_size.value
 }
 
 # Create virtual machine
@@ -159,7 +159,7 @@ resource "azurerm_windows_virtual_machine" "main" {
   network_interface_ids = [azurerm_network_interface.main.id]
   size                  = "Standard_DS1_v2"
   custom_data = base64encode(
-    templatefile("${path.module}/Initialize.ps1.tftpl", { init_script = wirtual_agent.main.init_script })
+    templatefile("${path.module}/Initialize.ps1.tftpl", { init_script = lattice_agent.main.init_script })
   )
   os_disk {
     name                 = "myOsDisk"
@@ -184,11 +184,11 @@ resource "azurerm_windows_virtual_machine" "main" {
     storage_account_uri = azurerm_storage_account.my_storage_account.primary_blob_endpoint
   }
   tags = {
-    Wirtual_Provisioned = "true"
+    Lattice_Provisioned = "true"
   }
 }
 
-resource "wirtual_metadata" "rdp_login" {
+resource "lattice_metadata" "rdp_login" {
   resource_id = azurerm_windows_virtual_machine.main.id
   item {
     key   = "Username"
@@ -210,7 +210,7 @@ resource "azurerm_virtual_machine_data_disk_attachment" "main_data" {
 
 # Stop the VM
 resource "null_resource" "stop_vm" {
-  count      = data.wirtual_workspace.me.transition == "stop" ? 1 : 0
+  count      = data.lattice_workspace.me.transition == "stop" ? 1 : 0
   depends_on = [azurerm_windows_virtual_machine.main]
   provisioner "local-exec" {
     # Use deallocate so the VM is not charged
@@ -220,7 +220,7 @@ resource "null_resource" "stop_vm" {
 
 # Start the VM
 resource "null_resource" "start" {
-  count      = data.wirtual_workspace.me.transition == "start" ? 1 : 0
+  count      = data.lattice_workspace.me.transition == "start" ? 1 : 0
   depends_on = [azurerm_windows_virtual_machine.main]
   provisioner "local-exec" {
     command = "az vm start --ids ${azurerm_windows_virtual_machine.main.id}"

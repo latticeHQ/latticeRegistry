@@ -1,7 +1,7 @@
 terraform {
   required_providers {
-    wirtual = {
-      source = "wirtualdev/wirtual"
+    lattice = {
+      source = "latticehq/lattice"
     }
     docker = {
       source = "kreuzwerker/docker"
@@ -10,7 +10,7 @@ terraform {
 }
 
 locals {
-  username = data.wirtual_workspace_owner.me.name
+  username = data.lattice_workspace_owner.me.name
 }
 
 variable "docker_socket" {
@@ -23,12 +23,12 @@ provider "docker" {
   host = var.docker_socket != "" ? var.docker_socket : null
 }
 
-data "wirtual_provisioner" "me" {}
-data "wirtual_workspace" "me" {}
-data "wirtual_workspace_owner" "me" {}
+data "lattice_provisioner" "me" {}
+data "lattice_workspace" "me" {}
+data "lattice_workspace_owner" "me" {}
 
-resource "wirtual_agent" "main" {
-  arch           = data.wirtual_provisioner.me.arch
+resource "lattice_agent" "main" {
+  arch           = data.lattice_provisioner.me.arch
   os             = "linux"
   startup_script = <<-EOT
     set -e
@@ -46,7 +46,7 @@ resource "wirtual_agent" "main" {
     pip3 install elevenlabs
 
     # Create sample agent script
-    cat > /home/wirtual/elevenlabs_agent.py <<'EOF'
+    cat > /home/lattice/elevenlabs_agent.py <<'EOF'
 from elevenlabs import generate, play, stream, voices, Voice
 import os
 
@@ -78,20 +78,20 @@ if __name__ == "__main__":
     print("Available functions: text_to_speech(), stream_text_to_speech(), list_available_voices()")
 EOF
 
-    echo "ElevenLabs agent ready. Run: python3 /home/wirtual/elevenlabs_agent.py"
+    echo "ElevenLabs agent ready. Run: python3 /home/lattice/elevenlabs_agent.py"
   EOT
 
   env = {
-    GIT_AUTHOR_NAME     = coalesce(data.wirtual_workspace_owner.me.full_name, data.wirtual_workspace_owner.me.name)
-    GIT_AUTHOR_EMAIL    = "${data.wirtual_workspace_owner.me.email}"
-    GIT_COMMITTER_NAME  = coalesce(data.wirtual_workspace_owner.me.full_name, data.wirtual_workspace_owner.me.name)
-    GIT_COMMITTER_EMAIL = "${data.wirtual_workspace_owner.me.email}"
+    GIT_AUTHOR_NAME     = coalesce(data.lattice_workspace_owner.me.full_name, data.lattice_workspace_owner.me.name)
+    GIT_AUTHOR_EMAIL    = "${data.lattice_workspace_owner.me.email}"
+    GIT_COMMITTER_NAME  = coalesce(data.lattice_workspace_owner.me.full_name, data.lattice_workspace_owner.me.name)
+    GIT_COMMITTER_EMAIL = "${data.lattice_workspace_owner.me.email}"
   }
 
   metadata {
     display_name = "CPU Usage"
     key          = "0_cpu_usage"
-    script       = "wirtual stat cpu"
+    script       = "lattice stat cpu"
     interval     = 10
     timeout      = 1
   }
@@ -99,7 +99,7 @@ EOF
   metadata {
     display_name = "RAM Usage"
     key          = "1_ram_usage"
-    script       = "wirtual stat mem"
+    script       = "lattice stat mem"
     interval     = 10
     timeout      = 1
   }
@@ -107,7 +107,7 @@ EOF
   metadata {
     display_name = "Home Disk"
     key          = "3_home_disk"
-    script       = "wirtual stat disk --path $${HOME}"
+    script       = "lattice stat disk --path $${HOME}"
     interval     = 60
     timeout      = 1
   }

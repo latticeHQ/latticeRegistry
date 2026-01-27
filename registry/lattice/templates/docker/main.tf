@@ -1,7 +1,7 @@
 terraform {
   required_providers {
-    wirtual = {
-      source = "wirtualdev/wirtual"
+    lattice = {
+      source = "latticehq/lattice"
     }
     docker = {
       source = "kreuzwerker/docker"
@@ -10,7 +10,7 @@ terraform {
 }
 
 locals {
-  username = data.wirtual_workspace_owner.me.name
+  username = data.lattice_workspace_owner.me.name
 }
 
 variable "docker_socket" {
@@ -24,12 +24,12 @@ provider "docker" {
   host = var.docker_socket != "" ? var.docker_socket : null
 }
 
-data "wirtual_provisioner" "me" {}
-data "wirtual_workspace" "me" {}
-data "wirtual_workspace_owner" "me" {}
+data "lattice_provisioner" "me" {}
+data "lattice_workspace" "me" {}
+data "lattice_workspace_owner" "me" {}
 
-resource "wirtual_agent" "main" {
-  arch           = data.wirtual_provisioner.me.arch
+resource "lattice_agent" "main" {
+  arch           = data.lattice_provisioner.me.arch
   os             = "linux"
   startup_script = <<-EOT
     set -e
@@ -53,21 +53,21 @@ resource "wirtual_agent" "main" {
   # You can remove this block if you'd prefer to configure Git manually or using
   # dotfiles. (see docs/dotfiles.md)
   env = {
-    GIT_AUTHOR_NAME     = coalesce(data.wirtual_workspace_owner.me.full_name, data.wirtual_workspace_owner.me.name)
-    GIT_AUTHOR_EMAIL    = "${data.wirtual_workspace_owner.me.email}"
-    GIT_COMMITTER_NAME  = coalesce(data.wirtual_workspace_owner.me.full_name, data.wirtual_workspace_owner.me.name)
-    GIT_COMMITTER_EMAIL = "${data.wirtual_workspace_owner.me.email}"
+    GIT_AUTHOR_NAME     = coalesce(data.lattice_workspace_owner.me.full_name, data.lattice_workspace_owner.me.name)
+    GIT_AUTHOR_EMAIL    = "${data.lattice_workspace_owner.me.email}"
+    GIT_COMMITTER_NAME  = coalesce(data.lattice_workspace_owner.me.full_name, data.lattice_workspace_owner.me.name)
+    GIT_COMMITTER_EMAIL = "${data.lattice_workspace_owner.me.email}"
   }
 
   # The following metadata blocks are optional. They are used to display
   # information about your workspace in the dashboard. You can remove them
   # if you don't want to display any information.
-  # For basic resources, you can use the `wirtual stat` command.
+  # For basic resources, you can use the `lattice stat` command.
   # If you need more control, you can write your own script.
   metadata {
     display_name = "CPU Usage"
     key          = "0_cpu_usage"
-    script       = "wirtual stat cpu"
+    script       = "lattice stat cpu"
     interval     = 10
     timeout      = 1
   }
@@ -75,7 +75,7 @@ resource "wirtual_agent" "main" {
   metadata {
     display_name = "RAM Usage"
     key          = "1_ram_usage"
-    script       = "wirtual stat mem"
+    script       = "lattice stat mem"
     interval     = 10
     timeout      = 1
   }
@@ -83,7 +83,7 @@ resource "wirtual_agent" "main" {
   metadata {
     display_name = "Home Disk"
     key          = "3_home_disk"
-    script       = "wirtual stat disk --path $${HOME}"
+    script       = "lattice stat disk --path $${HOME}"
     interval     = 60
     timeout      = 1
   }
@@ -91,7 +91,7 @@ resource "wirtual_agent" "main" {
   metadata {
     display_name = "CPU Usage (Host)"
     key          = "4_cpu_usage_host"
-    script       = "wirtual stat cpu --host"
+    script       = "lattice stat cpu --host"
     interval     = 10
     timeout      = 1
   }
@@ -99,7 +99,7 @@ resource "wirtual_agent" "main" {
   metadata {
     display_name = "Memory Usage (Host)"
     key          = "5_mem_usage_host"
-    script       = "wirtual stat mem --host"
+    script       = "lattice stat mem --host"
     interval     = 10
     timeout      = 1
   }
@@ -128,7 +128,7 @@ resource "wirtual_agent" "main" {
   # LiveKit agent configuration for dynamic agent switching
   metadata {
     display_name = "LiveKit Agent Config"
-    key          = "livekit_agent_config"
+    key          = "livekit_sidecar_config"
     script       = <<EOT
       cat <<'AGENT_CONFIG'
 ${jsonencode({
@@ -166,8 +166,8 @@ AGENT_CONFIG
   }
 }
 
-resource "wirtual_app" "code-server" {
-  agent_id     = wirtual_agent.main.id
+resource "lattice_app" "code-server" {
+  agent_id     = lattice_agent.main.id
   slug         = "code-server"
   display_name = "code-server"
   url          = "http://localhost:13337/?folder=/home/${local.username}"
@@ -183,42 +183,42 @@ resource "wirtual_app" "code-server" {
 }
 
 resource "docker_volume" "home_volume" {
-  name = "wirtual-${data.wirtual_workspace.me.id}-home"
+  name = "lattice-${data.lattice_workspace.me.id}-home"
   # Protect the volume from being deleted due to changes in attributes.
   lifecycle {
     ignore_changes = all
   }
   # Add labels in Docker to keep track of orphan resources.
   labels {
-    label = "wirtual.owner"
-    value = data.wirtual_workspace_owner.me.name
+    label = "lattice.owner"
+    value = data.lattice_workspace_owner.me.name
   }
   labels {
-    label = "wirtual.owner_id"
-    value = data.wirtual_workspace_owner.me.id
+    label = "lattice.owner_id"
+    value = data.lattice_workspace_owner.me.id
   }
   labels {
-    label = "wirtual.workspace_id"
-    value = data.wirtual_workspace.me.id
+    label = "lattice.workspace_id"
+    value = data.lattice_workspace.me.id
   }
   # This field becomes outdated if the workspace is renamed but can
   # be useful for debugging or cleaning out dangling volumes.
   labels {
-    label = "wirtual.workspace_name_at_creation"
-    value = data.wirtual_workspace.me.name
+    label = "lattice.workspace_name_at_creation"
+    value = data.lattice_workspace.me.name
   }
 }
 
 resource "docker_container" "workspace" {
-  count = data.wirtual_workspace.me.start_count
-  image = "wirtualcom/enterprise-base:ubuntu"
+  count = data.lattice_workspace.me.start_count
+  image = "latticecom/enterprise-base:ubuntu"
   # Uses lower() to avoid Docker restriction on container names.
-  name = "wirtual-${data.wirtual_workspace_owner.me.name}-${lower(data.wirtual_workspace.me.name)}"
-  # Hostname makes the shell more user friendly: wirtual@my-workspace:~$
-  hostname = data.wirtual_workspace.me.name
+  name = "lattice-${data.lattice_workspace_owner.me.name}-${lower(data.lattice_workspace.me.name)}"
+  # Hostname makes the shell more user friendly: lattice@my-workspace:~$
+  hostname = data.lattice_workspace.me.name
   # Use the docker gateway if the access URL is 127.0.0.1
-  entrypoint = ["sh", "-c", replace(wirtual_agent.main.init_script, "/localhost|127\\.0\\.0\\.1/", "host.docker.internal")]
-  env        = ["WIRTUAL_AGENT_TOKEN=${wirtual_agent.main.token}"]
+  entrypoint = ["sh", "-c", replace(lattice_agent.main.init_script, "/localhost|127\\.0\\.0\\.1/", "host.docker.internal")]
+  env        = ["LATTICE_AGENT_TOKEN=${lattice_agent.main.token}"]
   host {
     host = "host.docker.internal"
     ip   = "host-gateway"
@@ -231,19 +231,19 @@ resource "docker_container" "workspace" {
 
   # Add labels in Docker to keep track of orphan resources.
   labels {
-    label = "wirtual.owner"
-    value = data.wirtual_workspace_owner.me.name
+    label = "lattice.owner"
+    value = data.lattice_workspace_owner.me.name
   }
   labels {
-    label = "wirtual.owner_id"
-    value = data.wirtual_workspace_owner.me.id
+    label = "lattice.owner_id"
+    value = data.lattice_workspace_owner.me.id
   }
   labels {
-    label = "wirtual.workspace_id"
-    value = data.wirtual_workspace.me.id
+    label = "lattice.workspace_id"
+    value = data.lattice_workspace.me.id
   }
   labels {
-    label = "wirtual.workspace_name"
-    value = data.wirtual_workspace.me.name
+    label = "lattice.workspace_name"
+    value = data.lattice_workspace.me.name
   }
 }

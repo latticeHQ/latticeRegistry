@@ -62,25 +62,25 @@ variable "capabilities" {
 
 data "lattice_workspace" "current" {}
 
-resource "lattice_agent_metadata" "integration" {
+resource "lattice_sidecar_metadata" "integration" {
   agent_id = var.agent_id
   key      = "livekit_enabled"
   value    = "true"
 }
 
-resource "lattice_agent_metadata" "voice" {
+resource "lattice_sidecar_metadata" "voice" {
   agent_id = var.agent_id
   key      = "livekit_voice"
   value    = tostring(var.enable_voice)
 }
 
-resource "lattice_agent_metadata" "video" {
+resource "lattice_sidecar_metadata" "video" {
   agent_id = var.agent_id
   key      = "livekit_video"
   value    = tostring(var.enable_video)
 }
 
-resource "lattice_agent_metadata" "audio_config" {
+resource "lattice_sidecar_metadata" "audio_config" {
   agent_id = var.agent_id
   key      = "livekit_audio_config"
   value    = jsonencode({
@@ -89,7 +89,7 @@ resource "lattice_agent_metadata" "audio_config" {
   })
 }
 
-resource "lattice_agent_metadata" "capabilities" {
+resource "lattice_sidecar_metadata" "capabilities" {
   count    = length(var.capabilities) > 0 ? 1 : 0
   agent_id = var.agent_id
   key      = "livekit_capabilities"

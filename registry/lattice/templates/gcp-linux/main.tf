@@ -1,7 +1,7 @@
 terraform {
   required_providers {
-    wirtual = {
-      source = "wirtualdev/wirtual"
+    lattice = {
+      source = "latticehq/lattice"
     }
     google = {
       source = "hashicorp/google"
@@ -9,14 +9,14 @@ terraform {
   }
 }
 
-provider "wirtual" {
+provider "lattice" {
 }
 
 variable "project_id" {
   description = "Which Google Compute Project should your workspace live in?"
 }
 
-data "wirtual_parameter" "zone" {
+data "lattice_parameter" "zone" {
   name         = "zone"
   display_name = "Zone"
   description  = "Which zone should your workspace live in?"
@@ -52,28 +52,28 @@ data "wirtual_parameter" "zone" {
 }
 
 provider "google" {
-  zone    = data.wirtual_parameter.zone.value
+  zone    = data.lattice_parameter.zone.value
   project = var.project_id
 }
 
 data "google_compute_default_service_account" "default" {
 }
 
-data "wirtual_workspace" "me" {
+data "lattice_workspace" "me" {
 }
-data "wirtual_workspace_owner" "me" {}
+data "lattice_workspace_owner" "me" {}
 
 resource "google_compute_disk" "root" {
-  name  = "wirtual-${data.wirtual_workspace.me.id}-root"
+  name  = "lattice-${data.lattice_workspace.me.id}-root"
   type  = "pd-ssd"
-  zone  = data.wirtual_parameter.zone.value
+  zone  = data.lattice_parameter.zone.value
   image = "debian-cloud/debian-11"
   lifecycle {
     ignore_changes = [name, image]
   }
 }
 
-resource "wirtual_agent" "main" {
+resource "lattice_agent" "main" {
   auth           = "google-instance-identity"
   arch           = "amd64"
   os             = "linux"
@@ -118,18 +118,18 @@ resource "wirtual_agent" "main" {
     script       = <<-EOT
       #!/bin/bash
       set -e
-      df /home/wirtual | awk '$NF=="/"{printf "%s", $5}'
+      df /home/lattice | awk '$NF=="/"{printf "%s", $5}'
     EOT
   }
 }
 
 # code-server
-resource "wirtual_app" "code-server" {
-  agent_id     = wirtual_agent.main.id
+resource "lattice_app" "code-server" {
+  agent_id     = lattice_agent.main.id
   slug         = "code-server"
   display_name = "code-server"
   icon         = "/icon/code.svg"
-  url          = "http://localhost:13337?folder=/home/wirtual"
+  url          = "http://localhost:13337?folder=/home/lattice"
   subdomain    = false
   share        = "owner"
 
@@ -141,9 +141,9 @@ resource "wirtual_app" "code-server" {
 }
 
 resource "google_compute_instance" "dev" {
-  zone         = data.wirtual_parameter.zone.value
-  count        = data.wirtual_workspace.me.start_count
-  name         = "wirtual-${lower(data.wirtual_workspace_owner.me.name)}-${lower(data.wirtual_workspace.me.name)}-root"
+  zone         = data.lattice_parameter.zone.value
+  count        = data.lattice_workspace.me.start_count
+  name         = "lattice-${lower(data.lattice_workspace_owner.me.name)}-${lower(data.lattice_workspace.me.name)}-root"
   machine_type = "e2-medium"
   network_interface {
     network = "default"
@@ -169,20 +169,20 @@ set -eux
 # If user does not exist, create it and set up passwordless sudo
 if ! id -u "${local.linux_user}" >/dev/null 2>&1; then
   useradd -m -s /bin/bash "${local.linux_user}"
-  echo "${local.linux_user} ALL=(ALL) NOPASSWD:ALL" > /etc/sudoers.d/wirtual-user
+  echo "${local.linux_user} ALL=(ALL) NOPASSWD:ALL" > /etc/sudoers.d/lattice-user
 fi
 
-exec sudo -u "${local.linux_user}" sh -c '${wirtual_agent.main.init_script}'
+exec sudo -u "${local.linux_user}" sh -c '${lattice_agent.main.init_script}'
 EOMETA
 }
 
 locals {
-  # Ensure Wirtual username is a valid Linux username
-  linux_user = lower(substr(data.wirtual_workspace_owner.me.name, 0, 32))
+  # Ensure Lattice username is a valid Linux username
+  linux_user = lower(substr(data.lattice_workspace_owner.me.name, 0, 32))
 }
 
-resource "wirtual_metadata" "workspace_info" {
-  count       = data.wirtual_workspace.me.start_count
+resource "lattice_metadata" "workspace_info" {
+  count       = data.lattice_workspace.me.start_count
   resource_id = google_compute_instance.dev[0].id
 
   item {
@@ -191,7 +191,7 @@ resource "wirtual_metadata" "workspace_info" {
   }
 }
 
-resource "wirtual_metadata" "home_info" {
+resource "lattice_metadata" "home_info" {
   resource_id = google_compute_disk.root.id
 
   item {

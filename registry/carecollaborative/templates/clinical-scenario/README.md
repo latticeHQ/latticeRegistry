@@ -23,12 +23,12 @@ Deploy AI-powered patient simulations for medical students to practice clinical 
 
 ### Infrastructure
 
-The VM you run Wirtual on must have a running Docker socket:
+The VM you run Lattice on must have a running Docker socket:
 
 ```sh
-# Add wirtual user to Docker group
-sudo adduser wirtual docker
-sudo systemctl restart wirtual
+# Add lattice user to Docker group
+sudo adduser lattice docker
+sudo systemctl restart lattice
 ```
 
 ### API Keys

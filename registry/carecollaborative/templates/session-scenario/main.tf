@@ -1,7 +1,7 @@
 terraform {
   required_providers {
-    wirtual = {
-      source = "wirtualdev/wirtual"
+    lattice = {
+      source = "latticehq/lattice"
     }
     docker = {
       source = "kreuzwerker/docker"
@@ -132,13 +132,13 @@ variable "save_analysis_json" {
   default     = true
 }
 
-# Wirtual provider configuration
-data "wirtual_provisioner" "me" {}
+# Lattice provider configuration
+data "lattice_provisioner" "me" {}
 
 provider "docker" {}
 
-data "wirtual_workspace" "me" {}
-data "wirtual_workspace_owner" "me" {}
+data "lattice_workspace" "me" {}
+data "lattice_workspace_owner" "me" {}
 
 # Build configuration JSON for the agent
 locals {
@@ -158,8 +158,8 @@ locals {
 }
 
 # Agent resource
-resource "wirtual_agent" "main" {
-  arch = data.wirtual_provisioner.me.arch
+resource "lattice_agent" "main" {
+  arch = data.lattice_provisioner.me.arch
   os   = "linux"
 
   metadata {
@@ -189,36 +189,36 @@ resource "docker_image" "main" {
 
 # Docker volume for persistent data
 resource "docker_volume" "home_volume" {
-  name = "wirtual-${data.wirtual_workspace.me.id}-home"
+  name = "lattice-${data.lattice_workspace.me.id}-home"
   lifecycle {
     ignore_changes = all
   }
   labels {
-    label = "wirtual.owner"
-    value = data.wirtual_workspace_owner.me.name
+    label = "lattice.owner"
+    value = data.lattice_workspace_owner.me.name
   }
   labels {
-    label = "wirtual.owner_id"
-    value = data.wirtual_workspace_owner.me.id
+    label = "lattice.owner_id"
+    value = data.lattice_workspace_owner.me.id
   }
   labels {
-    label = "wirtual.workspace_id"
-    value = data.wirtual_workspace.me.id
+    label = "lattice.workspace_id"
+    value = data.lattice_workspace.me.id
   }
 }
 
 # Docker container running the pre-built agent
 resource "docker_container" "workspace" {
-  count = data.wirtual_workspace.me.start_count
+  count = data.lattice_workspace.me.start_count
   image = docker_image.main.image_id
-  name  = "wirtual-${data.wirtual_workspace_owner.me.name}-${lower(data.wirtual_workspace.me.name)}"
+  name  = "lattice-${data.lattice_workspace_owner.me.name}-${lower(data.lattice_workspace.me.name)}"
 
-  hostname = data.wirtual_workspace.me.name
+  hostname = data.lattice_workspace.me.name
 
-  entrypoint = ["sh", "-c", replace(wirtual_agent.main.init_script, "/localhost|127\\.0\\.0\\.1/", "host.docker.internal")]
+  entrypoint = ["sh", "-c", replace(lattice_agent.main.init_script, "/localhost|127\\.0\\.0\\.1/", "host.docker.internal")]
 
   env = [
-    "WIRTUAL_AGENT_TOKEN=${wirtual_agent.main.token}",
+    "LATTICE_AGENT_TOKEN=${lattice_agent.main.token}",
     # LiveKit credentials
     "LIVEKIT_URL=${var.livekit_url}",
     "LIVEKIT_API_KEY=${var.livekit_api_key}",
@@ -249,7 +249,7 @@ resource "docker_container" "workspace" {
   }
 
   volumes {
-    container_path = "/home/wirtual"
+    container_path = "/home/lattice"
     volume_name    = docker_volume.home_volume.name
     read_only      = false
   }
@@ -257,7 +257,7 @@ resource "docker_container" "workspace" {
 
 # Outputs
 output "agent_id" {
-  value       = wirtual_agent.main.id
+  value       = lattice_agent.main.id
   description = "The ID of the transcriber agent"
 }
 

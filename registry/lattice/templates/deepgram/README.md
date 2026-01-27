@@ -2,7 +2,7 @@
 display_name: Agent Definition with Deepgram
 description: Deploy speech-to-text agents with Deepgram real-time API
 icon: ../.icons/deepgram.svg
-maintainer_github: wirtualdev
+maintainer_github: latticeHQ
 verified: true
 tags: [voice, stt, realtime]
 ---
@@ -25,9 +25,9 @@ Deploy real-time speech-to-text agents using Deepgram's industry-leading transcr
 Requires Docker-enabled environment or cloud VM.
 
 ```sh
-# Add wirtual user to Docker group
-sudo adduser wirtual docker
-sudo systemctl restart wirtual
+# Add lattice user to Docker group
+sudo adduser lattice docker
+sudo systemctl restart lattice
 ```
 
 ### API Keys

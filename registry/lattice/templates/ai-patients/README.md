@@ -2,7 +2,7 @@
 display_name: AI Patients for Medical Training
 description: Interactive AI patient simulations for medical students to practice clinical skills
 icon: ../.icons/1f468-200d-2695-fe0f.png
-maintainer_github: wirtual
+maintainer_github: lattice
 verified: true
 tags: [docker, healthcare, education]
 ---
@@ -23,17 +23,17 @@ Deploy AI-powered patient simulation agents for medical education and clinical s
 
 ### Infrastructure
 
-The VM you run Wirtual on must have a running Docker socket and the `wirtual` user must be added to the Docker group:
+The VM you run Lattice on must have a running Docker socket and the `lattice` user must be added to the Docker group:
 
 ```sh
-# Add wirtual user to Docker group
-sudo adduser wirtual docker
+# Add lattice user to Docker group
+sudo adduser lattice docker
 
-# Restart Wirtual server
-sudo systemctl restart wirtual
+# Restart Lattice server
+sudo systemctl restart lattice
 
 # Test Docker
-sudo -u wirtual docker ps
+sudo -u lattice docker ps
 ```
 
 ### AI Models

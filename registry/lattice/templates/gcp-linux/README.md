@@ -2,7 +2,7 @@
 display_name: Agent Definition on GCP (Linux)
 description: Deploy Linux-based agents on Google Compute Engine
 icon: ../.icons/gcp.png
-maintainer_github: wirtual
+maintainer_github: lattice
 verified: true
 tags: [linux, gcp]
 ---
@@ -13,13 +13,13 @@ tags: [linux, gcp]
 
 ### Authentication
 
-This template assumes that wirtuald is run in an environment that is authenticated
+This template assumes that latticed is run in an environment that is authenticated
 with Google Cloud. For example, run `gcloud auth application-default login` to
-import credentials on the system and user running wirtuald. For other ways to
+import credentials on the system and user running latticed. For other ways to
 authenticate [consult the Terraform
 docs](https://registry.terraform.io/providers/hashicorp/google/latest/docs/guides/getting_started#adding-credentials).
 
-Wirtual requires a Google Cloud Service Account to provision workspaces. To create
+Lattice requires a Google Cloud Service Account to provision workspaces. To create
 a service account:
 
 1. Navigate to the [CGP
@@ -42,7 +42,7 @@ a service account:
 
 1. Click **Add key** > **Create new key**.
 
-1. Generate a **JSON private key**, which will be what you provide to Wirtual
+1. Generate a **JSON private key**, which will be what you provide to Lattice
    during the setup process.
 
 ## Architecture
@@ -52,13 +52,13 @@ This template provisions the following resources:
 - GCP VM (ephemeral)
 - GCP Disk (persistent, mounted to root)
 
-Wirtual persists the root volume. The full filesystem is preserved when the workspace restarts. See this [community example](https://github.com/bpmct/wirtual-templates/tree/main/aws-linux-ephemeral) of an ephemeral AWS instance.
+Lattice persists the root volume. The full filesystem is preserved when the workspace restarts. See this [community example](https://github.com/bpmct/lattice-templates/tree/main/aws-linux-ephemeral) of an ephemeral AWS instance.
 
 > **Note**
 > This template is designed to be a starting point! Edit the Terraform to extend the template to support your use case.
 
 ## code-server
 
-`code-server` is installed via the `startup_script` argument in the `wirtual_agent`
-resource block. The `wirtual_app` resource is defined to access `code-server` through
+`code-server` is installed via the `startup_script` argument in the `lattice_agent`
+resource block. The `lattice_app` resource is defined to access `code-server` through
 the dashboard UI over `localhost:13337`.

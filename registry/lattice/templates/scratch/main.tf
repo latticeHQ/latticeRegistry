@@ -1,23 +1,23 @@
 terraform {
   required_providers {
-    wirtual = {
-      source = "wirtualdev/wirtual"
+    lattice = {
+      source = "latticehq/lattice"
     }
   }
 }
 
-data "wirtual_provisioner" "me" {}
+data "lattice_provisioner" "me" {}
 
-data "wirtual_workspace" "me" {}
+data "lattice_workspace" "me" {}
 
-resource "wirtual_agent" "main" {
-  arch = data.wirtual_provisioner.me.arch
-  os   = data.wirtual_provisioner.me.os
+resource "lattice_agent" "main" {
+  arch = data.lattice_provisioner.me.arch
+  os   = data.lattice_provisioner.me.os
 
   metadata {
     display_name = "CPU Usage"
     key          = "0_cpu_usage"
-    script       = "wirtual stat cpu"
+    script       = "lattice stat cpu"
     interval     = 10
     timeout      = 1
   }
@@ -25,32 +25,32 @@ resource "wirtual_agent" "main" {
   metadata {
     display_name = "RAM Usage"
     key          = "1_ram_usage"
-    script       = "wirtual stat mem"
+    script       = "lattice stat mem"
     interval     = 10
     timeout      = 1
   }
 }
 
 # Use this to set environment variables in your workspace
-# details: https://registry.terraform.io/providers/wirtual/wirtual/latest/docs/resources/env
-resource "wirtual_env" "welcome_message" {
-  agent_id = wirtual_agent.main.id
+# details: https://registry.terraform.io/providers/lattice/lattice/latest/docs/resources/env
+resource "lattice_env" "welcome_message" {
+  agent_id = lattice_agent.main.id
   name     = "WELCOME_MESSAGE"
-  value    = "Welcome to your Wirtual workspace!"
+  value    = "Welcome to your Lattice workspace!"
 }
 
 # Adds code-server
-# See all available modules at https://registry.wirtual.dev
+# See all available modules at https://registry.latticeruntime.com
 module "code-server" {
-  source   = "registry.wirtual.dev/modules/code-server/wirtual"
+  source   = "registry.latticeruntime.com/modules/code-server/lattice"
   version  = "1.0.2"
-  agent_id = wirtual_agent.main.id
+  agent_id = lattice_agent.main.id
 }
 
 # Runs a script at workspace start/stop or on a cron schedule
-# details: https://registry.terraform.io/providers/wirtual/wirtual/latest/docs/resources/script
-resource "wirtual_script" "startup_script" {
-  agent_id           = wirtual_agent.main.id
+# details: https://registry.terraform.io/providers/lattice/lattice/latest/docs/resources/script
+resource "lattice_script" "startup_script" {
+  agent_id           = lattice_agent.main.id
   display_name       = "Startup Script"
   script             = <<-EOF
     #!/bin/sh

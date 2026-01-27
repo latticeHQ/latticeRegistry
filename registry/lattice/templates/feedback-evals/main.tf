@@ -1,7 +1,7 @@
 terraform {
   required_providers {
-    wirtual = {
-      source = "wirtualdev/wirtual"
+    lattice = {
+      source = "latticehq/lattice"
     }
   }
 }
@@ -62,7 +62,7 @@ variable "analysis_provider" {
   }
 }
 
-data "wirtual_parameter" "analysis_provider" {
+data "lattice_parameter" "analysis_provider" {
   name         = "analysis_provider"
   display_name = "AI Provider"
   description  = "Choose AI provider: anthropic (Claude) or openai (GPT)"
@@ -524,44 +524,44 @@ variable "analysis_key_guidelines" {
 }
 
 # ============================================================================
-# WIRTUAL WORKSPACE SETUP (Minimal - Just to Show Template Works)
+# LATTICE WORKSPACE SETUP (Minimal - Just to Show Template Works)
 # ============================================================================
 
-data "wirtual_workspace" "me" {}
+data "lattice_workspace" "me" {}
 
-data "wirtual_workspace_owner" "me" {}
+data "lattice_workspace_owner" "me" {}
 
 # ============================================================================
-# WIRTUAL AGENT WITH AI BRIDGE PRE-CONFIGURATION
+# LATTICE AGENT WITH AI BRIDGE PRE-CONFIGURATION
 # ============================================================================
 # This configures the workspace agent with AI Bridge environment variables
 # so that AI coding tools (like Claude Code, Cursor, Roo Code) automatically
-# route through Wirtual's AI Bridge for compliance and cost management.
+# route through Lattice's AI Bridge for compliance and cost management.
 
-data "wirtual_provisioner" "me" {}
+data "lattice_provisioner" "me" {}
 
-resource "wirtual_agent" "dev" {
-  arch = data.wirtual_provisioner.me.arch
-  os   = data.wirtual_provisioner.me.os
+resource "lattice_agent" "dev" {
+  arch = data.lattice_provisioner.me.arch
+  os   = data.lattice_provisioner.me.os
   
   # Pre-configure AI Bridge environment variables for in-workspace AI tools
   # These will be automatically available to any AI coding assistant running
   # inside the workspace (Claude Code, Cursor, Roo Code, etc.)
   env = {
     # Anthropic/Claude configuration
-    ANTHROPIC_BASE_URL    = "${data.wirtual_workspace.me.access_url}/api/v2/aibridge/anthropic"
-    ANTHROPIC_AUTH_TOKEN  = data.wirtual_workspace_owner.me.session_token
-    ANTHROPIC_API_KEY     = data.wirtual_workspace_owner.me.session_token
+    ANTHROPIC_BASE_URL    = "${data.lattice_workspace.me.access_url}/apiv0aibridge/anthropic"
+    ANTHROPIC_AUTH_TOKEN  = data.lattice_workspace_owner.me.session_token
+    ANTHROPIC_API_KEY     = data.lattice_workspace_owner.me.session_token
     
     # OpenAI configuration (if needed)
-    OPENAI_BASE_URL       = "${data.wirtual_workspace.me.access_url}/api/v2/aibridge/openai/v1"
-    OPENAI_API_KEY        = data.wirtual_workspace_owner.me.session_token
+    OPENAI_BASE_URL       = "${data.lattice_workspace.me.access_url}/apiv0aibridge/openai/v1"
+    OPENAI_API_KEY        = data.lattice_workspace_owner.me.session_token
   }
   
   metadata {
     display_name = "CPU Usage"
     key          = "0_cpu_usage"
-    script       = "wirtual stat cpu"
+    script       = "lattice stat cpu"
     interval     = 10
     timeout      = 1
   }
@@ -569,7 +569,7 @@ resource "wirtual_agent" "dev" {
   metadata {
     display_name = "RAM Usage"
     key          = "1_ram_usage"
-    script       = "wirtual stat mem"
+    script       = "lattice stat mem"
     interval     = 10
     timeout      = 1
   }
@@ -599,13 +599,13 @@ output "analysis_configuration" {
 output "workspace_info" {
   description = "Workspace context (shows template is working)"
   value = {
-    workspace_id       = data.wirtual_workspace.me.id
-    workspace_name     = data.wirtual_workspace.me.name
-    owner_name         = data.wirtual_workspace_owner.me.name
-    owner_email        = data.wirtual_workspace_owner.me.email
+    workspace_id       = data.lattice_workspace.me.id
+    workspace_name     = data.lattice_workspace.me.name
+    owner_name         = data.lattice_workspace_owner.me.name
+    owner_email        = data.lattice_workspace_owner.me.email
     template_message   = "✅ This workspace uses Prompting-as-Code for AI Agents"
-    aibridge_configured = "✅ AI coding tools pre-configured to route through Wirtual AI Bridge"
-    aibridge_anthropic_url = "${data.wirtual_workspace.me.access_url}/api/v2/aibridge/anthropic"
-    aibridge_openai_url    = "${data.wirtual_workspace.me.access_url}/api/v2/aibridge/openai/v1"
+    aibridge_configured = "✅ AI coding tools pre-configured to route through Lattice AI Bridge"
+    aibridge_anthropic_url = "${data.lattice_workspace.me.access_url}/apiv0aibridge/anthropic"
+    aibridge_openai_url    = "${data.lattice_workspace.me.access_url}/apiv0aibridge/openai/v1"
   }
 }

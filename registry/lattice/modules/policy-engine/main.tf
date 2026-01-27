@@ -50,19 +50,19 @@ variable "audit_retention_days" {
 
 data "lattice_workspace" "current" {}
 
-resource "lattice_agent_metadata" "policy_mode" {
+resource "lattice_sidecar_metadata" "policy_mode" {
   agent_id = var.agent_id
   key      = "policy_default_effect"
   value    = var.default_effect
 }
 
-resource "lattice_agent_metadata" "audit_enabled" {
+resource "lattice_sidecar_metadata" "audit_enabled" {
   agent_id = var.agent_id
   key      = "policy_audit_enabled"
   value    = tostring(var.enable_audit)
 }
 
-resource "lattice_agent_metadata" "policies" {
+resource "lattice_sidecar_metadata" "policies" {
   agent_id = var.agent_id
   key      = "policies"
   value    = jsonencode(var.policies)

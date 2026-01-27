@@ -2,7 +2,7 @@
 display_name: Agent Definition with Windsurf
 description: Deploy AI agents with Windsurf and Cascade AI assistant
 icon: ../.icons/windsurf.svg
-maintainer_github: wirtualdev
+maintainer_github: latticeHQ
 verified: true
 tags: [ide, vibe-coding]
 ---
@@ -22,12 +22,12 @@ Deploy AI coding agents with Windsurf, Codeium's AI editor featuring the Cascade
 
 ### Infrastructure
 
-Requires a Docker-enabled environment. The VM running Wirtual must have:
+Requires a Docker-enabled environment. The VM running Lattice must have:
 
 ```sh
-# Add wirtual user to Docker group
-sudo adduser wirtual docker
-sudo systemctl restart wirtual
+# Add lattice user to Docker group
+sudo adduser lattice docker
+sudo systemctl restart lattice
 ```
 
 ### API Keys

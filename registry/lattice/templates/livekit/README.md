@@ -2,7 +2,7 @@
 display_name: Agent Definition with LiveKit
 description: Deploy real-time voice/video agents with LiveKit infrastructure
 icon: ../.icons/livekit.svg
-maintainer_github: wirtualdev
+maintainer_github: latticeHQ
 verified: true
 tags: [voice, framework, realtime]
 ---
@@ -25,9 +25,9 @@ Deploy real-time voice and video agents using LiveKit's open-source WebRTC infra
 Requires Docker for running LiveKit server locally, or use LiveKit Cloud.
 
 ```sh
-# Add wirtual user to Docker group
-sudo adduser wirtual docker
-sudo systemctl restart wirtual
+# Add lattice user to Docker group
+sudo adduser lattice docker
+sudo systemctl restart lattice
 ```
 
 ### API Keys

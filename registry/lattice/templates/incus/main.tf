@@ -1,7 +1,7 @@
 terraform {
   required_providers {
-    wirtual = {
-      source = "wirtualdev/wirtual"
+    lattice = {
+      source = "latticehq/lattice"
     }
     incus = {
       source = "lxc/incus"
@@ -9,14 +9,14 @@ terraform {
   }
 }
 
-data "wirtual_provisioner" "me" {}
+data "lattice_provisioner" "me" {}
 
 provider "incus" {}
 
-data "wirtual_workspace" "me" {}
-data "wirtual_workspace_owner" "me" {}
+data "lattice_workspace" "me" {}
+data "lattice_workspace_owner" "me" {}
 
-data "wirtual_parameter" "image" {
+data "lattice_parameter" "image" {
   name         = "image"
   display_name = "Image"
   description  = "The container image to use. Be sure to use a variant with cloud-init installed!"
@@ -25,7 +25,7 @@ data "wirtual_parameter" "image" {
   mutable      = true
 }
 
-data "wirtual_parameter" "cpu" {
+data "lattice_parameter" "cpu" {
   name         = "cpu"
   display_name = "CPU"
   description  = "The number of CPUs to allocate to the workspace (1-8)"
@@ -39,7 +39,7 @@ data "wirtual_parameter" "cpu" {
   }
 }
 
-data "wirtual_parameter" "memory" {
+data "lattice_parameter" "memory" {
   name         = "memory"
   display_name = "Memory"
   description  = "The amount of memory to allocate to the workspace in GB (up to 16GB)"
@@ -53,7 +53,7 @@ data "wirtual_parameter" "memory" {
   }
 }
 
-data "wirtual_parameter" "git_repo" {
+data "lattice_parameter" "git_repo" {
   type        = "string"
   name        = "Git repository"
   default     = "https://github.com/latticehq/latticeruntime"
@@ -61,7 +61,7 @@ data "wirtual_parameter" "git_repo" {
   mutable     = true
 }
 
-data "wirtual_parameter" "repo_base_dir" {
+data "lattice_parameter" "repo_base_dir" {
   type        = "string"
   name        = "Repository Base Directory"
   default     = "~"
@@ -69,19 +69,19 @@ data "wirtual_parameter" "repo_base_dir" {
   mutable     = true
 }
 
-resource "wirtual_agent" "main" {
-  count = data.wirtual_workspace.me.start_count
-  arch  = data.wirtual_provisioner.me.arch
+resource "lattice_agent" "main" {
+  count = data.lattice_workspace.me.start_count
+  arch  = data.lattice_provisioner.me.arch
   os    = "linux"
   dir   = "/home/${local.workspace_user}"
   env = {
-    WIRTUAL_WORKSPACE_ID = data.wirtual_workspace.me.id
+    LATTICE_WORKSPACE_ID = data.lattice_workspace.me.id
   }
 
   metadata {
     display_name = "CPU Usage"
     key          = "0_cpu_usage"
-    script       = "wirtual stat cpu"
+    script       = "lattice stat cpu"
     interval     = 10
     timeout      = 1
   }
@@ -89,7 +89,7 @@ resource "wirtual_agent" "main" {
   metadata {
     display_name = "RAM Usage"
     key          = "1_ram_usage"
-    script       = "wirtual stat mem"
+    script       = "lattice stat mem"
     interval     = 10
     timeout      = 1
   }
@@ -97,67 +97,67 @@ resource "wirtual_agent" "main" {
   metadata {
     display_name = "Home Disk"
     key          = "3_home_disk"
-    script       = "wirtual stat disk --path /home/${lower(data.wirtual_workspace_owner.me.name)}"
+    script       = "lattice stat disk --path /home/${lower(data.lattice_workspace_owner.me.name)}"
     interval     = 60
     timeout      = 1
   }
 }
 
 module "git-clone" {
-  source   = "registry.wirtual.dev/modules/git-clone/wirtual"
+  source   = "registry.latticeruntime.com/modules/git-clone/lattice"
   version  = "1.0.2"
   agent_id = local.agent_id
-  url      = data.wirtual_parameter.git_repo.value
+  url      = data.lattice_parameter.git_repo.value
   base_dir = local.repo_base_dir
 }
 
 module "code-server" {
-  source   = "registry.wirtual.dev/modules/code-server/wirtual"
+  source   = "registry.latticeruntime.com/modules/code-server/lattice"
   version  = "1.0.2"
   agent_id = local.agent_id
   folder   = local.repo_base_dir
 }
 
 module "filebrowser" {
-  source   = "registry.wirtual.dev/modules/filebrowser/wirtual"
+  source   = "registry.latticeruntime.com/modules/filebrowser/lattice"
   version  = "1.0.2"
   agent_id = local.agent_id
 }
 
-module "wirtual-login" {
-  source   = "registry.wirtual.dev/modules/wirtual-login/wirtual"
+module "lattice-login" {
+  source   = "registry.latticeruntime.com/modules/lattice-login/lattice"
   version  = "1.0.2"
   agent_id = local.agent_id
 }
 
 resource "incus_volume" "home" {
-  name = "wirtual-${data.wirtual_workspace.me.id}-home"
+  name = "lattice-${data.lattice_workspace.me.id}-home"
   pool = local.pool
 }
 
 resource "incus_volume" "docker" {
-  name = "wirtual-${data.wirtual_workspace.me.id}-docker"
+  name = "lattice-${data.lattice_workspace.me.id}-docker"
   pool = local.pool
 }
 
 resource "incus_cached_image" "image" {
   source_remote = "images"
-  source_image  = data.wirtual_parameter.image.value
+  source_image  = data.lattice_parameter.image.value
 }
 
 resource "incus_instance_file" "agent_token" {
-  count              = data.wirtual_workspace.me.start_count
+  count              = data.lattice_workspace.me.start_count
   instance           = incus_instance.dev.name
   content            = <<EOF
-WIRTUAL_AGENT_TOKEN=${local.agent_token}
+LATTICE_AGENT_TOKEN=${local.agent_token}
 EOF
   create_directories = true
-  target_path        = "/opt/wirtual/init.env"
+  target_path        = "/opt/lattice/init.env"
 }
 
 resource "incus_instance" "dev" {
-  running = data.wirtual_workspace.me.start_count == 1
-  name    = "wirtual-${lower(data.wirtual_workspace_owner.me.name)}-${lower(data.wirtual_workspace.me.name)}"
+  running = data.lattice_workspace.me.start_count == 1
+  name    = "lattice-${lower(data.lattice_workspace_owner.me.name)}-${lower(data.lattice_workspace.me.name)}"
   image   = incus_cached_image.image.fingerprint
 
   config = {
@@ -167,7 +167,7 @@ resource "incus_instance" "dev" {
     "boot.autostart"                       = true
     "cloud-init.user-data"                 = <<EOF
 #cloud-config
-hostname: ${lower(data.wirtual_workspace.me.name)}
+hostname: ${lower(data.lattice_workspace.me.name)}
 users:
   - name: ${local.workspace_user}
     uid: 1000
@@ -178,51 +178,51 @@ users:
     shell: /bin/bash
     sudo: ['ALL=(ALL) NOPASSWD:ALL']
 write_files:
-  - path: /opt/wirtual/init
+  - path: /opt/lattice/init
     permissions: "0755"
     encoding: b64
     content: ${base64encode(local.agent_init_script)}
-  - path: /etc/systemd/system/wirtual-agent.service
+  - path: /etc/systemd/system/lattice-agent.service
     permissions: "0644"
     content: |
       [Unit]
-      Description=Wirtual Agent
+      Description=Lattice Agent
       After=network-online.target
       Wants=network-online.target
 
       [Service]
       User=${local.workspace_user}
-      EnvironmentFile=/opt/wirtual/init.env
-      ExecStart=/opt/wirtual/init
+      EnvironmentFile=/opt/lattice/init.env
+      ExecStart=/opt/lattice/init
       Restart=always
       RestartSec=10
       TimeoutStopSec=90
       KillMode=process
 
       OOMScoreAdjust=-900
-      SyslogIdentifier=wirtual-agent
+      SyslogIdentifier=lattice-agent
 
       [Install]
       WantedBy=multi-user.target
-  - path: /etc/systemd/system/wirtual-agent-watcher.service
+  - path: /etc/systemd/system/lattice-agent-watcher.service
     permissions: "0644"
     content: |
       [Unit]
-      Description=Wirtual Agent Watcher
+      Description=Lattice Agent Watcher
       After=network-online.target
 
       [Service]
       Type=oneshot
-      ExecStart=/usr/bin/systemctl restart wirtual-agent.service
+      ExecStart=/usr/bin/systemctl restart lattice-agent.service
 
       [Install]
       WantedBy=multi-user.target
-  - path: /etc/systemd/system/wirtual-agent-watcher.path
+  - path: /etc/systemd/system/lattice-agent-watcher.path
     permissions: "0644"
     content: |
       [Path]
-      PathModified=/opt/wirtual/init.env
-      Unit=wirtual-agent-watcher.service
+      PathModified=/opt/lattice/init.env
+      Unit=lattice-agent-watcher.service
 
       [Install]
       WantedBy=multi-user.target
@@ -233,14 +233,14 @@ runcmd:
     apt-get update && apt-get install -y curl docker.io
     usermod -aG docker ${local.workspace_user}
     newgrp docker
-  - systemctl enable wirtual-agent.service wirtual-agent-watcher.service wirtual-agent-watcher.path
-  - systemctl start wirtual-agent.service wirtual-agent-watcher.service wirtual-agent-watcher.path
+  - systemctl enable lattice-agent.service lattice-agent-watcher.service lattice-agent-watcher.path
+  - systemctl start lattice-agent.service lattice-agent-watcher.service lattice-agent-watcher.path
 EOF
   }
 
   limits = {
-    cpu    = data.wirtual_parameter.cpu.value
-    memory = "${data.wirtual_parameter.cpu.value}GiB"
+    cpu    = data.lattice_parameter.cpu.value
+    memory = "${data.lattice_parameter.cpu.value}GiB"
   }
 
   device {
@@ -274,17 +274,17 @@ EOF
 }
 
 locals {
-  workspace_user    = lower(data.wirtual_workspace_owner.me.name)
-  pool              = "wirtual"
-  repo_base_dir     = data.wirtual_parameter.repo_base_dir.value == "~" ? "/home/${local.workspace_user}" : replace(data.wirtual_parameter.repo_base_dir.value, "/^~\\//", "/home/${local.workspace_user}/")
+  workspace_user    = lower(data.lattice_workspace_owner.me.name)
+  pool              = "lattice"
+  repo_base_dir     = data.lattice_parameter.repo_base_dir.value == "~" ? "/home/${local.workspace_user}" : replace(data.lattice_parameter.repo_base_dir.value, "/^~\\//", "/home/${local.workspace_user}/")
   repo_dir          = module.git-clone.repo_dir
-  agent_id          = data.wirtual_workspace.me.start_count == 1 ? wirtual_agent.main[0].id : ""
-  agent_token       = data.wirtual_workspace.me.start_count == 1 ? wirtual_agent.main[0].token : ""
-  agent_init_script = data.wirtual_workspace.me.start_count == 1 ? wirtual_agent.main[0].init_script : ""
+  agent_id          = data.lattice_workspace.me.start_count == 1 ? lattice_agent.main[0].id : ""
+  agent_token       = data.lattice_workspace.me.start_count == 1 ? lattice_agent.main[0].token : ""
+  agent_init_script = data.lattice_workspace.me.start_count == 1 ? lattice_agent.main[0].init_script : ""
 }
 
-resource "wirtual_metadata" "info" {
-  count       = data.wirtual_workspace.me.start_count
+resource "lattice_metadata" "info" {
+  count       = data.lattice_workspace.me.start_count
   resource_id = incus_instance.dev.name
   item {
     key   = "memory"

@@ -1,15 +1,15 @@
 ---
 display_name: Azure VM (Windows)
-description: Provision Azure VMs as Wirtual workspaces
+description: Provision Azure VMs as Lattice workspaces
 icon: ../.icons/azure.png
-maintainer_github: wirtual
+maintainer_github: lattice
 verified: true
 tags: [vm, windows, azure]
 ---
 
 # Remote Development on Azure VMs (Windows)
 
-Provision Azure Windows VMs as [Wirtual workspaces](https://wirtual.dev/docs/workspaces) with this example template.
+Provision Azure Windows VMs as [Lattice workspaces](https://latticeruntime.com/docs/workspaces) with this example template.
 
 <!-- TODO: Add screenshot -->
 
@@ -17,9 +17,9 @@ Provision Azure Windows VMs as [Wirtual workspaces](https://wirtual.dev/docs/wor
 
 ### Authentication
 
-This template assumes that wirtuald is run in an environment that is authenticated
+This template assumes that latticed is run in an environment that is authenticated
 with Azure. For example, run `az login` then `az account set --subscription=<id>`
-to import credentials on the system and user running wirtuald. For other ways to
+to import credentials on the system and user running latticed. For other ways to
 authenticate, [consult the Terraform docs](https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs#authenticating-to-azure).
 
 ## Architecture
@@ -29,7 +29,7 @@ This template provisions the following resources:
 - Azure VM (ephemeral, deleted on stop)
 - Managed disk (persistent, mounted to `F:`)
 
-This means, when the workspace restarts, any tools or files outside of the data directory are not persisted. To pre-bake tools into the workspace (e.g. `python3`), modify the VM image, or use a [startup script](https://registry.terraform.io/providers/wirtual/wirtual/latest/docs/resources/script).
+This means, when the workspace restarts, any tools or files outside of the data directory are not persisted. To pre-bake tools into the workspace (e.g. `python3`), modify the VM image, or use a [startup script](https://registry.terraform.io/providers/lattice/lattice/latest/docs/resources/script).
 
 > **Note**
 > This template is designed to be a starting point! Edit the Terraform to extend the template to support your use case.

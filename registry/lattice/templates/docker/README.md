@@ -2,7 +2,7 @@
 display_name: Agent Definition with Docker
 description: Deploy containerized agents using Docker
 icon: ../.icons/docker.png
-maintainer_github: wirtual
+maintainer_github: lattice
 verified: true
 tags: [docker]
 ---
@@ -17,17 +17,17 @@ Deploy containerized AI agents using Docker with this agent definition template.
 
 ### Infrastructure
 
-The VM you run Wirtual on must have a running Docker socket and the `wirtual` user must be added to the Docker group:
+The VM you run Lattice on must have a running Docker socket and the `lattice` user must be added to the Docker group:
 
 ```sh
-# Add wirtual user to Docker group
-sudo adduser wirtual docker
+# Add lattice user to Docker group
+sudo adduser lattice docker
 
-# Restart Wirtual server
-sudo systemctl restart wirtual
+# Restart Lattice server
+sudo systemctl restart lattice
 
 # Test Docker
-sudo -u wirtual docker ps
+sudo -u lattice docker ps
 ```
 
 ## Architecture
@@ -36,7 +36,7 @@ This agent definition provisions the following resources:
 
 - Docker image (built by Docker socket and kept locally)
 - Docker container pod (ephemeral execution environment)
-- Docker volume (persistent on `/home/wirtual`)
+- Docker volume (persistent on `/home/lattice`)
 
 This means, when the workspace restarts, any tools or files outside of the home directory are not persisted. To pre-bake tools into the agent container (e.g. `python3`), modify the container image.
 
@@ -45,4 +45,4 @@ This means, when the workspace restarts, any tools or files outside of the home 
 
 ### Editing the image
 
-Edit the `Dockerfile` and run `wirtual templates push` to update agent definitions.
+Edit the `Dockerfile` and run `lattice templates push` to update agent definitions.

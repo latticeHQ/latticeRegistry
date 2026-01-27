@@ -1,7 +1,7 @@
 terraform {
   required_providers {
-    wirtual = {
-      source = "wirtualdev/wirtual"
+    lattice = {
+      source = "latticehq/lattice"
     }
     aws = {
       source = "hashicorp/aws"
@@ -11,7 +11,7 @@ terraform {
 
 # Last updated 2023-03-14
 # aws ec2 describe-regions | jq -r '[.Regions[].RegionName] | sort'
-data "wirtual_parameter" "region" {
+data "lattice_parameter" "region" {
   name         = "region"
   display_name = "Region"
   description  = "The region to deploy the workspace in."
@@ -104,7 +104,7 @@ data "wirtual_parameter" "region" {
   }
 }
 
-data "wirtual_parameter" "instance_type" {
+data "lattice_parameter" "instance_type" {
   name         = "instance_type"
   display_name = "Instance type"
   description  = "What instance type should your workspace use?"
@@ -137,11 +137,11 @@ data "wirtual_parameter" "instance_type" {
 }
 
 provider "aws" {
-  region = data.wirtual_parameter.region.value
+  region = data.lattice_parameter.region.value
 }
 
-data "wirtual_workspace" "me" {}
-data "wirtual_workspace_owner" "me" {}
+data "lattice_workspace" "me" {}
+data "lattice_workspace_owner" "me" {}
 
 data "aws_ami" "ubuntu" {
   most_recent = true
@@ -156,8 +156,8 @@ data "aws_ami" "ubuntu" {
   owners = ["099720109477"] # Canonical
 }
 
-resource "wirtual_agent" "dev" {
-  count          = data.wirtual_workspace.me.start_count
+resource "lattice_agent" "dev" {
+  count          = data.lattice_workspace.me.start_count
   arch           = "amd64"
   auth           = "aws-instance-identity"
   os             = "linux"
@@ -172,59 +172,59 @@ resource "wirtual_agent" "dev" {
     display_name = "CPU Usage"
     interval     = 5
     timeout      = 5
-    script       = "wirtual stat cpu"
+    script       = "lattice stat cpu"
   }
   metadata {
     key          = "memory"
     display_name = "Memory Usage"
     interval     = 5
     timeout      = 5
-    script       = "wirtual stat mem"
+    script       = "lattice stat mem"
   }
   metadata {
     key          = "disk"
     display_name = "Disk Usage"
     interval     = 600 # every 10 minutes
     timeout      = 30  # df can take a while on large filesystems
-    script       = "wirtual stat disk --path $HOME"
+    script       = "lattice stat disk --path $HOME"
   }
 }
 
-# See https://registry.wirtual.dev/modules/code-server
+# See https://registry.latticeruntime.com/modules/code-server
 module "code-server" {
-  count  = data.wirtual_workspace.me.start_count
-  source = "registry.wirtual.dev/modules/code-server/wirtual"
+  count  = data.lattice_workspace.me.start_count
+  source = "registry.latticeruntime.com/modules/code-server/lattice"
 
   # This ensures that the latest version of the module gets downloaded, you can also pin the module version to prevent breaking changes in production.
   version = ">= 1.0.0"
 
-  agent_id = wirtual_agent.dev[0].id
+  agent_id = lattice_agent.dev[0].id
   order    = 1
 }
 
-# See https://registry.wirtual.dev/modules/jetbrains-gateway
+# See https://registry.latticeruntime.com/modules/jetbrains-gateway
 module "jetbrains_gateway" {
-  count  = data.wirtual_workspace.me.start_count
-  source = "registry.wirtual.dev/modules/jetbrains-gateway/wirtual"
+  count  = data.lattice_workspace.me.start_count
+  source = "registry.latticeruntime.com/modules/jetbrains-gateway/lattice"
 
   # JetBrains IDEs to make available for the user to select
   jetbrains_ides = ["IU", "PY", "WS", "PS", "RD", "CL", "GO", "RM"]
   default        = "IU"
 
   # Default folder to open when starting a JetBrains IDE
-  folder = "/home/wirtual"
+  folder = "/home/lattice"
 
   # This ensures that the latest version of the module gets downloaded, you can also pin the module version to prevent breaking changes in production.
   version = ">= 1.0.0"
 
-  agent_id   = wirtual_agent.dev[0].id
+  agent_id   = lattice_agent.dev[0].id
   agent_name = "dev"
   order      = 2
 }
 
 locals {
-  hostname   = lower(data.wirtual_workspace.me.name)
-  linux_user = "wirtual"
+  hostname   = lower(data.lattice_workspace.me.name)
+  linux_user = "lattice"
 }
 
 data "cloudinit_config" "user_data" {
@@ -250,32 +250,32 @@ data "cloudinit_config" "user_data" {
     content = templatefile("${path.module}/cloud-init/userdata.sh.tftpl", {
       linux_user = local.linux_user
 
-      init_script = try(wirtual_agent.dev[0].init_script, "")
+      init_script = try(lattice_agent.dev[0].init_script, "")
     })
   }
 }
 
 resource "aws_instance" "dev" {
   ami               = data.aws_ami.ubuntu.id
-  availability_zone = "${data.wirtual_parameter.region.value}a"
-  instance_type     = data.wirtual_parameter.instance_type.value
+  availability_zone = "${data.lattice_parameter.region.value}a"
+  instance_type     = data.lattice_parameter.instance_type.value
 
   user_data = data.cloudinit_config.user_data.rendered
   tags = {
-    Name = "wirtual-${data.wirtual_workspace_owner.me.name}-${data.wirtual_workspace.me.name}"
+    Name = "lattice-${data.lattice_workspace_owner.me.name}-${data.lattice_workspace.me.name}"
     # Required if you are using our example policy, see template README
-    Wirtual_Provisioned = "true"
+    Lattice_Provisioned = "true"
   }
   lifecycle {
     ignore_changes = [ami]
   }
 }
 
-resource "wirtual_metadata" "workspace_info" {
+resource "lattice_metadata" "workspace_info" {
   resource_id = aws_instance.dev.id
   item {
     key   = "region"
-    value = data.wirtual_parameter.region.value
+    value = data.lattice_parameter.region.value
   }
   item {
     key   = "instance type"
@@ -289,5 +289,5 @@ resource "wirtual_metadata" "workspace_info" {
 
 resource "aws_ec2_instance_state" "dev" {
   instance_id = aws_instance.dev.id
-  state       = data.wirtual_workspace.me.transition == "start" ? "running" : "stopped"
+  state       = data.lattice_workspace.me.transition == "start" ? "running" : "stopped"
 }

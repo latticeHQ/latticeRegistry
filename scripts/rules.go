@@ -45,10 +45,10 @@ func xerrors(m dsl.Matcher) {
 //
 //nolint:unused,deadcode,varnamelen
 func databaseImport(m dsl.Matcher) {
-	m.Import("github.com/coder/coder/v2/coderd/database")
+	m.Import("github.com/coder/coderv0coderd/database")
 	m.Match("database.$_").
 		Report("Do not import any database types into codersdk").
-		Where(m.File().PkgPath.Matches("github.com/coder/coder/v2/codersdk"))
+		Where(m.File().PkgPath.Matches("github.com/coder/coderv0codersdk"))
 }
 
 // doNotCallTFailNowInsideGoroutine enforces not calling t.FailNow or
@@ -98,7 +98,7 @@ func doNotCallTFailNowInsideGoroutine(m dsl.Matcher) {
 func useStandardTimeoutsAndDelaysInTests(m dsl.Matcher) {
 	m.Import("github.com/stretchr/testify/require")
 	m.Import("github.com/stretchr/testify/assert")
-	m.Import("github.com/coder/coder/v2/testutil")
+	m.Import("github.com/coder/coderv0testutil")
 
 	m.Match(`context.WithTimeout($ctx, $duration)`).
 		Where(m.File().Imports("testing") && !m.File().PkgPath.Matches("testutil$") && !m["duration"].Text.Matches("^testutil\\.")).

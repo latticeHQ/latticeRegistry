@@ -51,13 +51,13 @@ variable "token_lifetime" {
 
 data "lattice_workspace" "current" {}
 
-resource "lattice_agent_metadata" "identity" {
+resource "lattice_sidecar_metadata" "identity" {
   agent_id = var.agent_id
   key      = "identity_provider"
   value    = var.provider_type
 }
 
-resource "lattice_agent_metadata" "issuer" {
+resource "lattice_sidecar_metadata" "issuer" {
   count    = var.provider_type == "oidc" ? 1 : 0
   agent_id = var.agent_id
   key      = "oidc_issuer"

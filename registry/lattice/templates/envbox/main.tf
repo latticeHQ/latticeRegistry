@@ -1,7 +1,7 @@
 terraform {
   required_providers {
-    wirtual = {
-      source = "wirtualdev/wirtual"
+    lattice = {
+      source = "latticehq/lattice"
     }
     kubernetes = {
       source = "hashicorp/kubernetes"
@@ -9,7 +9,7 @@ terraform {
   }
 }
 
-data "wirtual_parameter" "home_disk" {
+data "lattice_parameter" "home_disk" {
   name        = "Disk Size"
   description = "How large should the disk storing the home directory be?"
   icon        = "https://cdn-icons-png.flaticon.com/512/2344/2344147.png"
@@ -27,14 +27,14 @@ variable "use_kubeconfig" {
   default     = true
   description = <<-EOF
   Use host kubeconfig? (true/false)
-  Set this to false if the Wirtual host is itself running as a Pod on the same
+  Set this to false if the Lattice host is itself running as a Pod on the same
   Kubernetes cluster as you are deploying workspaces to.
-  Set this to true if the Wirtual host is running outside the Kubernetes cluster
-  for workspaces.  A valid "~/.kube/config" must be present on the Wirtual host.
+  Set this to true if the Lattice host is running outside the Kubernetes cluster
+  for workspaces.  A valid "~/.kube/config" must be present on the Lattice host.
   EOF
 }
 
-provider "wirtual" {
+provider "lattice" {
 }
 
 variable "namespace" {
@@ -75,14 +75,14 @@ variable "min_memory" {
 }
 
 provider "kubernetes" {
-  # Authenticate via ~/.kube/config or a Wirtual-specific ServiceAccount, depending on admin preferences
+  # Authenticate via ~/.kube/config or a Lattice-specific ServiceAccount, depending on admin preferences
   config_path = var.use_kubeconfig == true ? "~/.kube/config" : null
 }
 
-data "wirtual_workspace" "me" {}
-data "wirtual_workspace_owner" "me" {}
+data "lattice_workspace" "me" {}
+data "lattice_workspace_owner" "me" {}
 
-resource "wirtual_agent" "main" {
+resource "lattice_agent" "main" {
   os             = "linux"
   arch           = "amd64"
   startup_script = <<EOT
@@ -105,12 +105,12 @@ resource "wirtual_agent" "main" {
 }
 
 # code-server
-resource "wirtual_app" "code-server" {
-  agent_id     = wirtual_agent.main.id
+resource "lattice_app" "code-server" {
+  agent_id     = lattice_agent.main.id
   slug         = "code-server"
   display_name = "code-server"
   icon         = "/icon/code.svg"
-  url          = "http://localhost:13337?folder=/home/wirtual"
+  url          = "http://localhost:13337?folder=/home/lattice"
   subdomain    = false
   share        = "owner"
 
@@ -123,7 +123,7 @@ resource "wirtual_app" "code-server" {
 
 resource "kubernetes_persistent_volume_claim" "home" {
   metadata {
-    name      = "wirtual-${lower(data.wirtual_workspace_owner.me.name)}-${lower(data.wirtual_workspace.me.name)}-home"
+    name      = "lattice-${lower(data.lattice_workspace_owner.me.name)}-${lower(data.lattice_workspace.me.name)}-home"
     namespace = var.namespace
   }
   wait_until_bound = false
@@ -131,17 +131,17 @@ resource "kubernetes_persistent_volume_claim" "home" {
     access_modes = ["ReadWriteOnce"]
     resources {
       requests = {
-        storage = "${data.wirtual_parameter.home_disk.value}Gi"
+        storage = "${data.lattice_parameter.home_disk.value}Gi"
       }
     }
   }
 }
 
 resource "kubernetes_pod" "main" {
-  count = data.wirtual_workspace.me.start_count
+  count = data.lattice_workspace.me.start_count
 
   metadata {
-    name      = "wirtual-${lower(data.wirtual_workspace_owner.me.name)}-${lower(data.wirtual_workspace.me.name)}"
+    name      = "lattice-${lower(data.lattice_workspace_owner.me.name)}-${lower(data.lattice_workspace.me.name)}"
     namespace = var.namespace
   }
 
@@ -172,52 +172,52 @@ resource "kubernetes_pod" "main" {
       }
 
       env {
-        name  = "WIRTUAL_AGENT_TOKEN"
-        value = wirtual_agent.main.token
+        name  = "LATTICE_AGENT_TOKEN"
+        value = lattice_agent.main.token
       }
 
       env {
-        name  = "WIRTUAL_AGENT_URL"
-        value = data.wirtual_workspace.me.access_url
+        name  = "LATTICE_AGENT_URL"
+        value = data.lattice_workspace.me.access_url
       }
 
       env {
-        name  = "WIRTUAL_INNER_IMAGE"
-        value = "index.docker.io/wirtualcom/enterprise-base:ubuntu-20240812"
+        name  = "LATTICE_INNER_IMAGE"
+        value = "index.docker.io/latticecom/enterprise-base:ubuntu-20240812"
       }
 
       env {
-        name  = "WIRTUAL_INNER_USERNAME"
-        value = "wirtual"
+        name  = "LATTICE_INNER_USERNAME"
+        value = "lattice"
       }
 
       env {
-        name  = "WIRTUAL_BOOTSTRAP_SCRIPT"
-        value = wirtual_agent.main.init_script
+        name  = "LATTICE_BOOTSTRAP_SCRIPT"
+        value = lattice_agent.main.init_script
       }
 
       env {
-        name  = "WIRTUAL_MOUNTS"
-        value = "/home/wirtual:/home/wirtual"
+        name  = "LATTICE_MOUNTS"
+        value = "/home/lattice:/home/lattice"
       }
 
       env {
-        name  = "WIRTUAL_ADD_FUSE"
+        name  = "LATTICE_ADD_FUSE"
         value = var.create_fuse
       }
 
       env {
-        name  = "WIRTUAL_INNER_HOSTNAME"
-        value = data.wirtual_workspace.me.name
+        name  = "LATTICE_INNER_HOSTNAME"
+        value = data.lattice_workspace.me.name
       }
 
       env {
-        name  = "WIRTUAL_ADD_TUN"
+        name  = "LATTICE_ADD_TUN"
         value = var.create_tun
       }
 
       env {
-        name = "WIRTUAL_CPUS"
+        name = "LATTICE_CPUS"
         value_from {
           resource_field_ref {
             resource = "limits.cpu"
@@ -226,7 +226,7 @@ resource "kubernetes_pod" "main" {
       }
 
       env {
-        name = "WIRTUAL_MEMORY"
+        name = "LATTICE_MEMORY"
         value_from {
           resource_field_ref {
             resource = "limits.memory"
@@ -235,20 +235,20 @@ resource "kubernetes_pod" "main" {
       }
 
       volume_mount {
-        mount_path = "/home/wirtual"
+        mount_path = "/home/lattice"
         name       = "home"
         read_only  = false
         sub_path   = "home"
       }
 
       volume_mount {
-        mount_path = "/var/lib/wirtual/docker"
+        mount_path = "/var/lib/lattice/docker"
         name       = "home"
         sub_path   = "cache/docker"
       }
 
       volume_mount {
-        mount_path = "/var/lib/wirtual/containers"
+        mount_path = "/var/lib/lattice/containers"
         name       = "home"
         sub_path   = "cache/containers"
       }

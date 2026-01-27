@@ -2,7 +2,7 @@
 display_name: Agent Definition with ElevenLabs
 description: Deploy voice agents with ElevenLabs text-to-speech
 icon: ../.icons/elevenlabs.svg
-maintainer_github: wirtualdev
+maintainer_github: latticeHQ
 verified: true
 tags: [voice, tts]
 ---
@@ -25,9 +25,9 @@ Deploy voice-enabled AI agents using ElevenLabs' industry-leading text-to-speech
 Requires Docker-enabled environment or cloud VM.
 
 ```sh
-# Add wirtual user to Docker group
-sudo adduser wirtual docker
-sudo systemctl restart wirtual
+# Add lattice user to Docker group
+sudo adduser lattice docker
+sudo systemctl restart lattice
 ```
 
 ### API Keys

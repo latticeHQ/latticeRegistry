@@ -1,7 +1,7 @@
 terraform {
   required_providers {
-    wirtual = {
-      source = "wirtualdev/wirtual"
+    lattice = {
+      source = "latticehq/lattice"
     }
     kubernetes = {
       source = "hashicorp/kubernetes"
@@ -9,7 +9,7 @@ terraform {
   }
 }
 
-provider "wirtual" {
+provider "lattice" {
 }
 
 variable "use_kubeconfig" {
@@ -17,21 +17,21 @@ variable "use_kubeconfig" {
   description = <<-EOF
   Use host kubeconfig? (true/false)
 
-  Set this to false if the Wirtual host is itself running as a Pod on the same
+  Set this to false if the Lattice host is itself running as a Pod on the same
   Kubernetes cluster as you are deploying workspaces to.
 
-  Set this to true if the Wirtual host is running outside the Kubernetes cluster
-  for workspaces.  A valid "~/.kube/config" must be present on the Wirtual host.
+  Set this to true if the Lattice host is running outside the Kubernetes cluster
+  for workspaces.  A valid "~/.kube/config" must be present on the Lattice host.
   EOF
   default     = false
 }
 
 variable "namespace" {
   type        = string
-  description = "The Kubernetes namespace to create workspaces in (must exist prior to creating workspaces). If the Wirtual host is itself running as a Pod on the same Kubernetes cluster as you are deploying workspaces to, set this to the same namespace."
+  description = "The Kubernetes namespace to create workspaces in (must exist prior to creating workspaces). If the Lattice host is itself running as a Pod on the same Kubernetes cluster as you are deploying workspaces to, set this to the same namespace."
 }
 
-data "wirtual_parameter" "cpu" {
+data "lattice_parameter" "cpu" {
   name         = "cpu"
   display_name = "CPU"
   description  = "The number of CPU cores"
@@ -56,7 +56,7 @@ data "wirtual_parameter" "cpu" {
   }
 }
 
-data "wirtual_parameter" "memory" {
+data "lattice_parameter" "memory" {
   name         = "memory"
   display_name = "Memory"
   description  = "The amount of memory in GB"
@@ -81,7 +81,7 @@ data "wirtual_parameter" "memory" {
   }
 }
 
-data "wirtual_parameter" "home_disk_size" {
+data "lattice_parameter" "home_disk_size" {
   name         = "home_disk_size"
   display_name = "Home disk size"
   description  = "The size of the home disk in GB"
@@ -96,14 +96,14 @@ data "wirtual_parameter" "home_disk_size" {
 }
 
 provider "kubernetes" {
-  # Authenticate via ~/.kube/config or a Wirtual-specific ServiceAccount, depending on admin preferences
+  # Authenticate via ~/.kube/config or a Lattice-specific ServiceAccount, depending on admin preferences
   config_path = var.use_kubeconfig == true ? "~/.kube/config" : null
 }
 
-data "wirtual_workspace" "me" {}
-data "wirtual_workspace_owner" "me" {}
+data "lattice_workspace" "me" {}
+data "lattice_workspace_owner" "me" {}
 
-resource "wirtual_agent" "main" {
+resource "lattice_agent" "main" {
   os             = "linux"
   arch           = "amd64"
   startup_script = <<-EOT
@@ -120,12 +120,12 @@ resource "wirtual_agent" "main" {
   # The following metadata blocks are optional. They are used to display
   # information about your workspace in the dashboard. You can remove them
   # if you don't want to display any information.
-  # For basic resources, you can use the `wirtual stat` command.
+  # For basic resources, you can use the `lattice stat` command.
   # If you need more control, you can write your own script.
   metadata {
     display_name = "CPU Usage"
     key          = "0_cpu_usage"
-    script       = "wirtual stat cpu"
+    script       = "lattice stat cpu"
     interval     = 10
     timeout      = 1
   }
@@ -133,7 +133,7 @@ resource "wirtual_agent" "main" {
   metadata {
     display_name = "RAM Usage"
     key          = "1_ram_usage"
-    script       = "wirtual stat mem"
+    script       = "lattice stat mem"
     interval     = 10
     timeout      = 1
   }
@@ -141,7 +141,7 @@ resource "wirtual_agent" "main" {
   metadata {
     display_name = "Home Disk"
     key          = "3_home_disk"
-    script       = "wirtual stat disk --path $${HOME}"
+    script       = "lattice stat disk --path $${HOME}"
     interval     = 60
     timeout      = 1
   }
@@ -149,7 +149,7 @@ resource "wirtual_agent" "main" {
   metadata {
     display_name = "CPU Usage (Host)"
     key          = "4_cpu_usage_host"
-    script       = "wirtual stat cpu --host"
+    script       = "lattice stat cpu --host"
     interval     = 10
     timeout      = 1
   }
@@ -157,7 +157,7 @@ resource "wirtual_agent" "main" {
   metadata {
     display_name = "Memory Usage (Host)"
     key          = "5_mem_usage_host"
-    script       = "wirtual stat mem --host"
+    script       = "lattice stat mem --host"
     interval     = 10
     timeout      = 1
   }
@@ -175,12 +175,12 @@ resource "wirtual_agent" "main" {
 }
 
 # code-server
-resource "wirtual_app" "code-server" {
-  agent_id     = wirtual_agent.main.id
+resource "lattice_app" "code-server" {
+  agent_id     = lattice_agent.main.id
   slug         = "code-server"
   display_name = "code-server"
   icon         = "/icon/code.svg"
-  url          = "http://localhost:13337?folder=/home/wirtual"
+  url          = "http://localhost:13337?folder=/home/lattice"
   subdomain    = false
   share        = "owner"
 
@@ -193,21 +193,21 @@ resource "wirtual_app" "code-server" {
 
 resource "kubernetes_persistent_volume_claim" "home" {
   metadata {
-    name      = "wirtual-${data.wirtual_workspace.me.id}-home"
+    name      = "lattice-${data.lattice_workspace.me.id}-home"
     namespace = var.namespace
     labels = {
-      "app.kubernetes.io/name"     = "wirtual-pvc"
-      "app.kubernetes.io/instance" = "wirtual-pvc-${data.wirtual_workspace.me.id}"
-      "app.kubernetes.io/part-of"  = "wirtual"
-      //Wirtual-specific labels.
-      "com.wirtual.resource"       = "true"
-      "com.wirtual.workspace.id"   = data.wirtual_workspace.me.id
-      "com.wirtual.workspace.name" = data.wirtual_workspace.me.name
-      "com.wirtual.user.id"        = data.wirtual_workspace_owner.me.id
-      "com.wirtual.user.username"  = data.wirtual_workspace_owner.me.name
+      "app.kubernetes.io/name"     = "lattice-pvc"
+      "app.kubernetes.io/instance" = "lattice-pvc-${data.lattice_workspace.me.id}"
+      "app.kubernetes.io/part-of"  = "lattice"
+      //Lattice-specific labels.
+      "com.lattice.resource"       = "true"
+      "com.lattice.workspace.id"   = data.lattice_workspace.me.id
+      "com.lattice.workspace.name" = data.lattice_workspace.me.name
+      "com.lattice.user.id"        = data.lattice_workspace_owner.me.id
+      "com.lattice.user.username"  = data.lattice_workspace_owner.me.name
     }
     annotations = {
-      "com.wirtual.user.email" = data.wirtual_workspace_owner.me.email
+      "com.lattice.user.email" = data.lattice_workspace_owner.me.email
     }
   }
   wait_until_bound = false
@@ -215,33 +215,33 @@ resource "kubernetes_persistent_volume_claim" "home" {
     access_modes = ["ReadWriteOnce"]
     resources {
       requests = {
-        storage = "${data.wirtual_parameter.home_disk_size.value}Gi"
+        storage = "${data.lattice_parameter.home_disk_size.value}Gi"
       }
     }
   }
 }
 
 resource "kubernetes_deployment" "main" {
-  count = data.wirtual_workspace.me.start_count
+  count = data.lattice_workspace.me.start_count
   depends_on = [
     kubernetes_persistent_volume_claim.home
   ]
   wait_for_rollout = false
   metadata {
-    name      = "wirtual-${data.wirtual_workspace.me.id}"
+    name      = "lattice-${data.lattice_workspace.me.id}"
     namespace = var.namespace
     labels = {
-      "app.kubernetes.io/name"     = "wirtual-workspace"
-      "app.kubernetes.io/instance" = "wirtual-workspace-${data.wirtual_workspace.me.id}"
-      "app.kubernetes.io/part-of"  = "wirtual"
-      "com.wirtual.resource"         = "true"
-      "com.wirtual.workspace.id"     = data.wirtual_workspace.me.id
-      "com.wirtual.workspace.name"   = data.wirtual_workspace.me.name
-      "com.wirtual.user.id"          = data.wirtual_workspace_owner.me.id
-      "com.wirtual.user.username"    = data.wirtual_workspace_owner.me.name
+      "app.kubernetes.io/name"     = "lattice-workspace"
+      "app.kubernetes.io/instance" = "lattice-workspace-${data.lattice_workspace.me.id}"
+      "app.kubernetes.io/part-of"  = "lattice"
+      "com.lattice.resource"         = "true"
+      "com.lattice.workspace.id"     = data.lattice_workspace.me.id
+      "com.lattice.workspace.name"   = data.lattice_workspace.me.name
+      "com.lattice.user.id"          = data.lattice_workspace_owner.me.id
+      "com.lattice.user.username"    = data.lattice_workspace_owner.me.name
     }
     annotations = {
-      "com.wirtual.user.email" = data.wirtual_workspace_owner.me.email
+      "com.lattice.user.email" = data.lattice_workspace_owner.me.email
     }
   }
 
@@ -249,14 +249,14 @@ resource "kubernetes_deployment" "main" {
     replicas = 1
     selector {
       match_labels = {
-        "app.kubernetes.io/name"     = "wirtual-workspace"
-        "app.kubernetes.io/instance" = "wirtual-workspace-${data.wirtual_workspace.me.id}"
-        "app.kubernetes.io/part-of"  = "wirtual"
-        "com.wirtual.resource"         = "true"
-        "com.wirtual.workspace.id"     = data.wirtual_workspace.me.id
-        "com.wirtual.workspace.name"   = data.wirtual_workspace.me.name
-        "com.wirtual.user.id"          = data.wirtual_workspace_owner.me.id
-        "com.wirtual.user.username"    = data.wirtual_workspace_owner.me.name
+        "app.kubernetes.io/name"     = "lattice-workspace"
+        "app.kubernetes.io/instance" = "lattice-workspace-${data.lattice_workspace.me.id}"
+        "app.kubernetes.io/part-of"  = "lattice"
+        "com.lattice.resource"         = "true"
+        "com.lattice.workspace.id"     = data.lattice_workspace.me.id
+        "com.lattice.workspace.name"   = data.lattice_workspace.me.name
+        "com.lattice.user.id"          = data.lattice_workspace_owner.me.id
+        "com.lattice.user.username"    = data.lattice_workspace_owner.me.name
       }
     }
     strategy {
@@ -266,14 +266,14 @@ resource "kubernetes_deployment" "main" {
     template {
       metadata {
         labels = {
-          "app.kubernetes.io/name"     = "wirtual-workspace"
-          "app.kubernetes.io/instance" = "wirtual-workspace-${data.wirtual_workspace.me.id}"
-          "app.kubernetes.io/part-of"  = "wirtual"
-          "com.wirtual.resource"         = "true"
-          "com.wirtual.workspace.id"     = data.wirtual_workspace.me.id
-          "com.wirtual.workspace.name"   = data.wirtual_workspace.me.name
-          "com.wirtual.user.id"          = data.wirtual_workspace_owner.me.id
-          "com.wirtual.user.username"    = data.wirtual_workspace_owner.me.name
+          "app.kubernetes.io/name"     = "lattice-workspace"
+          "app.kubernetes.io/instance" = "lattice-workspace-${data.lattice_workspace.me.id}"
+          "app.kubernetes.io/part-of"  = "lattice"
+          "com.lattice.resource"         = "true"
+          "com.lattice.workspace.id"     = data.lattice_workspace.me.id
+          "com.lattice.workspace.name"   = data.lattice_workspace.me.name
+          "com.lattice.user.id"          = data.lattice_workspace_owner.me.id
+          "com.lattice.user.username"    = data.lattice_workspace_owner.me.name
         }
       }
       spec {
@@ -284,15 +284,15 @@ resource "kubernetes_deployment" "main" {
 
         container {
           name              = "dev"
-          image             = "wirtualcom/enterprise-base:ubuntu"
+          image             = "latticecom/enterprise-base:ubuntu"
           image_pull_policy = "Always"
-          command           = ["sh", "-c", wirtual_agent.main.init_script]
+          command           = ["sh", "-c", lattice_agent.main.init_script]
           security_context {
             run_as_user = "1000"
           }
           env {
-            name  = "WIRTUAL_AGENT_TOKEN"
-            value = wirtual_agent.main.token
+            name  = "LATTICE_AGENT_TOKEN"
+            value = lattice_agent.main.token
           }
           resources {
             requests = {
@@ -300,12 +300,12 @@ resource "kubernetes_deployment" "main" {
               "memory" = "512Mi"
             }
             limits = {
-              "cpu"    = "${data.wirtual_parameter.cpu.value}"
-              "memory" = "${data.wirtual_parameter.memory.value}Gi"
+              "cpu"    = "${data.lattice_parameter.cpu.value}"
+              "memory" = "${data.lattice_parameter.memory.value}Gi"
             }
           }
           volume_mount {
-            mount_path = "/home/wirtual"
+            mount_path = "/home/lattice"
             name       = "home"
             read_only  = false
           }
@@ -331,7 +331,7 @@ resource "kubernetes_deployment" "main" {
                   match_expressions {
                     key      = "app.kubernetes.io/name"
                     operator = "In"
-                    values   = ["wirtual-workspace"]
+                    values   = ["lattice-workspace"]
                   }
                 }
               }

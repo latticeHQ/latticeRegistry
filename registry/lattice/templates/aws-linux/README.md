@@ -2,7 +2,7 @@
 display_name: Agent Definition on AWS (Linux)
 description: Deploy Linux-based agents on AWS EC2 instances
 icon: ../.icons/aws.svg
-maintainer_github: wirtual
+maintainer_github: lattice
 verified: true
 tags: [linux, aws]
 ---
@@ -17,14 +17,14 @@ Deploy Linux-based AI agents on AWS EC2 instances with this agent definition tem
 
 By default, this template authenticates to AWS using the provider's default [authentication methods](https://registry.terraform.io/providers/hashicorp/aws/latest/docs#authentication-and-configuration).
 
-The simplest way (without making changes to the template) is via environment variables (e.g. `AWS_ACCESS_KEY_ID`) or a [credentials file](https://docs.aws.amazon.com/cli/latest/userguide/cli-configure-files.html#cli-configure-files-format). If you are running Wirtual on a VM, this file must be in `/home/wirtual/aws/credentials`.
+The simplest way (without making changes to the template) is via environment variables (e.g. `AWS_ACCESS_KEY_ID`) or a [credentials file](https://docs.aws.amazon.com/cli/latest/userguide/cli-configure-files.html#cli-configure-files-format). If you are running Lattice on a VM, this file must be in `/home/lattice/aws/credentials`.
 
 To use another [authentication method](https://registry.terraform.io/providers/hashicorp/aws/latest/docs#authentication), edit the template.
 
 ## Required permissions / policy
 
-The following sample policy allows Wirtual to create EC2 instances and modify
-instances provisioned by Wirtual:
+The following sample policy allows Lattice to create EC2 instances and modify
+instances provisioned by Lattice:
 
 ```json
 {
@@ -49,7 +49,7 @@ instances provisioned by Wirtual:
 			"Resource": "*"
 		},
 		{
-			"Sid": "WirtualResources",
+			"Sid": "LatticeResources",
 			"Effect": "Allow",
 			"Action": [
 				"ec2:DescribeInstanceAttribute",
@@ -67,7 +67,7 @@ instances provisioned by Wirtual:
 			"Resource": "arn:aws:ec2:*:*:instance/*",
 			"Condition": {
 				"StringEquals": {
-					"aws:ResourceTag/Wirtual_Provisioned": "true"
+					"aws:ResourceTag/Lattice_Provisioned": "true"
 				}
 			}
 		}
@@ -81,7 +81,7 @@ This agent definition provisions the following resources:
 
 - AWS EC2 Instance
 
-Wirtual uses `aws_ec2_instance_state` to start and stop the VM. This agent definition is fully persistent, meaning the full filesystem is preserved when the workspace restarts.
+Lattice uses `aws_ec2_instance_state` to start and stop the VM. This agent definition is fully persistent, meaning the full filesystem is preserved when the workspace restarts.
 
 > **Note**
 > This template is designed to be a starting point! Edit the Terraform to extend the template to support your agent use case.

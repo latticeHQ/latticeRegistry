@@ -1,7 +1,7 @@
 terraform {
   required_providers {
-    wirtual = {
-      source = "wirtualdev/wirtual"
+    lattice = {
+      source = "latticehq/lattice"
     }
     azurerm = {
       source = "hashicorp/azurerm"
@@ -9,9 +9,9 @@ terraform {
   }
 }
 
-# See https://registry.wirtual.dev/modules/azure-region
+# See https://registry.latticeruntime.com/modules/azure-region
 module "azure_region" {
-  source = "registry.wirtual.dev/modules/azure-region/wirtual"
+  source = "registry.latticeruntime.com/modules/azure-region/lattice"
 
   # This ensures that the latest version of the module gets downloaded, you can also pin the module version to prevent breaking changes in production.
   version = ">= 1.0.0"
@@ -19,7 +19,7 @@ module "azure_region" {
   default = "eastus"
 }
 
-data "wirtual_parameter" "instance_type" {
+data "lattice_parameter" "instance_type" {
   name         = "instance_type"
   display_name = "Instance type"
   description  = "What instance type should your workspace use?"
@@ -72,7 +72,7 @@ data "wirtual_parameter" "instance_type" {
   }
 }
 
-data "wirtual_parameter" "home_size" {
+data "lattice_parameter" "home_size" {
   name         = "home_size"
   display_name = "Home volume size"
   description  = "How large would you like your home volume to be (in GB)?"
@@ -90,10 +90,10 @@ provider "azurerm" {
   features {}
 }
 
-data "wirtual_workspace" "me" {}
-data "wirtual_workspace_owner" "me" {}
+data "lattice_workspace" "me" {}
+data "lattice_workspace_owner" "me" {}
 
-resource "wirtual_agent" "main" {
+resource "lattice_agent" "main" {
   arch = "amd64"
   os   = "linux"
   auth = "azure-instance-identity"
@@ -128,50 +128,50 @@ resource "wirtual_agent" "main" {
     script       = <<-EOT
       #!/bin/bash
       set -e
-      df /home/wirtual | awk '$NF=="/"{printf "%s", $5}'
+      df /home/lattice | awk '$NF=="/"{printf "%s", $5}'
     EOT
   }
 }
 
-# See https://registry.wirtual.dev/modules/code-server
+# See https://registry.latticeruntime.com/modules/code-server
 module "code-server" {
-  count  = data.wirtual_workspace.me.start_count
-  source = "registry.wirtual.dev/modules/code-server/wirtual"
+  count  = data.lattice_workspace.me.start_count
+  source = "registry.latticeruntime.com/modules/code-server/lattice"
 
   # This ensures that the latest version of the module gets downloaded, you can also pin the module version to prevent breaking changes in production.
   version = ">= 1.0.0"
 
-  agent_id = wirtual_agent.main.id
+  agent_id = lattice_agent.main.id
   order    = 1
 }
 
-# See https://registry.wirtual.dev/modules/jetbrains-gateway
+# See https://registry.latticeruntime.com/modules/jetbrains-gateway
 module "jetbrains_gateway" {
-  count  = data.wirtual_workspace.me.start_count
-  source = "registry.wirtual.dev/modules/jetbrains-gateway/wirtual"
+  count  = data.lattice_workspace.me.start_count
+  source = "registry.latticeruntime.com/modules/jetbrains-gateway/lattice"
 
   # JetBrains IDEs to make available for the user to select
   jetbrains_ides = ["IU", "PY", "WS", "PS", "RD", "CL", "GO", "RM"]
   default        = "IU"
 
   # Default folder to open when starting a JetBrains IDE
-  folder = "/home/wirtual"
+  folder = "/home/lattice"
 
   # This ensures that the latest version of the module gets downloaded, you can also pin the module version to prevent breaking changes in production.
   version = ">= 1.0.0"
 
-  agent_id   = wirtual_agent.main.id
+  agent_id   = lattice_agent.main.id
   agent_name = "main"
   order      = 2
 }
 
 locals {
-  prefix = "wirtual-${data.wirtual_workspace_owner.me.name}-${data.wirtual_workspace.me.name}"
+  prefix = "lattice-${data.lattice_workspace_owner.me.name}-${data.lattice_workspace.me.name}"
 
   userdata = templatefile("cloud-config.yaml.tftpl", {
-    username    = "wirtual" # Ensure this user/group does not exist in your VM image
-    init_script = base64encode(wirtual_agent.main.init_script)
-    hostname    = lower(data.wirtual_workspace.me.name)
+    username    = "lattice" # Ensure this user/group does not exist in your VM image
+    init_script = base64encode(lattice_agent.main.init_script)
+    hostname    = lower(data.lattice_workspace.me.name)
   })
 }
 
@@ -180,7 +180,7 @@ resource "azurerm_resource_group" "main" {
   location = module.azure_region.value
 
   tags = {
-    Wirtual_Provisioned = "true"
+    Lattice_Provisioned = "true"
   }
 }
 
@@ -192,7 +192,7 @@ resource "azurerm_resource_group" "main" {
 #  allocation_method   = "Static"
 #
 #  tags = {
-#    Wirtual_Provisioned = "true"
+#    Lattice_Provisioned = "true"
 #  }
 #}
 
@@ -203,7 +203,7 @@ resource "azurerm_virtual_network" "main" {
   resource_group_name = azurerm_resource_group.main.name
 
   tags = {
-    Wirtual_Provisioned = "true"
+    Lattice_Provisioned = "true"
   }
 }
 
@@ -228,7 +228,7 @@ resource "azurerm_network_interface" "main" {
   }
 
   tags = {
-    Wirtual_Provisioned = "true"
+    Lattice_Provisioned = "true"
   }
 }
 
@@ -238,7 +238,7 @@ resource "azurerm_managed_disk" "home" {
   name                 = "home"
   resource_group_name  = azurerm_resource_group.main.name
   storage_account_type = "StandardSSD_LRS"
-  disk_size_gb         = data.wirtual_parameter.home_size.value
+  disk_size_gb         = data.lattice_parameter.home_size.value
 }
 
 // azurerm requires an SSH key (or password) for an admin user or it won't start a VM.  However,
@@ -249,11 +249,11 @@ resource "tls_private_key" "dummy" {
 }
 
 resource "azurerm_linux_virtual_machine" "main" {
-  count               = data.wirtual_workspace.me.transition == "start" ? 1 : 0
+  count               = data.lattice_workspace.me.transition == "start" ? 1 : 0
   name                = "vm"
   resource_group_name = azurerm_resource_group.main.name
   location            = azurerm_resource_group.main.location
-  size                = data.wirtual_parameter.instance_type.value
+  size                = data.lattice_parameter.instance_type.value
   // cloud-init overwrites this, so the value here doesn't matter
   admin_username = "adminuser"
   admin_ssh_key {
@@ -264,7 +264,7 @@ resource "azurerm_linux_virtual_machine" "main" {
   network_interface_ids = [
     azurerm_network_interface.main.id,
   ]
-  computer_name = lower(data.wirtual_workspace.me.name)
+  computer_name = lower(data.lattice_workspace.me.name)
   os_disk {
     caching              = "ReadWrite"
     storage_account_type = "Standard_LRS"
@@ -278,20 +278,20 @@ resource "azurerm_linux_virtual_machine" "main" {
   user_data = base64encode(local.userdata)
 
   tags = {
-    Wirtual_Provisioned = "true"
+    Lattice_Provisioned = "true"
   }
 }
 
 resource "azurerm_virtual_machine_data_disk_attachment" "home" {
-  count              = data.wirtual_workspace.me.transition == "start" ? 1 : 0
+  count              = data.lattice_workspace.me.transition == "start" ? 1 : 0
   managed_disk_id    = azurerm_managed_disk.home.id
   virtual_machine_id = azurerm_linux_virtual_machine.main[0].id
   lun                = "10"
   caching            = "ReadWrite"
 }
 
-resource "wirtual_metadata" "workspace_info" {
-  count       = data.wirtual_workspace.me.start_count
+resource "lattice_metadata" "workspace_info" {
+  count       = data.lattice_workspace.me.start_count
   resource_id = azurerm_linux_virtual_machine.main[0].id
 
   item {
@@ -300,11 +300,11 @@ resource "wirtual_metadata" "workspace_info" {
   }
 }
 
-resource "wirtual_metadata" "home_info" {
+resource "lattice_metadata" "home_info" {
   resource_id = azurerm_managed_disk.home.id
 
   item {
     key   = "size"
-    value = "${data.wirtual_parameter.home_size.value} GiB"
+    value = "${data.lattice_parameter.home_size.value} GiB"
   }
 }

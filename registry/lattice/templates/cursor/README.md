@@ -2,7 +2,7 @@
 display_name: Agent Definition with Cursor
 description: Deploy AI agents with Cursor IDE pre-configured
 icon: ../.icons/cursor.svg
-maintainer_github: wirtualdev
+maintainer_github: latticeHQ
 verified: true
 tags: [ide, vibe-coding]
 ---
@@ -22,12 +22,12 @@ Deploy AI coding agents with Cursor, the AI-first code editor built on VSCode.
 
 ### Infrastructure
 
-Requires a Docker-enabled environment. The VM running Wirtual must have:
+Requires a Docker-enabled environment. The VM running Lattice must have:
 
 ```sh
-# Add wirtual user to Docker group
-sudo adduser wirtual docker
-sudo systemctl restart wirtual
+# Add lattice user to Docker group
+sudo adduser lattice docker
+sudo systemctl restart lattice
 ```
 
 ### API Keys

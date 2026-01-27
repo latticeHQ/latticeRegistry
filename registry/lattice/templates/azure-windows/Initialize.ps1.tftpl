@@ -37,7 +37,7 @@ Set-ItemProperty -Path 'HKLM:\System\CurrentControlSet\Control\Terminal Server' 
 # Enable RDP through Windows Firewall
 Enable-NetFirewallRule -DisplayGroup "Remote Desktop"
 # Disable Network Level Authentication (NLA)
-# Clients will connect via Wirtual's tunnel
+# Clients will connect via Lattice's tunnel
 (Get-WmiObject -class "Win32_TSGeneralSetting" -Namespace root\cimv2\terminalservices -ComputerName $env:COMPUTERNAME -Filter "TerminalName='RDP-tcp'").SetUserAuthenticationRequired(0)
 
 # Install Chocolatey package manager
@@ -54,17 +54,17 @@ $env:Path = [System.Environment]::GetEnvironmentVariable("Path","Machine") + ";"
 # Set protocol to TLS1.2 for agent download
 [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
 
-# Set Wirtual Agent to run immediately, and on each restart
+# Set Lattice Agent to run immediately, and on each restart
 $init_script = @'
 ${init_script}
 '@
-Out-File -FilePath "C:\AzureData\WirtualAgent.ps1" -InputObject $init_script
+Out-File -FilePath "C:\AzureData\LatticeAgent.ps1" -InputObject $init_script
 $task = @{
-	TaskName = 'WirtualAgent'
-	Action = (New-ScheduledTaskAction -Execute 'powershell.exe' -Argument '-sta -ExecutionPolicy Unrestricted -Command "C:\AzureData\WirtualAgent.ps1 *>>  C:\AzureData\WirtualAgent.log"')
+	TaskName = 'LatticeAgent'
+	Action = (New-ScheduledTaskAction -Execute 'powershell.exe' -Argument '-sta -ExecutionPolicy Unrestricted -Command "C:\AzureData\LatticeAgent.ps1 *>>  C:\AzureData\LatticeAgent.log"')
 	Trigger = (New-ScheduledTaskTrigger -AtStartup), (New-ScheduledTaskTrigger -Once -At (Get-Date).AddSeconds(15))
 	Settings = (New-ScheduledTaskSettingsSet -DontStopOnIdleEnd -ExecutionTimeLimit ([TimeSpan]::FromDays(3650)) -Compatibility Win8)
-	Principal = (New-ScheduledTaskPrincipal -UserId 'vm\wirtual' -RunLevel Highest -LogonType S4U)
+	Principal = (New-ScheduledTaskPrincipal -UserId 'vm\lattice' -RunLevel Highest -LogonType S4U)
 }
 Register-ScheduledTask @task -Force
 
