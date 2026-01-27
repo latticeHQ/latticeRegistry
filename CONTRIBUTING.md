@@ -201,8 +201,8 @@ terraform {
 }
 
 # Lattice data sources
-data "lattice_workspace" "me" {}
-data "lattice_workspace_owner" "me" {}
+data "lattice_agent" "me" {}
+data "lattice_agent_owner" "me" {}
 
 # Lattice agent
 resource "lattice_agent" "main" {

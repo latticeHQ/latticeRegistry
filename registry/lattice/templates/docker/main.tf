@@ -10,7 +10,7 @@ terraform {
 }
 
 locals {
-  username = data.lattice_workspace_owner.me.name
+  username = data.lattice_agent_owner.me.name
 }
 
 variable "docker_socket" {
@@ -25,8 +25,8 @@ provider "docker" {
 }
 
 data "lattice_provisioner" "me" {}
-data "lattice_workspace" "me" {}
-data "lattice_workspace_owner" "me" {}
+data "lattice_agent" "me" {}
+data "lattice_agent_owner" "me" {}
 
 resource "lattice_agent" "main" {
   arch           = data.lattice_provisioner.me.arch
@@ -53,10 +53,10 @@ resource "lattice_agent" "main" {
   # You can remove this block if you'd prefer to configure Git manually or using
   # dotfiles. (see docs/dotfiles.md)
   env = {
-    GIT_AUTHOR_NAME     = coalesce(data.lattice_workspace_owner.me.full_name, data.lattice_workspace_owner.me.name)
-    GIT_AUTHOR_EMAIL    = "${data.lattice_workspace_owner.me.email}"
-    GIT_COMMITTER_NAME  = coalesce(data.lattice_workspace_owner.me.full_name, data.lattice_workspace_owner.me.name)
-    GIT_COMMITTER_EMAIL = "${data.lattice_workspace_owner.me.email}"
+    GIT_AUTHOR_NAME     = coalesce(data.lattice_agent_owner.me.full_name, data.lattice_agent_owner.me.name)
+    GIT_AUTHOR_EMAIL    = "${data.lattice_agent_owner.me.email}"
+    GIT_COMMITTER_NAME  = coalesce(data.lattice_agent_owner.me.full_name, data.lattice_agent_owner.me.name)
+    GIT_COMMITTER_EMAIL = "${data.lattice_agent_owner.me.email}"
   }
 
   # The following metadata blocks are optional. They are used to display
@@ -183,7 +183,7 @@ resource "lattice_app" "code-server" {
 }
 
 resource "docker_volume" "home_volume" {
-  name = "lattice-${data.lattice_workspace.me.id}-home"
+  name = "lattice-${data.lattice_agent.me.id}-home"
   # Protect the volume from being deleted due to changes in attributes.
   lifecycle {
     ignore_changes = all
@@ -191,31 +191,31 @@ resource "docker_volume" "home_volume" {
   # Add labels in Docker to keep track of orphan resources.
   labels {
     label = "lattice.owner"
-    value = data.lattice_workspace_owner.me.name
+    value = data.lattice_agent_owner.me.name
   }
   labels {
     label = "lattice.owner_id"
-    value = data.lattice_workspace_owner.me.id
+    value = data.lattice_agent_owner.me.id
   }
   labels {
     label = "lattice.workspace_id"
-    value = data.lattice_workspace.me.id
+    value = data.lattice_agent.me.id
   }
   # This field becomes outdated if the workspace is renamed but can
   # be useful for debugging or cleaning out dangling volumes.
   labels {
     label = "lattice.workspace_name_at_creation"
-    value = data.lattice_workspace.me.name
+    value = data.lattice_agent.me.name
   }
 }
 
 resource "docker_container" "workspace" {
-  count = data.lattice_workspace.me.start_count
+  count = data.lattice_agent.me.start_count
   image = "latticecom/enterprise-base:ubuntu"
   # Uses lower() to avoid Docker restriction on container names.
-  name = "lattice-${data.lattice_workspace_owner.me.name}-${lower(data.lattice_workspace.me.name)}"
+  name = "lattice-${data.lattice_agent_owner.me.name}-${lower(data.lattice_agent.me.name)}"
   # Hostname makes the shell more user friendly: lattice@my-workspace:~$
-  hostname = data.lattice_workspace.me.name
+  hostname = data.lattice_agent.me.name
   # Use the docker gateway if the access URL is 127.0.0.1
   entrypoint = ["sh", "-c", replace(lattice_agent.main.init_script, "/localhost|127\\.0\\.0\\.1/", "host.docker.internal")]
   env        = ["LATTICE_SIDECAR_TOKEN=${lattice_agent.main.token}"]
@@ -232,18 +232,18 @@ resource "docker_container" "workspace" {
   # Add labels in Docker to keep track of orphan resources.
   labels {
     label = "lattice.owner"
-    value = data.lattice_workspace_owner.me.name
+    value = data.lattice_agent_owner.me.name
   }
   labels {
     label = "lattice.owner_id"
-    value = data.lattice_workspace_owner.me.id
+    value = data.lattice_agent_owner.me.id
   }
   labels {
     label = "lattice.workspace_id"
-    value = data.lattice_workspace.me.id
+    value = data.lattice_agent.me.id
   }
   labels {
     label = "lattice.workspace_name"
-    value = data.lattice_workspace.me.name
+    value = data.lattice_agent.me.name
   }
 }

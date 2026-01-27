@@ -140,8 +140,8 @@ provider "aws" {
   region = data.lattice_parameter.region.value
 }
 
-data "lattice_workspace" "me" {}
-data "lattice_workspace_owner" "me" {}
+data "lattice_agent" "me" {}
+data "lattice_agent_owner" "me" {}
 
 data "aws_ami" "ubuntu" {
   most_recent = true
@@ -157,7 +157,7 @@ data "aws_ami" "ubuntu" {
 }
 
 resource "lattice_agent" "dev" {
-  count          = data.lattice_workspace.me.start_count
+  count          = data.lattice_agent.me.start_count
   arch           = "amd64"
   auth           = "aws-instance-identity"
   os             = "linux"
@@ -192,7 +192,7 @@ resource "lattice_agent" "dev" {
 
 # See https://registry.latticeruntime.com/modules/code-server
 module "code-server" {
-  count  = data.lattice_workspace.me.start_count
+  count  = data.lattice_agent.me.start_count
   source = "registry.latticeruntime.com/modules/code-server/lattice"
 
   # This ensures that the latest version of the module gets downloaded, you can also pin the module version to prevent breaking changes in production.
@@ -204,7 +204,7 @@ module "code-server" {
 
 # See https://registry.latticeruntime.com/modules/jetbrains-gateway
 module "jetbrains_gateway" {
-  count  = data.lattice_workspace.me.start_count
+  count  = data.lattice_agent.me.start_count
   source = "registry.latticeruntime.com/modules/jetbrains-gateway/lattice"
 
   # JetBrains IDEs to make available for the user to select
@@ -223,7 +223,7 @@ module "jetbrains_gateway" {
 }
 
 locals {
-  hostname   = lower(data.lattice_workspace.me.name)
+  hostname   = lower(data.lattice_agent.me.name)
   linux_user = "lattice"
 }
 
@@ -262,7 +262,7 @@ resource "aws_instance" "dev" {
 
   user_data = data.cloudinit_config.user_data.rendered
   tags = {
-    Name = "lattice-${data.lattice_workspace_owner.me.name}-${data.lattice_workspace.me.name}"
+    Name = "lattice-${data.lattice_agent_owner.me.name}-${data.lattice_agent.me.name}"
     # Required if you are using our example policy, see template README
     Lattice_Provisioned = "true"
   }
@@ -289,5 +289,5 @@ resource "lattice_metadata" "workspace_info" {
 
 resource "aws_ec2_instance_state" "dev" {
   instance_id = aws_instance.dev.id
-  state       = data.lattice_workspace.me.transition == "start" ? "running" : "stopped"
+  state       = data.lattice_agent.me.transition == "start" ? "running" : "stopped"
 }

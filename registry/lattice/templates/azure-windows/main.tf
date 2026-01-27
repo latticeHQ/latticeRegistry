@@ -16,7 +16,7 @@ provider "azurerm" {
 provider "lattice" {
 }
 
-data "lattice_workspace" "me" {}
+data "lattice_agent" "me" {}
 
 data "lattice_parameter" "location" {
   description  = "What location should your workspace live in?"
@@ -76,7 +76,7 @@ locals {
 }
 
 resource "azurerm_resource_group" "main" {
-  name     = "${local.prefix}-${data.lattice_workspace.me.id}"
+  name     = "${local.prefix}-${data.lattice_agent.me.id}"
   location = data.lattice_parameter.location.value
   tags = {
     Lattice_Provisioned = "true"
@@ -210,7 +210,7 @@ resource "azurerm_virtual_machine_data_disk_attachment" "main_data" {
 
 # Stop the VM
 resource "null_resource" "stop_vm" {
-  count      = data.lattice_workspace.me.transition == "stop" ? 1 : 0
+  count      = data.lattice_agent.me.transition == "stop" ? 1 : 0
   depends_on = [azurerm_windows_virtual_machine.main]
   provisioner "local-exec" {
     # Use deallocate so the VM is not charged
@@ -220,7 +220,7 @@ resource "null_resource" "stop_vm" {
 
 # Start the VM
 resource "null_resource" "start" {
-  count      = data.lattice_workspace.me.transition == "start" ? 1 : 0
+  count      = data.lattice_agent.me.transition == "start" ? 1 : 0
   depends_on = [azurerm_windows_virtual_machine.main]
   provisioner "local-exec" {
     command = "az vm start --ids ${azurerm_windows_virtual_machine.main.id}"

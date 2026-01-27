@@ -90,8 +90,8 @@ provider "azurerm" {
   features {}
 }
 
-data "lattice_workspace" "me" {}
-data "lattice_workspace_owner" "me" {}
+data "lattice_agent" "me" {}
+data "lattice_agent_owner" "me" {}
 
 resource "lattice_agent" "main" {
   arch = "amd64"
@@ -135,7 +135,7 @@ resource "lattice_agent" "main" {
 
 # See https://registry.latticeruntime.com/modules/code-server
 module "code-server" {
-  count  = data.lattice_workspace.me.start_count
+  count  = data.lattice_agent.me.start_count
   source = "registry.latticeruntime.com/modules/code-server/lattice"
 
   # This ensures that the latest version of the module gets downloaded, you can also pin the module version to prevent breaking changes in production.
@@ -147,7 +147,7 @@ module "code-server" {
 
 # See https://registry.latticeruntime.com/modules/jetbrains-gateway
 module "jetbrains_gateway" {
-  count  = data.lattice_workspace.me.start_count
+  count  = data.lattice_agent.me.start_count
   source = "registry.latticeruntime.com/modules/jetbrains-gateway/lattice"
 
   # JetBrains IDEs to make available for the user to select
@@ -166,12 +166,12 @@ module "jetbrains_gateway" {
 }
 
 locals {
-  prefix = "lattice-${data.lattice_workspace_owner.me.name}-${data.lattice_workspace.me.name}"
+  prefix = "lattice-${data.lattice_agent_owner.me.name}-${data.lattice_agent.me.name}"
 
   userdata = templatefile("cloud-config.yaml.tftpl", {
     username    = "lattice" # Ensure this user/group does not exist in your VM image
     init_script = base64encode(lattice_agent.main.init_script)
-    hostname    = lower(data.lattice_workspace.me.name)
+    hostname    = lower(data.lattice_agent.me.name)
   })
 }
 
@@ -249,7 +249,7 @@ resource "tls_private_key" "dummy" {
 }
 
 resource "azurerm_linux_virtual_machine" "main" {
-  count               = data.lattice_workspace.me.transition == "start" ? 1 : 0
+  count               = data.lattice_agent.me.transition == "start" ? 1 : 0
   name                = "vm"
   resource_group_name = azurerm_resource_group.main.name
   location            = azurerm_resource_group.main.location
@@ -264,7 +264,7 @@ resource "azurerm_linux_virtual_machine" "main" {
   network_interface_ids = [
     azurerm_network_interface.main.id,
   ]
-  computer_name = lower(data.lattice_workspace.me.name)
+  computer_name = lower(data.lattice_agent.me.name)
   os_disk {
     caching              = "ReadWrite"
     storage_account_type = "Standard_LRS"
@@ -283,7 +283,7 @@ resource "azurerm_linux_virtual_machine" "main" {
 }
 
 resource "azurerm_virtual_machine_data_disk_attachment" "home" {
-  count              = data.lattice_workspace.me.transition == "start" ? 1 : 0
+  count              = data.lattice_agent.me.transition == "start" ? 1 : 0
   managed_disk_id    = azurerm_managed_disk.home.id
   virtual_machine_id = azurerm_linux_virtual_machine.main[0].id
   lun                = "10"
@@ -291,7 +291,7 @@ resource "azurerm_virtual_machine_data_disk_attachment" "home" {
 }
 
 resource "lattice_metadata" "workspace_info" {
-  count       = data.lattice_workspace.me.start_count
+  count       = data.lattice_agent.me.start_count
   resource_id = azurerm_linux_virtual_machine.main[0].id
 
   item {

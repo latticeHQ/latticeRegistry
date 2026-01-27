@@ -13,8 +13,8 @@ data "lattice_provisioner" "me" {}
 
 provider "incus" {}
 
-data "lattice_workspace" "me" {}
-data "lattice_workspace_owner" "me" {}
+data "lattice_agent" "me" {}
+data "lattice_agent_owner" "me" {}
 
 data "lattice_parameter" "image" {
   name         = "image"
@@ -70,12 +70,12 @@ data "lattice_parameter" "repo_base_dir" {
 }
 
 resource "lattice_agent" "main" {
-  count = data.lattice_workspace.me.start_count
+  count = data.lattice_agent.me.start_count
   arch  = data.lattice_provisioner.me.arch
   os    = "linux"
   dir   = "/home/${local.workspace_user}"
   env = {
-    LATTICE_WORKSPACE_ID = data.lattice_workspace.me.id
+    LATTICE_AGENT_ID = data.lattice_agent.me.id
   }
 
   metadata {
@@ -97,7 +97,7 @@ resource "lattice_agent" "main" {
   metadata {
     display_name = "Home Disk"
     key          = "3_home_disk"
-    script       = "lattice stat disk --path /home/${lower(data.lattice_workspace_owner.me.name)}"
+    script       = "lattice stat disk --path /home/${lower(data.lattice_agent_owner.me.name)}"
     interval     = 60
     timeout      = 1
   }
@@ -131,12 +131,12 @@ module "lattice-login" {
 }
 
 resource "incus_volume" "home" {
-  name = "lattice-${data.lattice_workspace.me.id}-home"
+  name = "lattice-${data.lattice_agent.me.id}-home"
   pool = local.pool
 }
 
 resource "incus_volume" "docker" {
-  name = "lattice-${data.lattice_workspace.me.id}-docker"
+  name = "lattice-${data.lattice_agent.me.id}-docker"
   pool = local.pool
 }
 
@@ -146,7 +146,7 @@ resource "incus_cached_image" "image" {
 }
 
 resource "incus_instance_file" "sidecar_token" {
-  count              = data.lattice_workspace.me.start_count
+  count              = data.lattice_agent.me.start_count
   instance           = incus_instance.dev.name
   content            = <<EOF
 LATTICE_SIDECAR_TOKEN=${local.sidecar_token}
@@ -156,8 +156,8 @@ EOF
 }
 
 resource "incus_instance" "dev" {
-  running = data.lattice_workspace.me.start_count == 1
-  name    = "lattice-${lower(data.lattice_workspace_owner.me.name)}-${lower(data.lattice_workspace.me.name)}"
+  running = data.lattice_agent.me.start_count == 1
+  name    = "lattice-${lower(data.lattice_agent_owner.me.name)}-${lower(data.lattice_agent.me.name)}"
   image   = incus_cached_image.image.fingerprint
 
   config = {
@@ -167,7 +167,7 @@ resource "incus_instance" "dev" {
     "boot.autostart"                       = true
     "cloud-init.user-data"                 = <<EOF
 #cloud-config
-hostname: ${lower(data.lattice_workspace.me.name)}
+hostname: ${lower(data.lattice_agent.me.name)}
 users:
   - name: ${local.workspace_user}
     uid: 1000
@@ -274,17 +274,17 @@ EOF
 }
 
 locals {
-  workspace_user    = lower(data.lattice_workspace_owner.me.name)
+  workspace_user    = lower(data.lattice_agent_owner.me.name)
   pool              = "lattice"
   repo_base_dir     = data.lattice_parameter.repo_base_dir.value == "~" ? "/home/${local.workspace_user}" : replace(data.lattice_parameter.repo_base_dir.value, "/^~\\//", "/home/${local.workspace_user}/")
   repo_dir          = module.git-clone.repo_dir
-  sidecar_id          = data.lattice_workspace.me.start_count == 1 ? lattice_agent.main[0].id : ""
-  sidecar_token       = data.lattice_workspace.me.start_count == 1 ? lattice_agent.main[0].token : ""
-  agent_init_script = data.lattice_workspace.me.start_count == 1 ? lattice_agent.main[0].init_script : ""
+  sidecar_id          = data.lattice_agent.me.start_count == 1 ? lattice_agent.main[0].id : ""
+  sidecar_token       = data.lattice_agent.me.start_count == 1 ? lattice_agent.main[0].token : ""
+  agent_init_script = data.lattice_agent.me.start_count == 1 ? lattice_agent.main[0].init_script : ""
 }
 
 resource "lattice_metadata" "info" {
-  count       = data.lattice_workspace.me.start_count
+  count       = data.lattice_agent.me.start_count
   resource_id = incus_instance.dev.name
   item {
     key   = "memory"

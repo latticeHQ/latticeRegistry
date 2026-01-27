@@ -100,8 +100,8 @@ provider "kubernetes" {
   config_path = var.use_kubeconfig == true ? "~/.kube/config" : null
 }
 
-data "lattice_workspace" "me" {}
-data "lattice_workspace_owner" "me" {}
+data "lattice_agent" "me" {}
+data "lattice_agent_owner" "me" {}
 
 resource "lattice_agent" "main" {
   os             = "linux"
@@ -193,21 +193,21 @@ resource "lattice_app" "code-server" {
 
 resource "kubernetes_persistent_volume_claim" "home" {
   metadata {
-    name      = "lattice-${data.lattice_workspace.me.id}-home"
+    name      = "lattice-${data.lattice_agent.me.id}-home"
     namespace = var.namespace
     labels = {
       "app.kubernetes.io/name"     = "lattice-pvc"
-      "app.kubernetes.io/instance" = "lattice-pvc-${data.lattice_workspace.me.id}"
+      "app.kubernetes.io/instance" = "lattice-pvc-${data.lattice_agent.me.id}"
       "app.kubernetes.io/part-of"  = "lattice"
       //Lattice-specific labels.
       "com.lattice.resource"       = "true"
-      "com.lattice.workspace.id"   = data.lattice_workspace.me.id
-      "com.lattice.workspace.name" = data.lattice_workspace.me.name
-      "com.lattice.user.id"        = data.lattice_workspace_owner.me.id
-      "com.lattice.user.username"  = data.lattice_workspace_owner.me.name
+      "com.lattice.workspace.id"   = data.lattice_agent.me.id
+      "com.lattice.workspace.name" = data.lattice_agent.me.name
+      "com.lattice.user.id"        = data.lattice_agent_owner.me.id
+      "com.lattice.user.username"  = data.lattice_agent_owner.me.name
     }
     annotations = {
-      "com.lattice.user.email" = data.lattice_workspace_owner.me.email
+      "com.lattice.user.email" = data.lattice_agent_owner.me.email
     }
   }
   wait_until_bound = false
@@ -222,26 +222,26 @@ resource "kubernetes_persistent_volume_claim" "home" {
 }
 
 resource "kubernetes_deployment" "main" {
-  count = data.lattice_workspace.me.start_count
+  count = data.lattice_agent.me.start_count
   depends_on = [
     kubernetes_persistent_volume_claim.home
   ]
   wait_for_rollout = false
   metadata {
-    name      = "lattice-${data.lattice_workspace.me.id}"
+    name      = "lattice-${data.lattice_agent.me.id}"
     namespace = var.namespace
     labels = {
       "app.kubernetes.io/name"     = "lattice-workspace"
-      "app.kubernetes.io/instance" = "lattice-workspace-${data.lattice_workspace.me.id}"
+      "app.kubernetes.io/instance" = "lattice-workspace-${data.lattice_agent.me.id}"
       "app.kubernetes.io/part-of"  = "lattice"
       "com.lattice.resource"         = "true"
-      "com.lattice.workspace.id"     = data.lattice_workspace.me.id
-      "com.lattice.workspace.name"   = data.lattice_workspace.me.name
-      "com.lattice.user.id"          = data.lattice_workspace_owner.me.id
-      "com.lattice.user.username"    = data.lattice_workspace_owner.me.name
+      "com.lattice.workspace.id"     = data.lattice_agent.me.id
+      "com.lattice.workspace.name"   = data.lattice_agent.me.name
+      "com.lattice.user.id"          = data.lattice_agent_owner.me.id
+      "com.lattice.user.username"    = data.lattice_agent_owner.me.name
     }
     annotations = {
-      "com.lattice.user.email" = data.lattice_workspace_owner.me.email
+      "com.lattice.user.email" = data.lattice_agent_owner.me.email
     }
   }
 
@@ -250,13 +250,13 @@ resource "kubernetes_deployment" "main" {
     selector {
       match_labels = {
         "app.kubernetes.io/name"     = "lattice-workspace"
-        "app.kubernetes.io/instance" = "lattice-workspace-${data.lattice_workspace.me.id}"
+        "app.kubernetes.io/instance" = "lattice-workspace-${data.lattice_agent.me.id}"
         "app.kubernetes.io/part-of"  = "lattice"
         "com.lattice.resource"         = "true"
-        "com.lattice.workspace.id"     = data.lattice_workspace.me.id
-        "com.lattice.workspace.name"   = data.lattice_workspace.me.name
-        "com.lattice.user.id"          = data.lattice_workspace_owner.me.id
-        "com.lattice.user.username"    = data.lattice_workspace_owner.me.name
+        "com.lattice.workspace.id"     = data.lattice_agent.me.id
+        "com.lattice.workspace.name"   = data.lattice_agent.me.name
+        "com.lattice.user.id"          = data.lattice_agent_owner.me.id
+        "com.lattice.user.username"    = data.lattice_agent_owner.me.name
       }
     }
     strategy {
@@ -267,13 +267,13 @@ resource "kubernetes_deployment" "main" {
       metadata {
         labels = {
           "app.kubernetes.io/name"     = "lattice-workspace"
-          "app.kubernetes.io/instance" = "lattice-workspace-${data.lattice_workspace.me.id}"
+          "app.kubernetes.io/instance" = "lattice-workspace-${data.lattice_agent.me.id}"
           "app.kubernetes.io/part-of"  = "lattice"
           "com.lattice.resource"         = "true"
-          "com.lattice.workspace.id"     = data.lattice_workspace.me.id
-          "com.lattice.workspace.name"   = data.lattice_workspace.me.name
-          "com.lattice.user.id"          = data.lattice_workspace_owner.me.id
-          "com.lattice.user.username"    = data.lattice_workspace_owner.me.name
+          "com.lattice.workspace.id"     = data.lattice_agent.me.id
+          "com.lattice.workspace.name"   = data.lattice_agent.me.name
+          "com.lattice.user.id"          = data.lattice_agent_owner.me.id
+          "com.lattice.user.username"    = data.lattice_agent_owner.me.name
         }
       }
       spec {
