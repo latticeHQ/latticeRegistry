@@ -59,12 +59,12 @@ provider "google" {
 data "google_compute_default_service_account" "default" {
 }
 
-data "lattice_workspace" "me" {
+data "lattice_agent" "me" {
 }
-data "lattice_workspace_owner" "me" {}
+data "lattice_agent_owner" "me" {}
 
 resource "google_compute_disk" "root" {
-  name  = "lattice-${data.lattice_workspace.me.id}-root"
+  name  = "lattice-${data.lattice_agent.me.id}-root"
   type  = "pd-ssd"
   zone  = data.lattice_parameter.zone.value
   image = "debian-cloud/debian-11"
@@ -142,8 +142,8 @@ resource "lattice_app" "code-server" {
 
 resource "google_compute_instance" "dev" {
   zone         = data.lattice_parameter.zone.value
-  count        = data.lattice_workspace.me.start_count
-  name         = "lattice-${lower(data.lattice_workspace_owner.me.name)}-${lower(data.lattice_workspace.me.name)}-root"
+  count        = data.lattice_agent.me.start_count
+  name         = "lattice-${lower(data.lattice_agent_owner.me.name)}-${lower(data.lattice_agent.me.name)}-root"
   machine_type = "e2-medium"
   network_interface {
     network = "default"
@@ -178,11 +178,11 @@ EOMETA
 
 locals {
   # Ensure Lattice username is a valid Linux username
-  linux_user = lower(substr(data.lattice_workspace_owner.me.name, 0, 32))
+  linux_user = lower(substr(data.lattice_agent_owner.me.name, 0, 32))
 }
 
 resource "lattice_metadata" "workspace_info" {
-  count       = data.lattice_workspace.me.start_count
+  count       = data.lattice_agent.me.start_count
   resource_id = google_compute_instance.dev[0].id
 
   item {

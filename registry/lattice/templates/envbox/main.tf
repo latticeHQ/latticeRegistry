@@ -79,8 +79,8 @@ provider "kubernetes" {
   config_path = var.use_kubeconfig == true ? "~/.kube/config" : null
 }
 
-data "lattice_workspace" "me" {}
-data "lattice_workspace_owner" "me" {}
+data "lattice_agent" "me" {}
+data "lattice_agent_owner" "me" {}
 
 resource "lattice_agent" "main" {
   os             = "linux"
@@ -123,7 +123,7 @@ resource "lattice_app" "code-server" {
 
 resource "kubernetes_persistent_volume_claim" "home" {
   metadata {
-    name      = "lattice-${lower(data.lattice_workspace_owner.me.name)}-${lower(data.lattice_workspace.me.name)}-home"
+    name      = "lattice-${lower(data.lattice_agent_owner.me.name)}-${lower(data.lattice_agent.me.name)}-home"
     namespace = var.namespace
   }
   wait_until_bound = false
@@ -138,10 +138,10 @@ resource "kubernetes_persistent_volume_claim" "home" {
 }
 
 resource "kubernetes_pod" "main" {
-  count = data.lattice_workspace.me.start_count
+  count = data.lattice_agent.me.start_count
 
   metadata {
-    name      = "lattice-${lower(data.lattice_workspace_owner.me.name)}-${lower(data.lattice_workspace.me.name)}"
+    name      = "lattice-${lower(data.lattice_agent_owner.me.name)}-${lower(data.lattice_agent.me.name)}"
     namespace = var.namespace
   }
 
@@ -178,7 +178,7 @@ resource "kubernetes_pod" "main" {
 
       env {
         name  = "LATTICE_SIDECAR_URL"
-        value = data.lattice_workspace.me.access_url
+        value = data.lattice_agent.me.access_url
       }
 
       env {
@@ -208,7 +208,7 @@ resource "kubernetes_pod" "main" {
 
       env {
         name  = "LATTICE_INNER_HOSTNAME"
-        value = data.lattice_workspace.me.name
+        value = data.lattice_agent.me.name
       }
 
       env {

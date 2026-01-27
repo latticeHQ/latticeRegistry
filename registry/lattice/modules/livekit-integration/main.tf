@@ -60,7 +60,7 @@ variable "capabilities" {
   default     = []
 }
 
-data "lattice_workspace" "current" {}
+data "lattice_agent" "current" {}
 
 resource "lattice_sidecar_metadata" "integration" {
   sidecar_id = var.sidecar_id
@@ -98,10 +98,10 @@ resource "lattice_sidecar_metadata" "capabilities" {
 
 output "room_url" {
   description = "The LiveKit room connection URL"
-  value       = "${data.lattice_workspace.current.access_url}/api/v1/integrations/livekit/room/${var.room_prefix}"
+  value       = "${data.lattice_agent.current.access_url}/api/v1/integrations/livekit/room/${var.room_prefix}"
 }
 
 output "websocket_endpoint" {
   description = "The WebSocket endpoint for real-time communication"
-  value       = "${data.lattice_workspace.current.access_url}/api/v1/integrations/livekit/ws"
+  value       = "${data.lattice_agent.current.access_url}/api/v1/integrations/livekit/ws"
 }

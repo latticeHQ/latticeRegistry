@@ -234,7 +234,7 @@ export const runTerraformApply = async <TVars extends TerraformVariables>(
   // workspace-specific values, which causes the resulting URL to be different
   // from what the tests have classically expected.
   childEnv.LATTICE_SIDECAR_URL = undefined;
-  childEnv.LATTICE_WORKSPACE_NAME = undefined;
+  childEnv.LATTICE_AGENT_NAME = undefined;
 
   for (const [key, value] of Object.entries(vars) as [string, JsonValue][]) {
     if (value !== null) {

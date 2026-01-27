@@ -49,7 +49,7 @@ variable "token_lifetime" {
   default     = 3600
 }
 
-data "lattice_workspace" "current" {}
+data "lattice_agent" "current" {}
 
 resource "lattice_sidecar_metadata" "identity" {
   sidecar_id = var.sidecar_id
@@ -66,10 +66,10 @@ resource "lattice_sidecar_metadata" "issuer" {
 
 output "identity_endpoint" {
   description = "The identity service endpoint"
-  value       = "${data.lattice_workspace.current.access_url}/api/v1/identity"
+  value       = "${data.lattice_agent.current.access_url}/api/v1/identity"
 }
 
 output "token_endpoint" {
   description = "The token issuance endpoint"
-  value       = "${data.lattice_workspace.current.access_url}/api/v1/identity/token"
+  value       = "${data.lattice_agent.current.access_url}/api/v1/identity/token"
 }

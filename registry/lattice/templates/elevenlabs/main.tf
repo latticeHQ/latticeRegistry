@@ -10,7 +10,7 @@ terraform {
 }
 
 locals {
-  username = data.lattice_workspace_owner.me.name
+  username = data.lattice_agent_owner.me.name
 }
 
 variable "docker_socket" {
@@ -24,8 +24,8 @@ provider "docker" {
 }
 
 data "lattice_provisioner" "me" {}
-data "lattice_workspace" "me" {}
-data "lattice_workspace_owner" "me" {}
+data "lattice_agent" "me" {}
+data "lattice_agent_owner" "me" {}
 
 resource "lattice_agent" "main" {
   arch           = data.lattice_provisioner.me.arch
@@ -82,10 +82,10 @@ EOF
   EOT
 
   env = {
-    GIT_AUTHOR_NAME     = coalesce(data.lattice_workspace_owner.me.full_name, data.lattice_workspace_owner.me.name)
-    GIT_AUTHOR_EMAIL    = "${data.lattice_workspace_owner.me.email}"
-    GIT_COMMITTER_NAME  = coalesce(data.lattice_workspace_owner.me.full_name, data.lattice_workspace_owner.me.name)
-    GIT_COMMITTER_EMAIL = "${data.lattice_workspace_owner.me.email}"
+    GIT_AUTHOR_NAME     = coalesce(data.lattice_agent_owner.me.full_name, data.lattice_agent_owner.me.name)
+    GIT_AUTHOR_EMAIL    = "${data.lattice_agent_owner.me.email}"
+    GIT_COMMITTER_NAME  = coalesce(data.lattice_agent_owner.me.full_name, data.lattice_agent_owner.me.name)
+    GIT_COMMITTER_EMAIL = "${data.lattice_agent_owner.me.email}"
   }
 
   metadata {

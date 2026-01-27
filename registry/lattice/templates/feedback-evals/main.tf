@@ -527,9 +527,9 @@ variable "analysis_key_guidelines" {
 # LATTICE WORKSPACE SETUP (Minimal - Just to Show Template Works)
 # ============================================================================
 
-data "lattice_workspace" "me" {}
+data "lattice_agent" "me" {}
 
-data "lattice_workspace_owner" "me" {}
+data "lattice_agent_owner" "me" {}
 
 # ============================================================================
 # LATTICE SIDECAR WITH AI BRIDGE PRE-CONFIGURATION
@@ -549,13 +549,13 @@ resource "lattice_agent" "dev" {
   # inside the workspace (Claude Code, Cursor, Roo Code, etc.)
   env = {
     # Anthropic/Claude configuration
-    ANTHROPIC_BASE_URL    = "${data.lattice_workspace.me.access_url}/apiv0aibridge/anthropic"
-    ANTHROPIC_AUTH_TOKEN  = data.lattice_workspace_owner.me.session_token
-    ANTHROPIC_API_KEY     = data.lattice_workspace_owner.me.session_token
+    ANTHROPIC_BASE_URL    = "${data.lattice_agent.me.access_url}/apiv0aibridge/anthropic"
+    ANTHROPIC_AUTH_TOKEN  = data.lattice_agent_owner.me.session_token
+    ANTHROPIC_API_KEY     = data.lattice_agent_owner.me.session_token
     
     # OpenAI configuration (if needed)
-    OPENAI_BASE_URL       = "${data.lattice_workspace.me.access_url}/apiv0aibridge/openai/v1"
-    OPENAI_API_KEY        = data.lattice_workspace_owner.me.session_token
+    OPENAI_BASE_URL       = "${data.lattice_agent.me.access_url}/apiv0aibridge/openai/v1"
+    OPENAI_API_KEY        = data.lattice_agent_owner.me.session_token
   }
   
   metadata {
@@ -599,13 +599,13 @@ output "analysis_configuration" {
 output "workspace_info" {
   description = "Workspace context (shows template is working)"
   value = {
-    workspace_id       = data.lattice_workspace.me.id
-    workspace_name     = data.lattice_workspace.me.name
-    owner_name         = data.lattice_workspace_owner.me.name
-    owner_email        = data.lattice_workspace_owner.me.email
+    workspace_id       = data.lattice_agent.me.id
+    workspace_name     = data.lattice_agent.me.name
+    owner_name         = data.lattice_agent_owner.me.name
+    owner_email        = data.lattice_agent_owner.me.email
     template_message   = "✅ This workspace uses Prompting-as-Code for AI Agents"
     aibridge_configured = "✅ AI coding tools pre-configured to route through Lattice AI Bridge"
-    aibridge_anthropic_url = "${data.lattice_workspace.me.access_url}/apiv0aibridge/anthropic"
-    aibridge_openai_url    = "${data.lattice_workspace.me.access_url}/apiv0aibridge/openai/v1"
+    aibridge_anthropic_url = "${data.lattice_agent.me.access_url}/apiv0aibridge/anthropic"
+    aibridge_openai_url    = "${data.lattice_agent.me.access_url}/apiv0aibridge/openai/v1"
   }
 }

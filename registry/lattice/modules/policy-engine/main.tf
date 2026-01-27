@@ -48,7 +48,7 @@ variable "audit_retention_days" {
   default     = 30
 }
 
-data "lattice_workspace" "current" {}
+data "lattice_agent" "current" {}
 
 resource "lattice_sidecar_metadata" "policy_mode" {
   sidecar_id = var.sidecar_id
@@ -70,10 +70,10 @@ resource "lattice_sidecar_metadata" "policies" {
 
 output "policy_endpoint" {
   description = "The policy evaluation endpoint"
-  value       = "${data.lattice_workspace.current.access_url}/api/v1/policy/evaluate"
+  value       = "${data.lattice_agent.current.access_url}/api/v1/policy/evaluate"
 }
 
 output "audit_endpoint" {
   description = "The audit log endpoint"
-  value       = "${data.lattice_workspace.current.access_url}/api/v1/policy/audit"
+  value       = "${data.lattice_agent.current.access_url}/api/v1/policy/audit"
 }

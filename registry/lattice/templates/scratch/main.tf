@@ -8,7 +8,7 @@ terraform {
 
 data "lattice_provisioner" "me" {}
 
-data "lattice_workspace" "me" {}
+data "lattice_agent" "me" {}
 
 resource "lattice_agent" "main" {
   arch = data.lattice_provisioner.me.arch

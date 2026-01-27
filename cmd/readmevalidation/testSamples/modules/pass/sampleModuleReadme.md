@@ -29,7 +29,7 @@ provider "docker" {}
 
 provider "lattice" {}
 
-data "lattice_workspace" "me" {}
+data "lattice_agent" "me" {}
 
 resource "lattice_agent" "main" {
   os   = "linux"
@@ -38,7 +38,7 @@ resource "lattice_agent" "main" {
 
 resource "docker_container" "workspace" {
   image = "lattice/enterprise-base:ubuntu"
-  name  = "lattice-${data.lattice_workspace.me.owner}-${data.lattice_workspace.me.name}"
+  name  = "lattice-${data.lattice_agent.me.owner}-${data.lattice_agent.me.name}"
 
   env = ["LATTICE_SIDECAR_TOKEN=${lattice_agent.main.token}"]
 }

@@ -12,7 +12,7 @@ tags: [helper]
 
 ```tf
 module "MODULE_NAME" {
-  count   = data.lattice_workspace.me.start_count
+  count   = data.lattice_agent.me.start_count
   source  = "registry.latticeruntime.com/NAMESPACE/MODULE_NAME/lattice"
   version = "1.0.0"
 }
@@ -28,7 +28,7 @@ Install the Dracula theme from [OpenVSX](https://open-vsx.org/):
 
 ```tf
 module "MODULE_NAME" {
-  count    = data.lattice_workspace.me.start_count
+  count    = data.lattice_agent.me.start_count
   source   = "registry.latticeruntime.com/NAMESPACE/MODULE_NAME/lattice"
   version  = "1.0.0"
   sidecar_id = lattice_agent.main.id
@@ -46,7 +46,7 @@ Configure VS Code's [settings.json](https://code.visualstudio.com/docs/getstarte
 
 ```tf
 module "MODULE_NAME" {
-  count      = data.lattice_workspace.me.start_count
+  count      = data.lattice_agent.me.start_count
   source     = "registry.latticeruntime.com/NAMESPACE/MODULE_NAME/lattice"
   version    = "1.0.0"
   sidecar_id   = lattice_agent.main.id

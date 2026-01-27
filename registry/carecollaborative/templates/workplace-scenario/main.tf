@@ -320,8 +320,8 @@ data "lattice_provisioner" "me" {}
 
 provider "docker" {}
 
-data "lattice_workspace" "me" {}
-data "lattice_workspace_owner" "me" {}
+data "lattice_agent" "me" {}
+data "lattice_agent_owner" "me" {}
 
 # Build workplace profile JSON for the agent
 locals {
@@ -420,31 +420,31 @@ resource "docker_image" "main" {
 
 # Docker volume for persistent data
 resource "docker_volume" "home_volume" {
-  name = "lattice-${data.lattice_workspace.me.id}-home"
+  name = "lattice-${data.lattice_agent.me.id}-home"
   lifecycle {
     ignore_changes = all
   }
   labels {
     label = "lattice.owner"
-    value = data.lattice_workspace_owner.me.name
+    value = data.lattice_agent_owner.me.name
   }
   labels {
     label = "lattice.owner_id"
-    value = data.lattice_workspace_owner.me.id
+    value = data.lattice_agent_owner.me.id
   }
   labels {
     label = "lattice.workspace_id"
-    value = data.lattice_workspace.me.id
+    value = data.lattice_agent.me.id
   }
 }
 
 # Docker container running the pre-built agent
 resource "docker_container" "workspace" {
-  count = data.lattice_workspace.me.start_count
+  count = data.lattice_agent.me.start_count
   image = docker_image.main.image_id
-  name  = "lattice-${data.lattice_workspace_owner.me.name}-${lower(data.lattice_workspace.me.name)}"
+  name  = "lattice-${data.lattice_agent_owner.me.name}-${lower(data.lattice_agent.me.name)}"
 
-  hostname = data.lattice_workspace.me.name
+  hostname = data.lattice_agent.me.name
 
   entrypoint = ["sh", "-c", replace(lattice_agent.main.init_script, "/localhost|127\\.0\\.0\\.1/", "host.docker.internal")]
 
