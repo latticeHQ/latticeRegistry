@@ -439,7 +439,7 @@ resource "docker_volume" "home_volume" {
 }
 
 # Docker container running the pre-built agent
-resource "docker_container" "workspace" {
+resource "docker_container" "agent" {
   count = data.lattice_agent.me.start_count
   image = docker_image.main.image_id
   name  = "lattice-${data.lattice_agent_owner.me.name}-${lower(data.lattice_agent.me.name)}"

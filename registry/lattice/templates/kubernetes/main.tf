@@ -201,8 +201,8 @@ resource "kubernetes_persistent_volume_claim" "home" {
       "app.kubernetes.io/part-of"  = "lattice"
       //Lattice-specific labels.
       "com.lattice.resource"       = "true"
-      "com.lattice.workspace.id"   = data.lattice_agent.me.id
-      "com.lattice.workspace.name" = data.lattice_agent.me.name
+      "com.lattice.agent.id"   = data.lattice_agent.me.id
+      "com.lattice.agent.name" = data.lattice_agent.me.name
       "com.lattice.user.id"        = data.lattice_agent_owner.me.id
       "com.lattice.user.username"  = data.lattice_agent_owner.me.name
     }
@@ -231,12 +231,12 @@ resource "kubernetes_deployment" "main" {
     name      = "lattice-${data.lattice_agent.me.id}"
     namespace = var.namespace
     labels = {
-      "app.kubernetes.io/name"     = "lattice-workspace"
-      "app.kubernetes.io/instance" = "lattice-workspace-${data.lattice_agent.me.id}"
+      "app.kubernetes.io/name"     = "lattice-agent"
+      "app.kubernetes.io/instance" = "lattice-agent-${data.lattice_agent.me.id}"
       "app.kubernetes.io/part-of"  = "lattice"
       "com.lattice.resource"         = "true"
-      "com.lattice.workspace.id"     = data.lattice_agent.me.id
-      "com.lattice.workspace.name"   = data.lattice_agent.me.name
+      "com.lattice.agent.id"     = data.lattice_agent.me.id
+      "com.lattice.agent.name"   = data.lattice_agent.me.name
       "com.lattice.user.id"          = data.lattice_agent_owner.me.id
       "com.lattice.user.username"    = data.lattice_agent_owner.me.name
     }
@@ -249,12 +249,12 @@ resource "kubernetes_deployment" "main" {
     replicas = 1
     selector {
       match_labels = {
-        "app.kubernetes.io/name"     = "lattice-workspace"
-        "app.kubernetes.io/instance" = "lattice-workspace-${data.lattice_agent.me.id}"
+        "app.kubernetes.io/name"     = "lattice-agent"
+        "app.kubernetes.io/instance" = "lattice-agent-${data.lattice_agent.me.id}"
         "app.kubernetes.io/part-of"  = "lattice"
         "com.lattice.resource"         = "true"
-        "com.lattice.workspace.id"     = data.lattice_agent.me.id
-        "com.lattice.workspace.name"   = data.lattice_agent.me.name
+        "com.lattice.agent.id"     = data.lattice_agent.me.id
+        "com.lattice.agent.name"   = data.lattice_agent.me.name
         "com.lattice.user.id"          = data.lattice_agent_owner.me.id
         "com.lattice.user.username"    = data.lattice_agent_owner.me.name
       }
@@ -266,12 +266,12 @@ resource "kubernetes_deployment" "main" {
     template {
       metadata {
         labels = {
-          "app.kubernetes.io/name"     = "lattice-workspace"
-          "app.kubernetes.io/instance" = "lattice-workspace-${data.lattice_agent.me.id}"
+          "app.kubernetes.io/name"     = "lattice-agent"
+          "app.kubernetes.io/instance" = "lattice-agent-${data.lattice_agent.me.id}"
           "app.kubernetes.io/part-of"  = "lattice"
           "com.lattice.resource"         = "true"
-          "com.lattice.workspace.id"     = data.lattice_agent.me.id
-          "com.lattice.workspace.name"   = data.lattice_agent.me.name
+          "com.lattice.agent.id"     = data.lattice_agent.me.id
+          "com.lattice.agent.name"   = data.lattice_agent.me.name
           "com.lattice.user.id"          = data.lattice_agent_owner.me.id
           "com.lattice.user.username"    = data.lattice_agent_owner.me.name
         }
@@ -320,7 +320,7 @@ resource "kubernetes_deployment" "main" {
         }
 
         affinity {
-          // This affinity attempts to spread out all workspace pods evenly across
+          // This affinity attempts to spread out all agent pods evenly across
           // nodes.
           pod_anti_affinity {
             preferred_during_scheduling_ignored_during_execution {
@@ -331,7 +331,7 @@ resource "kubernetes_deployment" "main" {
                   match_expressions {
                     key      = "app.kubernetes.io/name"
                     operator = "In"
-                    values   = ["lattice-workspace"]
+                    values   = ["lattice-agent"]
                   }
                 }
               }

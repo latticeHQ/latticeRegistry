@@ -41,14 +41,14 @@ func xerrors(m dsl.Matcher) {
 		Report("Use xerrors to provide additional stacktrace information!")
 }
 
-// databaseImport enforces not importing any database types into /wirtualsdk.
+// databaseImport enforces not importing any database types into /latticesdk.
 //
 //nolint:unused,deadcode,varnamelen
 func databaseImport(m dsl.Matcher) {
 	m.Import("github.com/latticehq/latticev0wirtuald/database")
 	m.Match("database.$_").
-		Report("Do not import any database types into wirtualsdk").
-		Where(m.File().PkgPath.Matches("github.com/latticehq/latticev0wirtualsdk"))
+		Report("Do not import any database types into latticesdk").
+		Where(m.File().PkgPath.Matches("github.com/latticehq/latticev0latticesdk"))
 }
 
 // doNotCallTFailNowInsideGoroutine enforces not calling t.FailNow or

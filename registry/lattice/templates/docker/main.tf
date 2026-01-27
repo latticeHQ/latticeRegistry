@@ -48,8 +48,8 @@ resource "lattice_sidecar" "main" {
     /tmp/code-server/bin/code-server --auth none --port 13337 >/tmp/code-server.log 2>&1 &
   EOT
 
-  # These environment variables allow you to make Git commits right away after creating a
-  # workspace. Note that they take precedence over configuration defined in ~/.gitconfig!
+  # These environment variables allow you to make Git commits right away after creating an
+  # agent. Note that they take precedence over configuration defined in ~/.gitconfig!
   # You can remove this block if you'd prefer to configure Git manually or using
   # dotfiles. (see docs/dotfiles.md)
   env = {
@@ -60,7 +60,7 @@ resource "lattice_sidecar" "main" {
   }
 
   # The following metadata blocks are optional. They are used to display
-  # information about your workspace in the dashboard. You can remove them
+  # information about your agent in the dashboard. You can remove them
   # if you don't want to display any information.
   # For basic resources, you can use the `lattice stat` command.
   # If you need more control, you can write your own script.
@@ -209,16 +209,24 @@ resource "docker_volume" "home_volume" {
   }
 }
 
-resource "docker_container" "workspace" {
+resource "docker_image" "agent" {
+  name         = "ubuntu:22.04"
+  keep_locally = true
+}
+
+resource "docker_container" "agent" {
   count = data.lattice_agent.me.start_count
-  image = "latticecom/enterprise-base:ubuntu"
+  image = docker_image.agent.image_id
   # Uses lower() to avoid Docker restriction on container names.
   name = "lattice-${data.lattice_agent_owner.me.name}-${lower(data.lattice_agent.me.name)}"
-  # Hostname makes the shell more user friendly: lattice@my-workspace:~$
+  # Hostname makes the shell more user friendly: lattice@my-agent:~$
   hostname = data.lattice_agent.me.name
-  # Use the docker gateway if the access URL is 127.0.0.1
+  # Use the init_script to download and start the lattice sidecar
   entrypoint = ["sh", "-c", replace(lattice_sidecar.main.init_script, "/localhost|127\\.0\\.0\\.1/", "host.docker.internal")]
-  env        = ["LATTICE_SIDECAR_TOKEN=${lattice_sidecar.main.token}"]
+  env = [
+    "LATTICE_SIDECAR_TOKEN=${lattice_sidecar.main.token}",
+    "LATTICE_SIDECAR_URL=${replace(data.lattice_agent.me.access_url, "/localhost|127\\.0\\.0\\.1/", "host.docker.internal")}"
+  ]
   host {
     host = "host.docker.internal"
     ip   = "host-gateway"
