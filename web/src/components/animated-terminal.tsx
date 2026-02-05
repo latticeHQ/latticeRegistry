@@ -6,7 +6,7 @@ import { Terminal } from "lucide-react";
 const terminalLines = [
   { type: "comment", text: "# Install Lattice Runtime" },
   { type: "command", text: "$ brew tap latticeHQ/lattice" },
-  { type: "command", text: "$ brew install lattice" },
+  { type: "command", text: "$ brew install latticehq/lattice/lattice" },
   { type: "success", text: "Lattice installed successfully" },
   { type: "comment", text: "# Verify installation" },
   { type: "command", text: "$ lattice --help" },
