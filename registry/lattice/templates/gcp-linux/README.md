@@ -1,7 +1,7 @@
 ---
 display_name: Agent Definition on GCP (Linux)
 description: Deploy Linux-based agents on Google Compute Engine
-icon: ../.icons/gcp.png
+icon: ../../.icons/gcp.png
 maintainer_github: lattice
 verified: true
 tags: [linux, gcp]

@@ -1,7 +1,7 @@
 ---
 display_name: Agent Definition with Deepgram
 description: Deploy speech-to-text agents with Deepgram real-time API
-icon: ../.icons/deepgram.svg
+icon: ../../.icons/deepgram.svg
 maintainer_github: latticeHQ
 verified: true
 tags: [voice, stt, realtime]

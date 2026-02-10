@@ -1,7 +1,7 @@
 ---
 display_name: Agent Definition with LiveKit
 description: Deploy real-time voice/video agents with LiveKit infrastructure
-icon: ../.icons/livekit.svg
+icon: ../../.icons/livekit.svg
 maintainer_github: latticeHQ
 verified: true
 tags: [voice, framework, realtime]

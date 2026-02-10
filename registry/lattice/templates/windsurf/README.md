@@ -1,7 +1,7 @@
 ---
 display_name: Agent Definition with Windsurf
 description: Deploy AI agents with Windsurf and Cascade AI assistant
-icon: ../.icons/windsurf.svg
+icon: ../../.icons/windsurf.svg
 maintainer_github: latticeHQ
 verified: true
 tags: [ide, vibe-coding]

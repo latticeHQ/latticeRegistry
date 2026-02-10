@@ -1,7 +1,7 @@
 ---
 display_name: Agent Definition with Continue
 description: Deploy AI agents with Continue open-source code assistant
-icon: ../.icons/continue.svg
+icon: ../../.icons/continue.svg
 maintainer_github: latticeHQ
 verified: true
 tags: [ide, vibe-coding, open-source]

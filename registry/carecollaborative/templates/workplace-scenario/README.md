@@ -1,7 +1,7 @@
 ---
 display_name: Workplace Employee Simulator
 description: AI employee simulator for HR training and workplace scenario practice
-icon: ../.icons/1f4bc.png
+icon: ../../.icons/1f4bc.png
 maintainer_github: carecollaborative
 verified: true
 tags: [workplace, hr, training, livekit, voice, avatar]

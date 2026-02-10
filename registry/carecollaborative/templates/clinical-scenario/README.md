@@ -1,7 +1,7 @@
 ---
 display_name: Clinical AI Patient
 description: AI patient simulator for medical education and clinical skills training
-icon: ../.icons/1f468-200d-2695-fe0f.png
+icon: ../../.icons/1f468-200d-2695-fe0f.png
 maintainer_github: carecollaborative
 verified: true
 tags: [healthcare, education, livekit, voice, avatar]

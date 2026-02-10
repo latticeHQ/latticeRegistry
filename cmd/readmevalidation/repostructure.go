@@ -11,14 +11,18 @@ import (
 	"golang.org/x/xerrors"
 )
 
-var supportedUserNameSpaceDirectories = append(supportedResourceTypes, ".images")
+var supportedUserNameSpaceDirectories = append(supportedResourceTypes, "presets", ".images", ".icons")
 
 // validNameRe validates that names contain only alphanumeric characters and hyphens
 var validNameRe = regexp.MustCompile(`^[a-zA-Z0-9](?:[a-zA-Z0-9-]*[a-zA-Z0-9])?$`)
 
-// validateLatticeResourceSubdirectory validates that the structure of a module or template within a namespace follows all
-// expected file conventions for Lattice Registry
-func validateLatticeResourceSubdirectory(dirPath string) []error {
+// resourceTypesRequiringTerraform lists resource types that must include a main.tf file.
+// Plugins are markdown-based skill packs and do not use Terraform.
+var resourceTypesRequiringTerraform = []string{"modules", "templates"}
+
+// validateLatticeResourceSubdirectory validates that the structure of a module, template, or plugin within a namespace
+// follows all expected file conventions for Lattice Registry
+func validateLatticeResourceSubdirectory(dirPath string, resourceType string) []error {
 	resourceDir, err := os.Stat(dirPath)
 	if err != nil {
 		// It's valid for a specific resource directory not to exist. It's just that if it does exist, it must follow
@@ -37,6 +41,8 @@ func validateLatticeResourceSubdirectory(dirPath string) []error {
 		return []error{addFilePathToError(dirPath, err)}
 	}
 
+	requiresTerraform := slices.Contains(resourceTypesRequiringTerraform, resourceType)
+
 	var errs []error
 	for _, f := range files {
 		// The .lattice subdirectories are sometimes generated as part of our Bun tests. These subdirectories will never
@@ -46,7 +52,7 @@ func validateLatticeResourceSubdirectory(dirPath string) []error {
 			continue
 		}
 
-		// Validate module/template name
+		// Validate module/template/plugin name
 		if !validNameRe.MatchString(f.Name()) {
 			errs = append(errs, xerrors.Errorf("%q: name contains invalid characters (only alphanumeric characters and hyphens are allowed)", path.Join(dirPath, f.Name())))
 			continue
@@ -61,12 +67,15 @@ func validateLatticeResourceSubdirectory(dirPath string) []error {
 			}
 		}
 
-		mainTerraformPath := path.Join(dirPath, f.Name(), "main.tf")
-		if _, err := os.Stat(mainTerraformPath); err != nil {
-			if errors.Is(err, os.ErrNotExist) {
-				errs = append(errs, xerrors.Errorf("%q: 'main.tf' file does not exist", mainTerraformPath))
-			} else {
-				errs = append(errs, addFilePathToError(mainTerraformPath, err))
+		// Only modules and templates require main.tf; plugins are markdown-based.
+		if requiresTerraform {
+			mainTerraformPath := path.Join(dirPath, f.Name(), "main.tf")
+			if _, err := os.Stat(mainTerraformPath); err != nil {
+				if errors.Is(err, os.ErrNotExist) {
+					errs = append(errs, xerrors.Errorf("%q: 'main.tf' file does not exist", mainTerraformPath))
+				} else {
+					errs = append(errs, addFilePathToError(mainTerraformPath, err))
+				}
 			}
 		}
 	}
@@ -124,7 +133,7 @@ func validateRegistryDirectory() []error {
 				continue
 			}
 
-			if errs := validateLatticeResourceSubdirectory(filePath); len(errs) != 0 {
+			if errs := validateLatticeResourceSubdirectory(filePath, segment); len(errs) != 0 {
 				allErrs = append(allErrs, errs...)
 			}
 		}

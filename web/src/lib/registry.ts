@@ -70,6 +70,23 @@ export interface Preset {
   instructions?: string;
 }
 
+export interface PluginFrontmatter {
+  display_name: string;
+  description: string;
+  icon: string;
+  verified?: boolean;
+  tags?: string[];
+}
+
+export interface Plugin {
+  namespace: string;
+  name: string;
+  slug: string;
+  frontmatter: PluginFrontmatter;
+  content: string;
+  htmlContent: string;
+}
+
 export interface Namespace {
   name: string;
   frontmatter: NamespaceFrontmatter;
@@ -78,6 +95,7 @@ export interface Namespace {
   modules: Module[];
   templates: Module[];
   presets: Preset[];
+  plugins: Plugin[];
 }
 
 export interface TableRow {
@@ -152,6 +170,7 @@ export async function getNamespace(name: string): Promise<Namespace | null> {
   const modules = await getModulesForNamespace(name);
   const templates = await getTemplatesForNamespace(name);
   const presets = await getPresetsForNamespace(name);
+  const plugins = await getPluginsForNamespace(name);
 
   return {
     name,
@@ -161,6 +180,7 @@ export async function getNamespace(name: string): Promise<Namespace | null> {
     modules,
     templates,
     presets,
+    plugins,
   };
 }
 
@@ -329,4 +349,52 @@ export async function getPreset(namespace: string, presetName: string): Promise<
 export async function getAllPresets(): Promise<Preset[]> {
   const namespaces = await getNamespaces();
   return namespaces.flatMap(ns => ns.presets);
+}
+
+export async function getPluginsForNamespace(namespace: string): Promise<Plugin[]> {
+  const pluginsPath = path.join(REGISTRY_PATH, namespace, 'plugins');
+  const plugins: Plugin[] = [];
+
+  if (!fs.existsSync(pluginsPath)) {
+    return plugins;
+  }
+
+  const dirs = fs.readdirSync(pluginsPath, { withFileTypes: true })
+    .filter(dirent => dirent.isDirectory());
+
+  for (const dir of dirs) {
+    const plugin = await getPlugin(namespace, dir.name);
+    if (plugin) {
+      plugins.push(plugin);
+    }
+  }
+
+  return plugins;
+}
+
+export async function getPlugin(namespace: string, pluginName: string): Promise<Plugin | null> {
+  const pluginPath = path.join(REGISTRY_PATH, namespace, 'plugins', pluginName);
+  const readmePath = path.join(pluginPath, 'README.md');
+
+  if (!fs.existsSync(readmePath)) {
+    return null;
+  }
+
+  const fileContent = fs.readFileSync(readmePath, 'utf-8');
+  const { data, content } = matter(fileContent);
+  const htmlContent = await marked(content);
+
+  return {
+    namespace,
+    name: pluginName,
+    slug: `${namespace}/${pluginName}`,
+    frontmatter: data as PluginFrontmatter,
+    content,
+    htmlContent,
+  };
+}
+
+export async function getAllPlugins(): Promise<Plugin[]> {
+  const namespaces = await getNamespaces();
+  return namespaces.flatMap(ns => ns.plugins);
 }

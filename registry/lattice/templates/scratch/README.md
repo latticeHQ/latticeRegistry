@@ -1,7 +1,7 @@
 ---
 display_name: Agent Definition from Scratch
 description: A minimal starter template for creating custom agent definitions
-icon: ../.icons/1f4e6.png
+icon: ../../.icons/1f4e6.png
 maintainer_github: lattice
 verified: true
 tags: []

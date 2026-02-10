@@ -1,7 +1,7 @@
 ---
 display_name: Envbox (Kubernetes)
 description: Provision envbox pods as Lattice workspaces
-icon: ../.icons/k8s.png
+icon: ../../.icons/k8s.png
 maintainer_github: lattice
 verified: true
 tags: [kubernetes, containers, docker-in-docker]
