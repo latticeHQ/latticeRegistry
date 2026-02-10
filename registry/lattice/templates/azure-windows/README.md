@@ -1,7 +1,7 @@
 ---
 display_name: Azure VM (Windows)
 description: Provision Azure VMs as Lattice workspaces
-icon: ../.icons/azure.png
+icon: ../../.icons/azure.png
 maintainer_github: lattice
 verified: true
 tags: [vm, windows, azure]

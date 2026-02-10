@@ -198,7 +198,7 @@ else
 
   # If a module is down, force a reployment to try getting things back online
   # ASAP
-  # EDIT: registry.coder.com is no longer hosted on vercel
+  # EDIT: registry.latticeruntime.com is no longer hosted on vercel
   #force_redeploy_registry
 fi
 

@@ -1,7 +1,7 @@
 ---
 display_name: Agent Definition on Azure (Linux)
 description: Deploy Linux-based agents on Azure VMs
-icon: ../.icons/azure.png
+icon: ../../.icons/azure.png
 maintainer_github: lattice
 verified: true
 tags: [linux, azure]

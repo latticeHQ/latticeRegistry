@@ -1,7 +1,7 @@
 ---
 display_name: AI Patients for Medical Training
 description: Interactive AI patient simulations for medical students to practice clinical skills
-icon: ../.icons/1f468-200d-2695-fe0f.png
+icon: ../../.icons/1f468-200d-2695-fe0f.png
 maintainer_github: lattice
 verified: true
 tags: [docker, healthcare, education]

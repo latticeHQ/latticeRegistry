@@ -1,7 +1,7 @@
 ---
 display_name: Agent Definition with Docker
 description: Deploy containerized agents using Docker
-icon: ../.icons/docker.png
+icon: ../../.icons/docker.png
 maintainer_github: lattice
 verified: true
 tags: [docker]

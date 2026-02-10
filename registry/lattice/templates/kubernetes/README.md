@@ -1,7 +1,7 @@
 ---
 display_name: Agent Definition on Kubernetes
 description: Deploy containerized agents on Kubernetes
-icon: ../.icons/k8s.png
+icon: ../../.icons/k8s.png
 maintainer_github: lattice
 verified: true
 tags: [kubernetes]

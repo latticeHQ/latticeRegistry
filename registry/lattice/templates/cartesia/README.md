@@ -1,7 +1,7 @@
 ---
 display_name: Agent Definition with Cartesia
 description: Deploy ultra-fast voice agents with Cartesia neural TTS
-icon: ../.icons/cartesia.svg
+icon: ../../.icons/cartesia.svg
 maintainer_github: latticeHQ
 verified: true
 tags: [voice, tts, realtime]

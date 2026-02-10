@@ -40,7 +40,7 @@ linters:
     exhaustruct:
       include:
         - httpmw\.\w+
-        - github.com/coder/coderv0coderd/database\.[^G][^e][^t]\w+Params
+        - github.com/lattice/coderv0coderd/database\.[^G][^e][^t]\w+Params
     gocognit:
       min-complexity: 300
     goconst:

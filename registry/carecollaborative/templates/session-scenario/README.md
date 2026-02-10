@@ -1,7 +1,7 @@
 ---
 display_name: Session Transcriber & Evaluator
 description: Multi-participant transcription and session analysis for training evaluations
-icon: ../.icons/1f4cb.png
+icon: ../../.icons/1f4cb.png
 maintainer_github: carecollaborative
 verified: true
 tags: [transcription, evaluation, livekit, analytics, s3]

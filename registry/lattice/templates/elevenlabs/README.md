@@ -1,7 +1,7 @@
 ---
 display_name: Agent Definition with ElevenLabs
 description: Deploy voice agents with ElevenLabs text-to-speech
-icon: ../.icons/elevenlabs.svg
+icon: ../../.icons/elevenlabs.svg
 maintainer_github: latticeHQ
 verified: true
 tags: [voice, tts]

@@ -1,7 +1,7 @@
 ---
 display_name: Agent Definition on AWS (Linux)
 description: Deploy Linux-based agents on AWS EC2 instances
-icon: ../.icons/aws.svg
+icon: ../../.icons/aws.svg
 maintainer_github: lattice
 verified: true
 tags: [linux, aws]

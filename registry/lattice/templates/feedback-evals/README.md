@@ -1,7 +1,7 @@
 ---
 display_name: Feedback & Evaluation System
 description: AI-powered assessment platform for faculty to evaluate and provide feedback on student performance
-icon: ../.icons/1f4cb.png
+icon: ../../.icons/1f4cb.png
 maintainer_github: lattice
 verified: true
 tags: [docker, healthcare, education]

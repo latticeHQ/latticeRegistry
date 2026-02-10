@@ -4,12 +4,13 @@ Welcome! This guide covers how to contribute to the Lattice Registry, whether yo
 
 ## What is the Lattice Registry?
 
-The Lattice Registry is a collection of Terraform modules for Lattice Runtime deployments. Modules provide identity management, policy enforcement, AI framework integrations, monitoring configurations, and other runtime functionality.
+The Lattice Registry is a collection of Terraform modules, templates, and plugins for Lattice Runtime deployments. Modules provide identity management, policy enforcement, AI framework integrations, monitoring configurations, and other runtime functionality. Plugins provide domain-specific skills and MCP server integrations for Lattice Workbench.
 
 ## Types of Contributions
 
 - **[New Modules](#creating-a-new-module)** - Add support for a new tool or functionality
 - **[New Templates](#creating-a-new-template)** - Create complete agent workspace configurations
+- **[New Plugins](#creating-a-new-plugin)** - Add domain-specific skills for Lattice Workbench
 - **[Existing Modules](#contributing-to-existing-modules)** - Fix bugs, add features, or improve documentation
 - **[Existing Templates](#contributing-to-existing-templates)** - Improve workspace templates
 - **[Bug Reports](#reporting-issues)** - Report problems or request features
@@ -38,12 +39,13 @@ bun install
 
 ### Understanding Namespaces
 
-All modules and templates are organized under `/registry/[namespace]/`. Each contributor gets their own namespace with both modules and templates directories:
+All modules, templates, and plugins are organized under `/registry/[namespace]/`. Each contributor gets their own namespace:
 
 ```
 registry/[namespace]/
 ├── modules/         # Individual components and tools
-└── templates/       # Complete workspace configurations
+├── templates/       # Complete workspace configurations
+└── plugins/         # Knowledge-work skill packs for Lattice Workbench
 ```
 
 For example: `/registry/your-username/modules/` and `/registry/your-username/templates/`. If a namespace is taken, choose a different unique namespace, but you can still use any display name on the Registry website.
@@ -272,6 +274,79 @@ lattice templates push [template-name] -d .
 
 ---
 
+## Creating a New Plugin
+
+Plugins are knowledge-work skill packs for Lattice Workbench. Unlike modules and templates (which use Terraform), plugins are markdown-based and provide domain-specific AI agent skills, commands, and MCP server integrations.
+
+### Plugin Structure
+
+```
+registry/[your-username]/plugins/[plugin-name]/
+├── README.md        # Documentation with frontmatter, skills table, MCP servers, connectors
+```
+
+### 1. Create Your Plugin Directory
+
+```bash
+mkdir -p registry/[your-username]/plugins/[plugin-name]
+cd registry/[your-username]/plugins/[plugin-name]
+```
+
+### 2. Create README.md
+
+```markdown
+---
+display_name: "Plugin Name"
+description: "What this plugin provides"
+icon: "../../../../.icons/your-icon.png"
+verified: false
+tags: ["domain", "skills", "relevant-tags"]
+---
+
+# Plugin Name
+
+Description of what the plugin provides and which workflows it supports.
+
+## Skills
+
+| Name | Type | Description |
+|------|------|-------------|
+| `plugin-command-name` | command | What this command does |
+| `plugin-skill-name` | skill | What this skill does |
+
+## MCP Servers
+
+| Server | URL |
+|--------|-----|
+| service-name | https://mcp.service.com/mcp |
+
+## Connectors
+
+| Category | Placeholder | Included servers | Other options |
+|----------|-------------|-----------------|---------------|
+| CRM | `~~CRM` | HubSpot | Salesforce, Pipedrive |
+```
+
+### 3. Plugin Guidelines
+
+- Plugins appear in Lattice Workbench under Settings > Plugin Packs
+- Skills use `~~placeholder` syntax for tool-agnostic connector references
+- Commands are slash-command style skills invoked by users
+- Skills are background capabilities the agent uses automatically
+- MCP server URLs should point to valid MCP endpoints
+- Include a Connectors table mapping placeholder categories to real services
+
+### 4. Submit
+
+```bash
+bun run fmt
+git add .
+git commit -m "Add [plugin-name] plugin"
+git push origin your-branch
+```
+
+---
+
 ## Contributing to Existing Templates
 
 ### 1. Types of Template Improvements
@@ -409,6 +484,12 @@ Example: `https://github.com/latticeHQ/registry/compare/main...your-branch?templ
 - `README.md` - Documentation with frontmatter
 
 Templates don't require test files like modules do, but should be manually tested before submission.
+
+### Every Plugin Must Have
+
+- `README.md` - Documentation with frontmatter, skills table, MCP servers, and connectors
+
+Plugins are markdown-based and do not require Terraform files or tests.
 
 ### README Frontmatter
 

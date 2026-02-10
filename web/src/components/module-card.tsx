@@ -13,14 +13,16 @@ function getIconPath(iconRelativePath: string): string {
 
 interface ModuleCardProps {
   module: Module;
-  type?: "module" | "template";
+  type?: "module" | "template" | "plugin";
 }
 
 export function ModuleCard({ module, type = "module" }: ModuleCardProps) {
-  const href =
-    type === "module"
-      ? `/modules/${module.namespace}/${module.name}`
-      : `/templates/${module.namespace}/${module.name}`;
+  const hrefMap: Record<string, string> = {
+    module: `/modules/${module.namespace}/${module.name}`,
+    template: `/templates/${module.namespace}/${module.name}`,
+    plugin: `/plugins/${module.namespace}/${module.name}`,
+  };
+  const href = hrefMap[type];
 
   const iconPath = module.frontmatter.icon ? getIconPath(module.frontmatter.icon) : null;
 

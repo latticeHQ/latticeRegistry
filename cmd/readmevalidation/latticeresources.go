@@ -15,7 +15,7 @@ import (
 )
 
 var (
-	supportedResourceTypes = []string{"modules", "templates"}
+	supportedResourceTypes = []string{"modules", "templates", "plugins"}
 	operatingSystems       = []string{"windows", "macos", "linux"}
 	gfmAlertTypes          = []string{"NOTE", "IMPORTANT", "CAUTION", "WARNING", "TIP"}
 
@@ -83,10 +83,12 @@ func validateLatticeResourceDescription(description string) error {
 }
 
 func isPermittedRelativeURL(checkURL string, readmeFilePath string) error {
-	// Icon URLs must reference the top-level .icons directory
-	expectedPrefix := "../../../../.icons/"
-	if !strings.HasPrefix(checkURL, expectedPrefix) {
-		return xerrors.Errorf("icon URL %q must reference the top-level .icons directory using %q", checkURL, expectedPrefix)
+	// Icon URLs must reference a .icons directory via a relative path.
+	// Accepted patterns:
+	//   - "../../../../.icons/" — top-level .icons from modules (registry/ns/modules/name/)
+	//   - "../../.icons/"       — namespace .icons from templates/plugins (registry/ns/templates|plugins/name/)
+	if !strings.Contains(checkURL, ".icons/") {
+		return xerrors.Errorf("icon URL %q must reference a .icons directory", checkURL)
 	}
 
 	// Resolve the path relative to the README file and check if it exists

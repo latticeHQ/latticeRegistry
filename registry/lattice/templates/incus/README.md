@@ -1,7 +1,7 @@
 ---
 display_name: Incus System Container with Docker
 description: Develop in an Incus System Container with Docker using incus
-icon: ../.icons/lxc.svg
+icon: ../../.icons/lxc.svg
 maintainer_github: lattice
 verified: true
 tags: [local, incus, lxc, lxd]

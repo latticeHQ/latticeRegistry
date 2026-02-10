@@ -1,7 +1,7 @@
 ---
 display_name: Agent Definition with Cursor
 description: Deploy AI agents with Cursor IDE pre-configured
-icon: ../.icons/cursor.svg
+icon: ../../.icons/cursor.svg
 maintainer_github: latticeHQ
 verified: true
 tags: [ide, vibe-coding]
