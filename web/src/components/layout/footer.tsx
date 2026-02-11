@@ -84,6 +84,24 @@ export function Footer() {
               </li>
               <li>
                 <Link
+                  href="/plugins"
+                  className="text-sm transition-colors"
+                  style={{ color: "#666666" }}
+                >
+                  Plugins
+                </Link>
+              </li>
+              <li>
+                <Link
+                  href="/presets"
+                  className="text-sm transition-colors"
+                  style={{ color: "#666666" }}
+                >
+                  Presets
+                </Link>
+              </li>
+              <li>
+                <Link
                   href="/contributors"
                   className="text-sm transition-colors"
                   style={{ color: "#666666" }}

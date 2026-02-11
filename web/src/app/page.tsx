@@ -1,8 +1,5 @@
 import Link from "next/link";
-import { getAllModules, getAllTemplates, getAllPresets, getNamespaces } from "@/lib/registry";
-import { ModuleCard } from "@/components/module-card";
-import { Button } from "@/components/ui/button";
-import { AnimatedTerminal } from "@/components/animated-terminal";
+import { getAllModules, getAllTemplates, getAllPresets, getAllPlugins, getNamespaces } from "@/lib/registry";
 import {
   ArrowRight,
   Shield,
@@ -10,24 +7,20 @@ import {
   Lock,
   Fingerprint,
   ArrowUpRight,
-  CheckCircle2,
   Zap,
   Code2,
   GitBranch,
   Package,
   Box,
-  Cpu,
-  Network,
-  Layers,
-  Activity,
-  Server,
   Sparkles,
+  Puzzle,
 } from "lucide-react";
 
 export default async function HomePage() {
   const modules = await getAllModules();
   const templates = await getAllTemplates();
   const presets = await getAllPresets();
+  const plugins = await getAllPlugins();
   const namespaces = await getNamespaces();
 
   const capabilities = [
@@ -65,11 +58,45 @@ export default async function HomePage() {
   const stats = [
     { value: modules.length.toString(), label: "Modules", icon: Package },
     { value: templates.length.toString(), label: "Templates", icon: Box },
+    { value: plugins.length.toString(), label: "Plugins", icon: Puzzle },
     { value: presets.length.toString(), label: "Presets", icon: Sparkles },
     { value: namespaces.length.toString(), label: "Contributors", icon: GitBranch },
   ];
 
-  const featuredModules = modules.slice(0, 6);
+  const featured = [
+    ...modules.slice(0, 3).map((m) => ({
+      name: m.frontmatter.display_name || m.name,
+      description: m.frontmatter.description,
+      tags: m.frontmatter.tags?.slice(0, 3) || [],
+      href: `/modules/${m.namespace}/${m.name}`,
+      type: "Module" as const,
+      icon: Package,
+    })),
+    ...templates.slice(0, 3).map((t) => ({
+      name: t.frontmatter.display_name || t.name,
+      description: t.frontmatter.description,
+      tags: t.frontmatter.tags?.slice(0, 3) || [],
+      href: `/templates/${t.namespace}/${t.name}`,
+      type: "Template" as const,
+      icon: Box,
+    })),
+    ...plugins.slice(0, 3).map((p) => ({
+      name: p.frontmatter.display_name || p.name,
+      description: p.frontmatter.description,
+      tags: p.frontmatter.tags?.slice(0, 3) || [],
+      href: `/plugins/${p.namespace}/${p.name}`,
+      type: "Plugin" as const,
+      icon: Puzzle,
+    })),
+    ...presets.slice(0, 3).map((p) => ({
+      name: p.frontmatter.display_name || p.name,
+      description: p.frontmatter.description,
+      tags: p.frontmatter.tags?.slice(0, 3) || [],
+      href: `/presets/${p.namespace}/${p.name}`,
+      type: "Preset" as const,
+      icon: Sparkles,
+    })),
+  ];
 
   return (
     <div className="relative overflow-hidden">
@@ -84,11 +111,11 @@ export default async function HomePage() {
             <div className="space-y-6">
               {/* Heading - Large Anthropic style */}
               <h1 style={{ fontSize: "56px", lineHeight: "1.1", letterSpacing: "-0.02em", fontWeight: "400", color: "#1a1a1a" }}>
-                Modules, templates, and presets that extend Lattice Runtime
+                Modules, templates, plugins, and presets that extend Lattice Runtime
               </h1>
 
               <p style={{ fontSize: "18px", lineHeight: "1.6", color: "#666666" }}>
-                Lattice Registry is a community-driven repository for modules, templates, and presets. Identity management, policy templates, AI framework integrations, training presets, and monitoring.
+                Lattice Registry is a community-driven repository for modules, templates, plugins, and presets. Identity management, policy templates, AI framework integrations, knowledge-work plugins, and monitoring.
               </p>
 
               {/* CTA Buttons */}
@@ -135,6 +162,16 @@ export default async function HomePage() {
                     </div>
                   </a>
                   <a
+                    href="/plugins"
+                    className="block p-4 rounded-lg transition-colors"
+                    style={{ background: "#ffffff", border: "1px solid #e0e0d8" }}
+                  >
+                    <div className="flex items-center justify-between">
+                      <span className="font-medium" style={{ color: "#1a1a1a" }}>Discover plugins</span>
+                      <ArrowUpRight className="h-4 w-4" style={{ color: "#666666" }} />
+                    </div>
+                  </a>
+                  <a
                     href="/presets"
                     className="block p-4 rounded-lg transition-colors"
                     style={{ background: "#ffffff", border: "1px solid #e0e0d8" }}
@@ -166,7 +203,7 @@ export default async function HomePage() {
       {/* Stats Section - Anthropic style */}
       <section className="relative py-20" style={{ borderTop: "1px solid #e0e0d8", borderBottom: "1px solid #e0e0d8", background: "#ffffff" }}>
         <div className="mx-auto max-w-6xl px-6">
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-8 md:gap-16">
+          <div className="grid grid-cols-2 md:grid-cols-5 gap-8 md:gap-12">
             {stats.map((stat, index) => (
               <div key={index}>
                 <div style={{ fontSize: "40px", fontWeight: "400", color: "#1a1a1a", letterSpacing: "-0.01em", marginBottom: "8px" }} className="tabular-nums">
@@ -213,7 +250,7 @@ export default async function HomePage() {
         </div>
       </section>
 
-      {/* Featured Modules - Anthropic style */}
+      {/* Featured - Anthropic style */}
       <section className="relative py-24" style={{ background: "#ffffff", borderTop: "1px solid #e0e0d8" }}>
         <div className="mx-auto max-w-6xl px-6">
           <div className="mb-12">
@@ -221,28 +258,37 @@ export default async function HomePage() {
               Featured
             </h2>
             <p style={{ fontSize: "15px", color: "#666666" }}>
-              Popular modules from the community
+              Modules, templates, plugins, and presets from the community
             </p>
           </div>
 
           <div className="space-y-2">
-            {featuredModules.map((module) => (
+            {featured.map((item) => (
               <Link
-                key={module.slug}
-                href={`/modules/${module.namespace}/${module.name}`}
+                key={item.href}
+                href={item.href}
                 className="block p-5 rounded-lg transition-colors"
                 style={{ background: "#f5f5f0", border: "1px solid #e0e0d8" }}
               >
                 <div className="flex items-start justify-between">
                   <div className="flex-1">
-                    <h3 className="text-base font-medium mb-1" style={{ color: "#1a1a1a" }}>
-                      {module.frontmatter.display_name || module.name}
-                    </h3>
-                    <p className="text-sm mb-3" style={{ color: "#666666" }}>
-                      {module.frontmatter.description}
+                    <div className="flex items-center gap-2 mb-1">
+                      <item.icon className="h-4 w-4 flex-shrink-0" style={{ color: "#d97706" }} />
+                      <h3 className="text-base font-medium" style={{ color: "#1a1a1a" }}>
+                        {item.name}
+                      </h3>
+                      <span
+                        className="text-[10px] font-medium px-1.5 py-0.5 rounded"
+                        style={{ background: "#ebe9e1", color: "#999999" }}
+                      >
+                        {item.type}
+                      </span>
+                    </div>
+                    <p className="text-sm mb-3 ml-6" style={{ color: "#666666" }}>
+                      {item.description}
                     </p>
-                    <div className="flex gap-2">
-                      {module.frontmatter.tags?.slice(0, 3).map((tag) => (
+                    <div className="flex gap-2 ml-6">
+                      {item.tags.map((tag) => (
                         <span
                           key={tag}
                           className="text-xs px-2 py-1 rounded"
@@ -259,13 +305,37 @@ export default async function HomePage() {
             ))}
           </div>
 
-          <div className="mt-8">
+          <div className="mt-8 flex gap-6">
             <Link
               href="/modules"
               className="inline-flex items-center gap-2 text-sm font-medium"
               style={{ color: "#1a1a1a" }}
             >
-              View all modules
+              All modules
+              <ArrowRight className="h-4 w-4" />
+            </Link>
+            <Link
+              href="/templates"
+              className="inline-flex items-center gap-2 text-sm font-medium"
+              style={{ color: "#1a1a1a" }}
+            >
+              All templates
+              <ArrowRight className="h-4 w-4" />
+            </Link>
+            <Link
+              href="/plugins"
+              className="inline-flex items-center gap-2 text-sm font-medium"
+              style={{ color: "#1a1a1a" }}
+            >
+              All plugins
+              <ArrowRight className="h-4 w-4" />
+            </Link>
+            <Link
+              href="/presets"
+              className="inline-flex items-center gap-2 text-sm font-medium"
+              style={{ color: "#1a1a1a" }}
+            >
+              All presets
               <ArrowRight className="h-4 w-4" />
             </Link>
           </div>
