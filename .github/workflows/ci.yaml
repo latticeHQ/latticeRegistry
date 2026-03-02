@@ -37,7 +37,7 @@ jobs:
             all:
               - '**'
       - name: Set up Terraform
-        uses: hashicorp/setup-terraform@v3
+        uses: hashicorp/setup-terraform@v4
         with:
           terraform_version: "1.5.0"
       - name: Set up Bun
@@ -84,7 +84,7 @@ jobs:
           bun-version: latest
       # Need Terraform for its formatter
       - name: Install Terraform
-        uses: hashicorp/setup-terraform@v3
+        uses: hashicorp/setup-terraform@v4
         with:
           terraform_version: "1.5.0"
       - name: Install dependencies
@@ -92,7 +92,7 @@ jobs:
       - name: Validate formatting
         run: bun fmt:ci
       - name: Check for typos
-        uses: crate-ci/typos@v1.42.0
+        uses: crate-ci/typos@v1.44.0
         with:
           config: .github/typos.toml
   validate-readme-files:
