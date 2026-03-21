@@ -1,0 +1,9 @@
+{
+  "name": "scratch",
+  "display_name": "Agent Definition from Scratch",
+  "description": "A minimal starter template for creating custom agent definitions with full flexibility",
+  "icon": "mui:add-box",
+  "category": "agent",
+  "tags": ["starter", "minimal", "custom", "template"],
+  "version": "1.0.0"
+}

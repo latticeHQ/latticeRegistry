@@ -1,0 +1,9 @@
+{
+  "name": "gcp-linux",
+  "display_name": "Agent Definition on GCP (Linux)",
+  "description": "Deploy Linux-based agents on Google Compute Engine with configurable machine types and zones",
+  "icon": "mui:cloud",
+  "category": "agent",
+  "tags": ["gcp", "linux", "compute-engine", "cloud", "infrastructure"],
+  "version": "1.0.0"
+}

@@ -1,0 +1,9 @@
+{
+  "name": "ai-patients",
+  "display_name": "AI Patients for Medical Training",
+  "description": "Interactive AI patient simulations for medical students to practice clinical skills including history taking, diagnosis, and communication",
+  "icon": "mui:smart-toy",
+  "category": "session",
+  "tags": ["ai", "patients", "medical", "simulation", "healthcare", "education"],
+  "version": "1.0.0"
+}

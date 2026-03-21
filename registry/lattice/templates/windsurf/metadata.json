@@ -1,0 +1,9 @@
+{
+  "name": "windsurf",
+  "display_name": "Agent Definition with Windsurf",
+  "description": "Deploy AI agents with Windsurf IDE and Cascade AI assistant for intelligent development workflows",
+  "icon": "mui:terminal",
+  "category": "tool",
+  "tags": ["windsurf", "ide", "vibe-coding", "cascade", "code-assistant"],
+  "version": "1.0.0"
+}

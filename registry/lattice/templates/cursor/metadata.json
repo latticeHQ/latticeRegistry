@@ -1,0 +1,9 @@
+{
+  "name": "cursor",
+  "display_name": "Agent Definition with Cursor",
+  "description": "Deploy AI agents with Cursor IDE pre-configured for AI-assisted development workflows",
+  "icon": "mui:edit",
+  "category": "tool",
+  "tags": ["cursor", "ide", "vibe-coding", "code-assistant", "editor"],
+  "version": "1.0.0"
+}

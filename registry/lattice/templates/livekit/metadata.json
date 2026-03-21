@@ -1,0 +1,9 @@
+{
+  "name": "livekit",
+  "display_name": "Agent Definition with LiveKit",
+  "description": "Deploy real-time voice and video agents with LiveKit infrastructure for interactive sessions",
+  "icon": "mui:videocam",
+  "category": "session",
+  "tags": ["livekit", "voice", "video", "realtime", "framework", "webrtc"],
+  "version": "1.0.0"
+}

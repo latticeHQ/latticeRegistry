@@ -1,0 +1,9 @@
+{
+  "name": "elevenlabs",
+  "display_name": "Agent Definition with ElevenLabs",
+  "description": "Deploy voice agents with ElevenLabs text-to-speech for high-fidelity conversational audio",
+  "icon": "mui:graphic-eq",
+  "category": "session",
+  "tags": ["elevenlabs", "voice", "tts", "speech", "audio"],
+  "version": "1.0.0"
+}

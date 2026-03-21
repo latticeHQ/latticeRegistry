@@ -1,0 +1,9 @@
+{
+  "name": "incus",
+  "display_name": "Incus System Container with Docker",
+  "description": "Develop in an Incus system container with Docker support for local containerized agent workloads",
+  "icon": "mui:layers",
+  "category": "agent",
+  "tags": ["incus", "lxc", "lxd", "local", "containers", "docker"],
+  "version": "1.0.0"
+}

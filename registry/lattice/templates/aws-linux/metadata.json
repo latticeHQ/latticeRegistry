@@ -1,0 +1,9 @@
+{
+  "name": "aws-linux",
+  "display_name": "Agent Definition on AWS (Linux)",
+  "description": "Deploy Linux-based agents on AWS EC2 instances with configurable instance types and regions",
+  "icon": "mui:cloud",
+  "category": "agent",
+  "tags": ["aws", "linux", "ec2", "cloud", "infrastructure"],
+  "version": "1.0.0"
+}

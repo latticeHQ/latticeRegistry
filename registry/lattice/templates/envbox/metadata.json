@@ -1,0 +1,9 @@
+{
+  "name": "envbox",
+  "display_name": "Envbox (Kubernetes)",
+  "description": "Provision envbox pods on Kubernetes with Docker-in-Docker support for isolated agent environments",
+  "icon": "mui:inventory",
+  "category": "agent",
+  "tags": ["envbox", "kubernetes", "containers", "docker-in-docker", "infrastructure"],
+  "version": "1.0.0"
+}

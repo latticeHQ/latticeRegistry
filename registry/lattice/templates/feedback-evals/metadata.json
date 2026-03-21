@@ -1,0 +1,9 @@
+{
+  "name": "feedback-evals",
+  "display_name": "Feedback & Evaluation System",
+  "description": "AI-powered assessment platform for faculty to evaluate and provide structured feedback on student performance",
+  "icon": "mui:rate-review",
+  "category": "evaluation",
+  "tags": ["feedback", "evaluation", "assessment", "healthcare", "education", "faculty"],
+  "version": "1.0.0"
+}

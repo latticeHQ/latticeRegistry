@@ -1,0 +1,9 @@
+{
+  "name": "cartesia",
+  "display_name": "Agent Definition with Cartesia",
+  "description": "Deploy ultra-fast voice agents with Cartesia neural text-to-speech for real-time conversational AI",
+  "icon": "mui:record-voice-over",
+  "category": "session",
+  "tags": ["cartesia", "voice", "tts", "realtime", "speech"],
+  "version": "1.0.0"
+}

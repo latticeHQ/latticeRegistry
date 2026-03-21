@@ -1,0 +1,9 @@
+{
+  "name": "docker",
+  "display_name": "Agent Definition with Docker",
+  "description": "Provision Docker containers as development environments for containerized agent workloads",
+  "icon": "mui:widgets",
+  "category": "agent",
+  "tags": ["docker", "container", "linux", "infrastructure"],
+  "version": "1.0.0"
+}

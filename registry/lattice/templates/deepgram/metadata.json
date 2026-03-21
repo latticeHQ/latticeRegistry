@@ -1,0 +1,9 @@
+{
+  "name": "deepgram",
+  "display_name": "Agent Definition with Deepgram",
+  "description": "Deploy speech-to-text agents with Deepgram real-time transcription API for voice processing",
+  "icon": "mui:hearing",
+  "category": "session",
+  "tags": ["deepgram", "voice", "stt", "realtime", "transcription", "speech"],
+  "version": "1.0.0"
+}

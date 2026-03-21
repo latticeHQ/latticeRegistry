@@ -1,0 +1,9 @@
+{
+  "name": "azure-linux",
+  "display_name": "Agent Definition on Azure (Linux)",
+  "description": "Deploy Linux-based agents on Azure VMs with configurable VM sizes and regions",
+  "icon": "mui:cloud",
+  "category": "agent",
+  "tags": ["azure", "linux", "vm", "cloud", "infrastructure"],
+  "version": "1.0.0"
+}

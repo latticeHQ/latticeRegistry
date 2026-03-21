@@ -1,0 +1,9 @@
+{
+  "name": "continue",
+  "display_name": "Agent Definition with Continue",
+  "description": "Deploy AI agents with Continue open-source code assistant for IDE-integrated development",
+  "icon": "mui:code",
+  "category": "tool",
+  "tags": ["continue", "ide", "vibe-coding", "open-source", "code-assistant"],
+  "version": "1.0.0"
+}

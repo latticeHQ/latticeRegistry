@@ -1,0 +1,9 @@
+{
+  "name": "azure-windows",
+  "display_name": "Azure VM (Windows)",
+  "description": "Provision Windows-based Azure VMs as Lattice workspaces for development environments",
+  "icon": "mui:desktop-windows",
+  "category": "agent",
+  "tags": ["azure", "windows", "vm", "cloud", "infrastructure", "desktop"],
+  "version": "1.0.0"
+}

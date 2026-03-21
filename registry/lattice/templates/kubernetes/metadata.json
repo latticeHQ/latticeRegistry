@@ -1,0 +1,9 @@
+{
+  "name": "kubernetes",
+  "display_name": "Agent Definition on Kubernetes",
+  "description": "Deploy containerized agents on Kubernetes clusters with configurable resource limits and namespaces",
+  "icon": "mui:hub",
+  "category": "agent",
+  "tags": ["kubernetes", "k8s", "container", "orchestration", "infrastructure"],
+  "version": "1.0.0"
+}
