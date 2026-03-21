@@ -1,0 +1,9 @@
+{
+  "name": "surgery-eval",
+  "display_name": "Surgery Evaluation",
+  "description": "AI feedback pipeline for surgical skills and pre-operative assessment transcripts using ACGME Surgery Milestones, EPA Entrustment Scale, and WHO Surgical Safety Checklist.",
+  "icon": "mui:health-safety",
+  "category": "evaluation",
+  "tags": ["surgery", "evaluation", "acgme", "epa", "feedback", "transcript", "preoperative", "who-checklist"],
+  "version": "1.0.0"
+}

@@ -1,0 +1,9 @@
+{
+  "name": "psychiatry-eval",
+  "display_name": "Psychiatry Evaluation",
+  "description": "AI feedback pipeline for psychiatric clinical encounter transcripts using DSM-5-TR, Mental Status Examination, C-SSRS risk assessment, and Motivational Interviewing frameworks.",
+  "icon": "mui:psychology",
+  "category": "evaluation",
+  "tags": ["psychiatry", "evaluation", "dsm-5", "mse", "feedback", "transcript", "behavioral-health", "risk-assessment"],
+  "version": "1.0.0"
+}

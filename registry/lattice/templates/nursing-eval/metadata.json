@@ -1,0 +1,9 @@
+{
+  "name": "nursing-eval",
+  "display_name": "Nursing Clinical Competency Evaluation",
+  "description": "AI feedback pipeline for nursing clinical transcripts using AACN Essentials, QSEN Competencies, and Benner's Novice to Expert framework.",
+  "icon": "mui:monitor-heart",
+  "category": "evaluation",
+  "tags": ["nursing", "evaluation", "aacn", "qsen", "feedback", "transcript", "benner"],
+  "version": "1.0.0"
+}

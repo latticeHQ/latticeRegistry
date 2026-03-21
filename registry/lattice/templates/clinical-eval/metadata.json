@@ -1,0 +1,9 @@
+{
+  "name": "clinical-eval",
+  "display_name": "Clinical Evaluation",
+  "description": "AI feedback pipeline for clinical transcripts using ACGME Core Competencies, scoring history taking, communication, clinical reasoning, professionalism, and patient safety.",
+  "icon": "mui:hospital",
+  "category": "evaluation",
+  "tags": ["clinical", "evaluation", "acgme", "feedback", "transcript", "internal-medicine"],
+  "version": "1.0.0"
+}

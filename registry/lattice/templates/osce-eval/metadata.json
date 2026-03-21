@@ -1,0 +1,9 @@
+{
+  "name": "osce-eval",
+  "display_name": "OSCE Evaluation",
+  "description": "AI feedback pipeline for Objective Structured Clinical Examination encounters using Stanford Clinical Skills Assessment, Kalamazoo Communication, and Calgary-Cambridge frameworks.",
+  "icon": "mui:fact-check",
+  "category": "evaluation",
+  "tags": ["osce", "evaluation", "stanford", "kalamazoo", "calgary-cambridge", "feedback", "clinical-skills"],
+  "version": "1.0.0"
+}

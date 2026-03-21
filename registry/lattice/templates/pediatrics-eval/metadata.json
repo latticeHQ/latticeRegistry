@@ -1,0 +1,9 @@
+{
+  "name": "pediatrics-eval",
+  "display_name": "Pediatrics Evaluation",
+  "description": "AI feedback pipeline for pediatric clinical transcripts using ACGME Pediatrics Milestones, AAP Bright Futures, and developmental assessment frameworks.",
+  "icon": "mui:favorite",
+  "category": "evaluation",
+  "tags": ["pediatrics", "evaluation", "acgme", "bright-futures", "feedback", "transcript", "developmental"],
+  "version": "1.0.0"
+}

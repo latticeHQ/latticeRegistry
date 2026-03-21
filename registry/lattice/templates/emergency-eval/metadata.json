@@ -1,0 +1,9 @@
+{
+  "name": "emergency-eval",
+  "display_name": "Emergency Medicine Evaluation",
+  "description": "AI feedback pipeline for emergency medicine clinical transcripts using ACGME EM Milestones 2.0, ABEM oral exam format, and ATLS/ACLS frameworks.",
+  "icon": "mui:medical",
+  "category": "evaluation",
+  "tags": ["emergency", "evaluation", "acgme", "feedback", "transcript", "trauma", "resuscitation"],
+  "version": "1.0.0"
+}
